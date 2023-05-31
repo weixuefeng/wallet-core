@@ -261,4 +261,13 @@ TWString* _Nonnull TWHDWalletGetExtendedPublicKeyDerivation(struct TWHDWallet* _
 TW_EXPORT_STATIC_METHOD
 struct TWPublicKey* _Nullable TWHDWalletGetPublicKeyFromExtended(TWString* _Nonnull extended, enum TWCoinType coin, TWString* _Nonnull derivationPath);
 
+/// Computes the private key from an extended private key representation.
+///
+/// \param extended extended private key
+/// \param coin a coin type
+/// \param derivationPath a derivation path
+/// \note Returned object needs to be deleted with \TWPrivateKeyDelete
+/// \return Nullable TWPrivate key
+TW_EXPORT_STATIC_METHOD
+struct TWPrivateKey* _Nullable TWHDWalletGetPrivateKeyFromExtended(TWString* _Nonnull extended, enum TWCoinType coin, TWString* _Nonnull derivationPath);
 TW_EXTERN_C_END

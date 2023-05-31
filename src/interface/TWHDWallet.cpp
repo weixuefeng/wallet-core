@@ -135,3 +135,12 @@ TWPublicKey *TWHDWalletGetPublicKeyFromExtended(TWString *_Nonnull extended, enu
     }
     return new TWPublicKey{ PublicKey(*publicKey) };
 }
+
+TWPrivateKey *TWHDWalletGetPrivateKeyFromExtended(TWString *_Nonnull extended, enum TWCoinType coin, TWString *_Nonnull derivationPath) {
+    const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
+    auto privateKey = HDWallet<>::getPrivateKeyFromExtended(*reinterpret_cast<const std::string*>(extended), coin, derivationPathObject);
+    if (!privateKey) {
+        return nullptr;
+    }
+    return new TWPrivateKey{ PrivateKey(*privateKey) };
+}

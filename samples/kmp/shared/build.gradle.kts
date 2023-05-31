@@ -79,7 +79,7 @@ android {
     namespace = "com.example.kmpsample"
     compileSdk = 33
     defaultConfig {
-        minSdk = 24
+        minSdk = 21
         targetSdk = 33
     }
 }

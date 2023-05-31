@@ -7,7 +7,7 @@ android {
     ndkVersion '23.1.7779620'
     defaultConfig {
         applicationId "com.trustwallet.core.app"
-        minSdkVersion 23
+        minSdkVersion 21
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
