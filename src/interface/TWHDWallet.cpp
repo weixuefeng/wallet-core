@@ -144,3 +144,17 @@ TWPrivateKey *TWHDWalletGetPrivateKeyFromExtended(TWString *_Nonnull extended, e
     }
     return new TWPrivateKey{ PrivateKey(*privateKey) };
 }
+
+TWPrivateKey *TWHDWalletGetPrivateKeyByChainCode(TWString* _Nonnull  chainCode, TWString* _Nonnull  key, enum TWCoinType coin, TWString* _Nonnull  derivationPath) {
+    const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
+    auto privateKey = HDWallet<>::getPrivateKeyByChainCode(*reinterpret_cast<const std::string*>(chainCode), *reinterpret_cast<const std::string*>(key), coin, derivationPathObject);
+    if (!privateKey) {
+        return nullptr;
+    }
+    return new TWPrivateKey{ PrivateKey(*privateKey) };
+}
+
+TWString *_Nonnull TWHDWalletGetHDNode(TWString *_Nonnull mnemonic, enum TWCoinType coin, TWString *_Nonnull derivationPath) {
+    const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
+    return new std::string(HDWallet<>::getHDNode(*reinterpret_cast<const std::string*>(mnemonic), coin, derivationPathObject));
+}

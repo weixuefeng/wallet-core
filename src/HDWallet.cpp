@@ -324,6 +324,44 @@ PrivateKey HDWallet<seedSize>::bip32DeriveRawSeed(TWCoinType coin, const Data& s
     return wallet.getKeyByCurve(curve, path);
 }
 
+// expose method about HDNode
+template <std::size_t seedSize>
+std::string HDWallet<seedSize>::getHDNode(const std::string& mnemonic, TWCoinType coin, const DerivationPath& derivationPath) {
+    TWCurve c = curve(coin);
+    const auto wallet = HDWallet(mnemonic, "");
+    auto node = getNode(wallet, c, derivationPath);
+    auto chain = Data(node.chain_code, node.chain_code + 32);
+    auto private_key = Data(node.private_key, node.private_key + 32);
+    auto res = Base58::encode(chain) + "," + Base58::encode(private_key);
+    return res;
+}
+
+// for gate wallet derivation ed25519, like sol, sui ...
+template <std::size_t seedSize>
+std::optional<PrivateKey> HDWallet<seedSize>::getPrivateKeyByChainCode(const std::string& chainCode, const std::string& key, TWCoinType coin, const DerivationPath& derivationPath) {
+    // default path
+    TWCurve c = curve(coin);
+    const char* curveNameStr = curveName(c);
+    HDNode node;
+    node.public_key[0] = 0x0;
+    node.curve = get_curve_by_name(curveNameStr);
+    node.child_num = 0;
+    node.depth = 0;
+    node.private_key_extension[0] = 0x0;
+    auto deChain = Base58::decode(chainCode);
+    auto deKey = Base58::decode(key);
+    std::memcpy(node.chain_code, &deChain[0], deChain.size());
+    std::memcpy(node.private_key, &deKey[0], deKey.size());
+
+    for (auto& index : derivationPath.indices) {
+        hdnode_private_ckd(&node, index.derivationIndex());
+    }
+    auto data = Data(node.private_key, node.private_key + PrivateKey::_size);
+    TW::memzero(&node);
+    return PrivateKey(data);
+}
+
+
 namespace {
 
 uint32_t fingerprint(HDNode* node, Hash::Hasher hasher) {

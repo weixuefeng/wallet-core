@@ -12,7 +12,7 @@
 #include "PrivateKey.h"
 #include "HexCoding.h"
 #include "HDWallet.h"
-
+#include <TrezorCrypto/bip32.h>
 #include <iostream>
 #include <vector>
 #include <cassert>
@@ -111,6 +111,30 @@ bool Address::deriveFromXpubIndex(const string& coinid, const string& xpub, cons
     const auto publicKey = HDWallet<>::getPublicKeyFromExtended(xpub, ctype, dp);
     if (!publicKey) { return false; }
     res = TW::deriveAddress(ctype, publicKey.value());
+    return true;
+}
+
+bool Address::getNode(const string& coinid, const string& derivPath, string& res) {
+    Coin coin;
+    if (!_coins.findCoin(coinid, coin)) { return false; }
+    auto ctype = (TWCoinType)coin.c;
+    auto curve = (TWCurve)coin.curve;
+
+    DerivationPath dp(derivPath);
+    // get the private key
+    string mnemo = _keys.getMnemo();
+    assert(mnemo.length() > 0); // a mnemonic is always set
+    HDWallet wallet(mnemo, "");
+    PrivateKey priKey = wallet.getKey(ctype, dp);
+    auto node = HDWallet<>::getHDNode(mnemo, ctype, dp);
+    // split
+    // auto chain_code = node.chain_code;
+    // auto privateKey = node.private_key;
+    // _out << "chain code " << chain_code << endl;
+    // _out << "private key " << privateKey << endl;
+    // derive address
+
+    res = TW::deriveAddress(ctype, priKey);
     return true;
 }
 

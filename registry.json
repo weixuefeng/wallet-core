@@ -1916,11 +1916,11 @@
     "blockchain": "Solana",
     "derivation": [
       {
-        "path": "m/44'/501'/0'"
+        "path": "m/44'/501'/0'/0'"
       },
       {
         "name": "solana",
-        "path": "m/44'/501'/0'/0'"
+        "path": "m/44'/501'/0'"
       }
     ],
     "curve": "ed25519",

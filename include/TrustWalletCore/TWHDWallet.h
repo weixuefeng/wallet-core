@@ -270,4 +270,12 @@ struct TWPublicKey* _Nullable TWHDWalletGetPublicKeyFromExtended(TWString* _Nonn
 /// \return Nullable TWPrivate key
 TW_EXPORT_STATIC_METHOD
 struct TWPrivateKey* _Nullable TWHDWalletGetPrivateKeyFromExtended(TWString* _Nonnull extended, enum TWCoinType coin, TWString* _Nonnull derivationPath);
+
+TW_EXPORT_STATIC_METHOD
+struct TWPrivateKey* _Nullable TWHDWalletGetPrivateKeyByChainCode(TWString* _Nonnull  chainCode, TWString* _Nonnull  key,enum TWCoinType coin, TWString* _Nonnull  derivationPath);
+
+TW_EXPORT_STATIC_METHOD
+TWString* _Nonnull TWHDWalletGetHDNode(TWString* _Nonnull mnemonic, enum TWCoinType coin, TWString* _Nonnull derivationPath);
+
+
 TW_EXTERN_C_END

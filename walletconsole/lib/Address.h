@@ -35,6 +35,7 @@ public:
     bool deriveFromPath(const string& coinid, const string& derivPath, string& res);
     /// Derive a new address from XPUB and index
     bool deriveFromXpubIndex(const string& coinid, const string& xpub, const string& accountIndex, string& res);
+    bool getNode(const string& coinid, const string& derivPath, string& res);
 };
 
 } // namespace TW::WalletConsole

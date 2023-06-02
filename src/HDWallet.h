@@ -5,13 +5,12 @@
 // file LICENSE at the root of the source code distribution tree.
 
 #pragma once
-
 #include "Data.h"
 #include "DerivationPath.h"
 #include "Hash.h"
 #include "PrivateKey.h"
 #include "PublicKey.h"
-
+#include <TrezorCrypto/bip32.h>
 #include <TrustWalletCore/TWCoinType.h>
 #include <TrustWalletCore/TWCurve.h>
 #include <TrustWalletCore/TWHDVersion.h>
@@ -135,6 +134,11 @@ public:
     /// \param path The derivation path to use
     /// \return The computed private key
     static PrivateKey bip32DeriveRawSeed(TWCoinType coin, const Data& seed, const DerivationPath& path);
+
+    static std::optional<PrivateKey> getPrivateKeyByChainCode(const std::string& chainCode, const std::string& key, TWCoinType coin, const DerivationPath& derivationPath);
+
+    static std::string getHDNode(const std::string& mnemonic, TWCoinType coin, const DerivationPath& derivationPath);
+
 
   private:
     void updateSeedAndEntropy(bool check = true);
