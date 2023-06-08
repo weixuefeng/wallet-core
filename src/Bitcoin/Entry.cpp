@@ -21,6 +21,7 @@ bool Entry::validateAddress(TWCoinType coin, const std::string& address, const P
 
     switch (coin) {
     case TWCoinTypeBitcoin:
+    case TWCoinTypeBitcoinTestnet:
     case TWCoinTypeDigiByte:
     case TWCoinTypeLitecoin:
     case TWCoinTypeMonacoin:
@@ -69,6 +70,7 @@ std::string Entry::deriveAddress(TWCoinType coin, const PublicKey& publicKey, TW
 
     switch (coin) {
     case TWCoinTypeBitcoin:
+    case TWCoinTypeBitcoinTestnet:
     case TWCoinTypeLitecoin:
         switch (derivation) {
         case TWDerivationBitcoinLegacy:
@@ -114,6 +116,7 @@ inline Data cashAddressToData(const CashAddress&& addr) {
 Data Entry::addressToData(TWCoinType coin, const std::string& address) const {
     switch (coin) {
     case TWCoinTypeBitcoin:
+    case TWCoinTypeBitcoinTestnet:
     case TWCoinTypeBitcoinGold:
     case TWCoinTypeDigiByte:
     case TWCoinTypeGroestlcoin:
