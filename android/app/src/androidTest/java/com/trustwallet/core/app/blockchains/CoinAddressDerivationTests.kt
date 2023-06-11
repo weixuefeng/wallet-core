@@ -66,7 +66,7 @@ class CoinAddressDerivationTests {
         NANO -> assertEquals("nano_39gsbcishxn3n7wd17ono4otq5wazwzusqgqigztx73wbrh5jwbdbshfnumc", address)
         NEBULAS -> assertEquals("n1ZVgEidtdseYv9ogmGz69Cz4mbqmHYSNqJ", address)
         NEAR -> assertEquals("0c91f6106ff835c0195d5388565a2d69e25038a7e23d26198f85caf6594117ec", address)
-        THETA -> assertEquals("0x0d1fa20c218Fec2f2C55d52aB267940485fa5DA4", address)
+        THETA, THETAFUEL -> assertEquals("0x0d1fa20c218Fec2f2C55d52aB267940485fa5DA4", address)
         COSMOS -> assertEquals("cosmos142j9u5eaduzd7faumygud6ruhdwme98qsy2ekn", address)
         DECRED -> assertEquals("DsidJiDGceqHTyqiejABy1ZQ3FX4SiWZkYG", address)
         DOGECOIN -> assertEquals("DJRFZNg8jkUtjcpo2zJd92FUAzwRjitw6f", address)
@@ -132,5 +132,6 @@ class CoinAddressDerivationTests {
         PERSISTENCE -> assertEquals("persistence142j9u5eaduzd7faumygud6ruhdwme98q7gv2ch", address)
         AKASH -> assertEquals("akash142j9u5eaduzd7faumygud6ruhdwme98qal870f", address)
         NOBLE -> assertEquals("noble142j9u5eaduzd7faumygud6ruhdwme98qc8l3wa", address)
+        ROOTSTOCK -> assertEquals("0xA2D7065F94F838a3aB9C04D67B312056846424Df", address)
     }
 }

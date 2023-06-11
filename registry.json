@@ -1950,6 +1950,36 @@
     }
   },
   {
+    "id": "tfuelevm",
+    "name": "Theta Fuel",
+    "coinId": 361,
+    "symbol": "TFUEL",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/500'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "361",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://explorer.thetatoken.org",
+      "txPath": "/tx/",
+      "accountPath": "/account/",
+      "sampleTx": "0xdb1c1c4e06289a4fc71b98ced218242d4f4a54a09987791a6a53a5260c053555",
+      "sampleAccount": "0xa144e6a98b967e585b214bfa7f6692af81987e5b"
+    },
+    "info": {
+      "url": "https://www.thetatoken.org",
+      "source": "https://github.com/thetatoken/theta-protocol-ledger",
+      "rpc": "https://eth-rpc-api.thetatoken.org/rpc",
+      "documentation": "https://github.com/thetatoken/theta-mainnet-integration-guide/blob/master/docs/api.md#api-reference"
+    }
+  },
+  {
     "id": "solana",
     "name": "Solana",
     "coinId": 501,
@@ -2639,6 +2669,36 @@
       "source": "https://github.com/maticnetwork/contracts",
       "rpc": "https://polygon-rpc.com",
       "documentation": "https://eth.wiki/json-rpc/API"
+    }
+  },
+  {
+    "id": "rootstock",
+    "name": "Rootstock",
+    "coinId": 137,
+    "symbol": "RBTC",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/137'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "30",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://explorer.rsk.co",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0xeb8fa0488a655f8dc975153bffd066800bcaae5f21cf372356365b2a1d6d2288",
+      "sampleAccount": "0x4e5dabc28e4a0f5e5b19fcb56b28c5a1989352c1"
+    },
+    "info": {
+      "url": "https://rootstock.io",
+      "source": "https://github.com/rsksmart/rskj",
+      "rpc": "https://public-node.rsk.co",
+      "documentation": "https://dev.rootstock.io"
     }
   },
   {

@@ -20,6 +20,7 @@ This list is generated from [./registry.json](../registry.json)
 | 118     | Cosmos Hub       | ATOM   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cosmos/info/logo.png" width="32" />       | <https://cosmos.network>      |
 | 133     | Zcash            | ZEC    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zcash/info/logo.png" width="32" />        | <https://z.cash>              |
 | 136     | Firo             | FIRO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/firo/info/logo.png" width="32" />         | <https://firo.org/>           |
+| 137     | Rootstock        | RBTC   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/rootstock/info/logo.png" width="32" />    | <https://rootstock.io>        |
 | 144     | XRP              | XRP    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ripple/info/logo.png" width="32" />       | <https://ripple.com/xrp>      |
 | 145     | Bitcoin Cash     | BCH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoincash/info/logo.png" width="32" />  | <https://bitcoincash.org>     |
 | 148     | Stellar          | XLM    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/stellar/info/logo.png" width="32" />      | <https://stellar.org>         |
@@ -37,6 +38,7 @@ This list is generated from [./registry.json](../registry.json)
 | 313     | Zilliqa          | ZIL    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zilliqa/info/logo.png" width="32" />      | <https://zilliqa.com>         |
 | 330     | Terra Classic    | LUNC   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/terra/info/logo.png" width="32" />        | <https://terra.money>         |
 | 354     | Polkadot         | DOT    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polkadot/info/logo.png" width="32" />     | <https://polkadot.network/>   |
+| 361     | Theta Fuel       | TFUEL  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tfuelevm/info/logo.png" width="32" />     | <https://www.thetatoken.org>  |
 | 394     | Crypto.org       | CRO    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cryptoorg/info/logo.png" width="32" />    | <https://crypto.org/>         |
 | 396     | Everscale        | EVER   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/everscale/info/logo.png" width="32" />    | <https://everscale.network/>  |
 | 397     | NEAR             | NEAR   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/near/info/logo.png" width="32" />         | <https://nearprotocol.com>    |
