@@ -113,6 +113,9 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeBinance:
             EXPECT_EQ(address, "bnb1hkfq3zahaqkkzx5mjnamwjsfpq2jk7z0mlq0d0");
             break;
+        case TWCoinTypeBitcoinTestnet:
+            EXPECT_EQ(address, "tb1qhkfq3zahaqkkzx5mjnamwjsfpq2jk7z0986mnl");
+            break;
         case TWCoinTypeBitcoin:
             EXPECT_EQ(address, "bc1qhkfq3zahaqkkzx5mjnamwjsfpq2jk7z00ppggv");
             break;

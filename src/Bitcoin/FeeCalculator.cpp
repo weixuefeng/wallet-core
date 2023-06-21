@@ -44,6 +44,7 @@ const FeeCalculator& getFeeCalculator(TWCoinType coinType) noexcept {
         return decredFeeCalculator;
 
     case TWCoinTypeBitcoin:
+    case TWCoinTypeBitcoinTestnet:
     case TWCoinTypeBitcoinGold:
     case TWCoinTypeDigiByte:
     case TWCoinTypeLitecoin:
