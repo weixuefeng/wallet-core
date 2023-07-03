@@ -37,12 +37,14 @@ TEST(Coin, DeriveAddress) {
         // Ethereum and ...
         case TWCoinTypeEthereum:
         // ... clones:
+        case TWCoinTypeAcalaEVM:
         case TWCoinTypeArbitrum:
         case TWCoinTypeAurora:
         case TWCoinTypeAvalancheCChain:
         case TWCoinTypeBoba:
         case TWCoinTypeCallisto:
         case TWCoinTypeCelo:
+        case TWCoinTypeConfluxeSpace:
         case TWCoinTypeCronosChain:
         case TWCoinTypeECOChain:
         case TWCoinTypeEthereumClassic:
@@ -101,7 +103,9 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeKomodo:
             EXPECT_EQ(address, "RSZYjMDCP4q3t7NAFXPPnqEGrMZn971pdB");
             break;
-
+        case TWCoinTypeAcala:
+            EXPECT_EQ(address, "26GQqmwt3154cQbG2fyBsh3cGuCBoRFtrwuCD6WcVJdFReA4");
+            break;
         case TWCoinTypeAeternity:
             EXPECT_EQ(address, "ak_2p5878zbFhxnrm7meL7TmqwtvBaqcBddyp5eGzZbovZ5FeVfcw");
             break;

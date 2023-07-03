@@ -166,6 +166,9 @@ enum TWCoinType {
     TWCoinTypeScroll = 534353,
     TWCoinTypeRootstock = 137,
     TWCoinTypeThetaFuel = 361,
+    TWCoinTypeConfluxeSpace = 1030,
+    TWCoinTypeAcala = 787,
+    TWCoinTypeAcalaEVM = 10000787,
     TWCoinTypeGateChain = 10000086,
 };
 
