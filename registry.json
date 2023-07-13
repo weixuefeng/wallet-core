@@ -4003,6 +4003,36 @@
     }
   },
   {
+    "id": "opbnb",
+    "name": "OpBNB testnet",
+    "coinId": 5611,
+    "chainId": "5611",
+    "symbol": "tBNB",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://opbnbscan.com",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x788ea8fb4a82dae957f1d3b18af3cd0bbde55a276e66bd17af8c869f24c03a0f",
+      "sampleAccount": "0x4eaf936c172b5e5511959167e8ab4f7031113ca3"
+    },
+    "info": {
+      "url": "https://opbnb.bnbchain.org/en",
+      "source": "https://github.com/bnb-chain/opbnb",
+      "rpc": "https://opbnb-testnet-rpc.bnbchain.org",
+      "documentation": "https://docs.bnbchain.org/opbnb-docs"
+    }
+  },
+  {
     "id": "stratis",
     "name": "Stratis",
     "coinId": 105105,
@@ -4244,6 +4274,36 @@
       "source": "https://github.com/gatechain/gatechain-docs",
       "rpc": "https://evm.gatenode.cc",
       "documentation": "https://www.gatechain.io/docs/en/home/"
+    }
+  },
+  {
+    "id": "sei",
+    "name": "Sei",
+    "displayName": "Sei",
+    "coinId": 100000118,
+    "symbol": "SEI",
+    "decimals": 6,
+    "chainId": "sei-chain",
+    "blockchain": "Cosmos",
+    "derivation": [
+      {
+        "path": "m/44'/118'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1",
+    "hrp": "sei",
+    "addressHasher": "sha256ripemd",
+    "explorer": {
+      "url": "https://www.sei.io/neutron",
+      "txPath": "/txs/",
+      "accountPath": "/account/",
+      "sampleTx": "E18BA087009A05EB6A15A22FE30BA99379B909F74A74120E6F92B9882C45F0D7",
+      "sampleAccount": "neutron1pm4af8pcurxssdxztqw9rexx5f8zfq7uzqfmy8"
+    },
+    "info": {
+      "url": "https://sei.io/",
+      "documentation": "https://docs.sei.io/"
     }
   }
 ]

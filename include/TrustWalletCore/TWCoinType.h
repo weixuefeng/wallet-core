@@ -169,6 +169,7 @@ enum TWCoinType {
     TWCoinTypeConfluxeSpace = 1030,
     TWCoinTypeAcala = 787,
     TWCoinTypeAcalaEVM = 10000787,
+    TWCoinTypeOpBNBtestnet = 5611,
     TWCoinTypeGateChain = 10000086,
 };
 
