@@ -171,6 +171,7 @@ enum TWCoinType {
     TWCoinTypeAcalaEVM = 10000787,
     TWCoinTypeOpBNBtestnet = 5611,
     TWCoinTypeGateChain = 10000086,
+    TWCoinTypeSei = 19000118,
 };
 
 /// Returns the blockchain for a coin type.
