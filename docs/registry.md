@@ -85,6 +85,7 @@ This list is generated from [./registry.json](../registry.json)
 | 2301    | Qtum             | QTUM   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/qtum/info/logo.png" width="32" />         | <https://qtum.org>            |
 | 2718    | Nebulas          | NAS    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nebulas/info/logo.png" width="32" />      | <https://nebulas.io>          |
 | 3030    | Hedera           | HBAR   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/hedera/info/logo.png" width="32" />       | <https://hedera.com/>         |
+| 5611    | OpBNB testnet    | tBNB   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/opbnb/info/logo.png" width="32" />        | <https://opbnb.bnbchain.org/en> |
 | 6060    | GoChain          | GO     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/gochain/info/logo.png" width="32" />      | <https://gochain.io>          |
 | 8964    | NULS             | NULS   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nuls/info/logo.png" width="32" />         | <https://nuls.io>             |
 | 14001   | WAX              | WAXP   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/wax/info/logo.png" width="32" />          | <http://wax.io>               |
@@ -141,4 +142,5 @@ This list is generated from [./registry.json](../registry.json)
 | 70000118 | Kujira           | KUJI   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/kujira/info/logo.png" width="32" />       | <https://kujira.app/>         |
 | 80000118 | Comdex           | CMDX   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/comdex/info/logo.png" width="32" />       | <https://comdex.one/>         |
 | 90000118 | Neutron          | NTRN   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/neutron/info/logo.png" width="32" />      | <https://neutron.org/>        |
+| 245022934 | Neon             | NEON   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/neon/info/logo.png" width="32" />         | <https://neonevm.org>         |
 | 1323161554 | Aurora           | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/aurora/info/logo.png" width="32" />       | <https://aurora.dev/>         |

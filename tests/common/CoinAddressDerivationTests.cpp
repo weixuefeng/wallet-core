@@ -77,6 +77,8 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeIoTeXEVM:
         case TWCoinTypeGateChain:
         case TWCoinTypeScroll:
+        case TWCoinTypeOpBNBtestnet:
+        case TWCoinTypeNeon:
             EXPECT_EQ(address, "0x9d8A62f656a8d1615C1294fd71e9CFb3E4855A4F");
             break;
 

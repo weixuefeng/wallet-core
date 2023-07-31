@@ -4003,6 +4003,36 @@
     }
   },
   {
+    "id": "opbnb",
+    "name": "OpBNB testnet",
+    "coinId": 5611,
+    "chainId": "5611",
+    "symbol": "tBNB",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://opbnbscan.com",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x788ea8fb4a82dae957f1d3b18af3cd0bbde55a276e66bd17af8c869f24c03a0f",
+      "sampleAccount": "0x4eaf936c172b5e5511959167e8ab4f7031113ca3"
+    },
+    "info": {
+      "url": "https://opbnb.bnbchain.org/en",
+      "source": "https://github.com/bnb-chain/opbnb",
+      "rpc": "https://opbnb-testnet-rpc.bnbchain.org",
+      "documentation": "https://docs.bnbchain.org/opbnb-docs"
+    }
+  },
+  {
     "id": "stratis",
     "name": "Stratis",
     "coinId": 105105,
@@ -4244,6 +4274,36 @@
       "source": "https://github.com/gatechain/gatechain-docs",
       "rpc": "https://evm.gatenode.cc",
       "documentation": "https://www.gatechain.io/docs/en/home/"
+    }
+  },
+  {
+    "id": "neon",
+    "name": "Neon",
+    "coinId": 245022934,
+    "symbol": "NEON",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "245022934",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://neonscan.org",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x77d86af2c6f02f14ef13ca52bf54864d92fcc4b32d8e884e225061c006738ed6",
+      "sampleAccount": "0xfa4a8650e7bebb918859c280a86f9661bed29877"
+    },
+    "info": {
+      "url": "https://neonevm.org",
+      "source": "https://github.com/neonevm/neon-evm",
+      "rpc": "https://neon-proxy-mainnet.solana.p2p.org/",
+      "documentation": "https://docs.neonfoundation.io/docs/quick_start"
     }
   }
 ]
