@@ -4248,6 +4248,36 @@
     }
   },
   {
+    "id": "neon",
+    "name": "Neon",
+    "coinId": 245022934,
+    "symbol": "NEON",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "245022934",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://neonscan.org",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x77d86af2c6f02f14ef13ca52bf54864d92fcc4b32d8e884e225061c006738ed6",
+      "sampleAccount": "0xfa4a8650e7bebb918859c280a86f9661bed29877"
+    },
+    "info": {
+      "url": "https://neonevm.org",
+      "source": "https://github.com/neonevm/neon-evm",
+      "rpc": "https://neon-proxy-mainnet.solana.p2p.org/",
+      "documentation": "https://docs.neonfoundation.io/docs/quick_start"
+    }
+  },
+  {
     "id": "gate",
     "name": "Gate Chain",
     "displayName": "Gate Chain",
@@ -4277,33 +4307,33 @@
     }
   },
   {
-    "id": "neon",
-    "name": "Neon",
-    "coinId": 245022934,
-    "symbol": "NEON",
-    "decimals": 18,
-    "blockchain": "Ethereum",
+    "id": "sei",
+    "name": "Sei",
+    "displayName": "Sei",
+    "coinId": 19000118,
+    "symbol": "SEI",
+    "decimals": 6,
+    "chainId": "sei-chain",
+    "blockchain": "Cosmos",
     "derivation": [
       {
-        "path": "m/44'/60'/0'/0/0"
+        "path": "m/44'/118'/0'/0/0"
       }
     ],
     "curve": "secp256k1",
-    "publicKeyType": "secp256k1Extended",
-    "chainId": "245022934",
-    "addressHasher": "keccak256",
+    "publicKeyType": "secp256k1",
+    "hrp": "sei",
+    "addressHasher": "sha256ripemd",
     "explorer": {
-      "url": "https://neonscan.org",
-      "txPath": "/tx/",
-      "accountPath": "/address/",
-      "sampleTx": "0x77d86af2c6f02f14ef13ca52bf54864d92fcc4b32d8e884e225061c006738ed6",
-      "sampleAccount": "0xfa4a8650e7bebb918859c280a86f9661bed29877"
+      "url": "https://sei.explorer.guru",
+      "txPath": "/transaction/",
+      "accountPath": "/account/",
+      "sampleTx": "E18BA087009A05EB6A15A22FE30BA99379B909F74A74120E6F92B9882C45F0D7",
+      "sampleAccount": "sei1u6a53xj48avfd547an2qcw6au3jrwaah650vpl"
     },
     "info": {
-      "url": "https://neonevm.org",
-      "source": "https://github.com/neonevm/neon-evm",
-      "rpc": "https://neon-proxy-mainnet.solana.p2p.org/",
-      "documentation": "https://docs.neonfoundation.io/docs/quick_start"
+      "url": "https://sei.io/",
+      "documentation": "https://docs.sei.io/"
     }
   }
 ]
