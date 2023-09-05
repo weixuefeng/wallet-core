@@ -162,6 +162,15 @@ TransactionPayload tokenTransferPayload(const Proto::SigningInput& input) {
     return payload;
 }
 
+TransactionPayload tokenTransferCoinsPayload(const Proto::SigningInput& input) {
+    auto&& [args, argsJson] = commonTransferPayload(input.token_transfer_coins());
+    auto& function = input.token_transfer_coins().function();
+    TypeTag tokenTransferTag = {TypeTag::TypeTagVariant(TStructTag{.st = StructTag(Address(function.account_address()),
+                                                                                   function.module(), function.name(), {})})};
+    TransactionPayload payload = EntryFunction(gAptosAccountModule, "transfer_coins", {tokenTransferTag}, args, argsJson);
+    return payload;
+}
+
 TransactionPayload registerTokenPayload(const Proto::SigningInput& input) {
 
     auto& function = input.register_token().function();
@@ -171,48 +180,29 @@ TransactionPayload registerTokenPayload(const Proto::SigningInput& input) {
     return payload;
 }
 
-Proto::SigningOutput blindSign(const Proto::SigningInput& input) {
-    auto output = Proto::SigningOutput();
-    auto privateKey = PrivateKey(Data(input.private_key().begin(), input.private_key().end()));
-    auto pubKeyData = privateKey.getPublicKey(TWPublicKeyTypeED25519).bytes;
+TransactionBasePtr buildBlindTx(const Proto::SigningInput& input) {
     if (nlohmann::json j = nlohmann::json::parse(input.any_encoded(), nullptr, false); j.is_discarded()) {
-        BCS::Serializer serializer;
-        auto encodedCall = parse_hex(input.any_encoded());
-        serializer.add_bytes(begin(encodedCall), end(encodedCall));
-        auto signature = privateKey.sign(encodedCall, TWCurveED25519);
-        output.set_raw_txn(encodedCall.data(), encodedCall.size());
-        output.mutable_authenticator()->set_public_key(pubKeyData.data(), pubKeyData.size());
-        output.mutable_authenticator()->set_signature(signature.data(), signature.size());
-        serializer << BCS::uleb128{.value = 0} << pubKeyData << signature;
-        output.set_encoded(serializer.bytes.data(), serializer.bytes.size());
-
-        // clang-format off
-        nlohmann::json json = {
-            {"type", "ed25519_signature"},
-            {"public_key", hexEncoded(pubKeyData)},
-            {"signature", hexEncoded(signature)}
-        };
-        // clang-format on
-        output.set_json(json.dump());
+        auto blindBuilder = std::make_unique<BlindBuilder>();
+        blindBuilder->encodedCallHex(input.any_encoded());
+        return blindBuilder;
     } else {
-        TransactionBuilder::builder()
-            .sender(Address(input.sender()))
+        auto txBuilder = std::make_unique<TransactionBuilder>();
+        txBuilder->sender(Address(input.sender()))
             .sequenceNumber(input.sequence_number())
             .payload(EntryFunction::from_json(j))
             .maxGasAmount(input.max_gas_amount())
             .gasUnitPrice(input.gas_unit_price())
             .expirationTimestampSecs(input.expiration_timestamp_secs())
-            .chainId(static_cast<uint8_t>(input.chain_id()))
-            .sign(input, output);
+            .chainId(static_cast<uint8_t>(input.chain_id()));
+        return txBuilder;
     }
-    return output;
 }
 
-Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
-    auto protoOutput = Proto::SigningOutput();
+TransactionBasePtr buildTx(const Proto::SigningInput& input) {
     if (!input.any_encoded().empty()) {
-        return blindSign(input);
+        return buildBlindTx(input);
     }
+
     auto nftPayloadFunctor = [](const Proto::NftMessage& nftMessage) {
         switch (nftMessage.nft_transaction_payload_case()) {
         case Proto::NftMessage::kOfferNft:
@@ -257,20 +247,34 @@ Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
         case Proto::SigningInput::kLiquidStakingMessage: {
             return liquidStakingFunctor(input.liquid_staking_message());
         }
+        case Proto::SigningInput::kTokenTransferCoins: {
+            return tokenTransferCoinsPayload(input);
+        }
         case Proto::SigningInput::TRANSACTION_PAYLOAD_NOT_SET:
             throw std::runtime_error("Transaction payload should be set");
         }
     };
-    TransactionBuilder::builder()
-        .sender(Address(input.sender()))
+    auto txBuilder = std::make_unique<TransactionBuilder>();
+    txBuilder->sender(Address(input.sender()))
         .sequenceNumber(input.sequence_number())
         .payload(payloadFunctor())
         .maxGasAmount(input.max_gas_amount())
         .gasUnitPrice(input.gas_unit_price())
         .expirationTimestampSecs(input.expiration_timestamp_secs())
-        .chainId(static_cast<uint8_t>(input.chain_id()))
-        .sign(input, protoOutput);
-    return protoOutput;
+        .chainId(static_cast<uint8_t>(input.chain_id()));
+    return txBuilder;
+}
+
+Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
+    return buildTx(input)->sign(input);
+}
+
+TxCompiler::Proto::PreSigningOutput Signer::preImageHashes(const Proto::SigningInput& input) {
+    return buildTx(input)->preImage();
+}
+
+Proto::SigningOutput Signer::compile(const Proto::SigningInput& input, const Data& signature, const PublicKey& publicKey) {
+    return buildTx(input)->compile(signature, publicKey);
 }
 
 } // namespace TW::Aptos
