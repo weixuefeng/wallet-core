@@ -4457,35 +4457,5 @@
       "rpc": "https://evm.gatenode.cc",
       "documentation": "https://www.gatechain.io/docs/en/home/"
     }
-  },
-  {
-    "id": "sei",
-    "name": "Sei",
-    "displayName": "Sei",
-    "coinId": 19000118,
-    "symbol": "SEI",
-    "decimals": 6,
-    "chainId": "sei-chain",
-    "blockchain": "Cosmos",
-    "derivation": [
-      {
-        "path": "m/44'/118'/0'/0/0"
-      }
-    ],
-    "curve": "secp256k1",
-    "publicKeyType": "secp256k1",
-    "hrp": "sei",
-    "addressHasher": "sha256ripemd",
-    "explorer": {
-      "url": "https://sei.explorer.guru",
-      "txPath": "/transaction/",
-      "accountPath": "/account/",
-      "sampleTx": "E18BA087009A05EB6A15A22FE30BA99379B909F74A74120E6F92B9882C45F0D7",
-      "sampleAccount": "sei1u6a53xj48avfd547an2qcw6au3jrwaah650vpl"
-    },
-    "info": {
-      "url": "https://sei.io/",
-      "documentation": "https://docs.sei.io/"
-    }
   }
 ]
