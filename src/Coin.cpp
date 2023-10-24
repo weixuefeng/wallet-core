@@ -66,6 +66,7 @@
 #include "Sui/Entry.h"
 #include "Greenfield/Entry.h"
 #include "InternetComputer/Entry.h"
+#include "Polkadot/Entry.h" // TODO remove if the blockchain already exists, or just remove this comment if not
 // end_of_coin_includes_marker_do_not_modify
 
 using namespace TW;

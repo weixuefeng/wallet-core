@@ -74,6 +74,7 @@ This list is generated from [./registry.json](../registry.json)
 | 888     | NEO              | NEO    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/neo/info/logo.png" width="32" />          | <https://neo.org>             |
 | 889     | TomoChain        | TOMO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tomochain/info/logo.png" width="32" />    | <https://tomochain.com>       |
 | 899     | eCash            | XEC    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ecash/info/logo.png" width="32" />        | <https://e.cash>              |
+| 913     | Vara Network     | VARA   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/vara/info/logo.png" width="32" />         | <https://vara-network.io/>    |
 | 931     | THORChain        | RUNE   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/thorchain/info/logo.png" width="32" />    | <https://thorchain.org>       |
 | 966     | Polygon          | MATIC  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png" width="32" />      | <https://polygon.technology>  |
 | 996     | OKX Chain        | OKT    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/okc/info/logo.png" width="32" />          | <https://www.okx.com/okc>     |
@@ -140,6 +141,7 @@ This list is generated from [./registry.json](../registry.json)
 | 18000118 | Noble            | USDC   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/noble/info/logo.png" width="32" />        | <https://nobleassets.xyz/>    |
 | 19000118 | Sei              | SEI    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/sei/info/logo.png" width="32" />          | <https://sei.io/>             |
 | 20000118 | Stargaze         | STARS  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/stargaze/info/logo.png" width="32" />     | <https://www.stargaze.zone/>  |
+| 20000118 | Celestia         | TIA    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/celestia/info/logo.png" width="32" />     | <https://docs.celestia.org/>  |
 | 20000714 | BNB Smart Chain  | BNB    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png" width="32" />   | <https://www.binance.org/en/smartChain> |
 | 20009001 | Native Evmos     | EVMOS  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nativeevmos/info/logo.png" width="32" />  | <https://evmos.org/>          |
 | 30000118 | Juno             | JUNO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/juno/info/logo.png" width="32" />         | <https://www.junonetwork.io/> |
