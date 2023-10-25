@@ -4549,6 +4549,36 @@
     }
   },
   {
+    "id": "vara",
+    "name": "Vara",
+    "coinId": 913,
+    "symbol": "VARA",
+    "decimals": 12,
+    "blockchain": "Polkadot",
+    "derivation": [
+      {
+        "path": "m/44'/913'/0'/0'/0'"
+      }
+    ],
+    "curve": "ed25519",
+    "publicKeyType": "ed25519",
+    "addressHasher": "keccak256",
+    "ss58Prefix": 137,
+    "explorer": {
+      "url": "https://vara.subscan.io",
+      "txPath": "/extrinsic/",
+      "accountPath": "/account/",
+      "sampleTx": "0xb96f97d8ee508f420e606e1a6dcc74b88844713ddec2bd7cf4e3aa6b1d6beef4",
+      "sampleAccount": "kGhT5vHiV2VqFjAJxEqZ55wKePWNXYU2M8Yd1LzyPtSUuBnDG"
+    },
+    "info": {
+      "url": "https://vara-network.io/",
+      "source": "https://github.com/gear-tech/gear/",
+      "rpc": "",
+      "documentation": "https://polkadot.js.org/api/substrate/rpc.html"
+    }
+  },
+  {
     "id": "gate",
     "name": "Gate Chain",
     "displayName": "Gate Chain",
