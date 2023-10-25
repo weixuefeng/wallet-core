@@ -453,6 +453,66 @@
     }
   },
   {
+    "id": "mantle",
+    "name": "Mantle",
+    "coinId": 5000,
+    "symbol": "MNT",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "5000",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://explorer.mantle.xyz",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0xfae996ea23f1ff9909ac04d26ae6e52ab600a84163fab9e0e893483c685629dd",
+      "sampleAccount": "0xA295EEFd401C8BE1457F266d3e73cdD015e5CFbb"
+    },
+    "info": {
+      "url": "https://www.mantle.xyz",
+      "source": "https://github.com/mantlenetworkio",
+      "rpc": "https://rpc.mantle.xyz",
+      "documentation": "https://docs.mantle.xyz/network/introduction/overview"
+    }
+  },
+  {
+    "id": "zeneon",
+    "name": "Zen EON",
+    "coinId": 7332,
+    "symbol": "ZEN",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "7332",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://eon-explorer.horizenlabs.io",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0xb462e3dac8eef21957d3b6cff3c184d083434367a726dd871e98a774f4d037a5",
+      "sampleAccount": "0x09bCfC348101B1179BCF3837aC996cF09357215f"
+    },
+    "info": {
+      "url": "https://eon.horizen.io",
+      "source": "https://github.com/HorizenOfficial/eon",
+      "rpc": "https://eon-rpc.horizenlabs.io/ethv1",
+      "documentation": "https://eon.horizen.io/docs"
+    }
+  },
+  {
     "id": "ethereum",
     "name": "Ethereum",
     "coinId": 60,
@@ -1149,6 +1209,36 @@
     }
   },
   {
+    "id": "tia",
+    "name": "Tia",
+    "displayName": "Celestia",
+    "coinId": 21000118,
+    "symbol": "TIA",
+    "decimals": 6,
+    "blockchain": "Cosmos",
+    "chainId": "mocha-4",
+    "derivation": [
+      {
+        "path": "m/44'/118'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1",
+    "hrp": "celestia",
+    "addressHasher": "sha256ripemd",
+    "explorer": {
+      "url": "https://www.mintscan.io/tia",
+      "txPath": "/txs/",
+      "accountPath": "/account/",
+      "sampleTx": "943B1A59EB724A1258CF167834A83558DE5A31E8C1E31FCBCBB99404222E5FBF",
+      "sampleAccount": "celestia142j9u5eaduzd7faumygud6ruhdwme98qpwmfv7"
+    },
+    "info": {
+      "url": "https://celestia.org/",
+      "documentation": "https://docs.celestia.org/"
+    }
+  },
+  {
     "id": "coreum",
     "name": "Coreum",
     "displayName": "Coreum",
@@ -1745,7 +1835,6 @@
       "documentation": "https://developer.algorand.org/docs/algod-rest-paths"
     }
   },
-
   {
     "id": "iotex",
     "name": "IoTeX",
@@ -3256,7 +3345,7 @@
     "chainId": "534353",
     "addressHasher": "keccak256",
     "explorer": {
-      "url": "https://blockscout.scroll.io",
+      "url": "https://scrollscan.com",
       "txPath": "/tx/",
       "accountPath": "/address/",
       "sampleTx": "0xee9196d6840c8d31626324d91c886d20e65711c2026c559133fb23741d3b2f9d",
@@ -3265,7 +3354,7 @@
     "info": {
       "url": "https://scroll.io",
       "source": "https://github.com/scroll-tech",
-      "rpc": "https://alpha-rpc.scroll.io/l2",
+      "rpc": "https://rpc.scroll.io",
       "documentation": "https://guide.scroll.io"
     }
   },
@@ -4130,7 +4219,7 @@
     "coinId": 5600,
     "symbol": "BNB",
     "decimals": 18,
-    "chainId": "5600",
+    "chainId": "9000",
     "blockchain": "Greenfield",
     "derivation": [
       {
@@ -4144,8 +4233,8 @@
       "url": "https://greenfieldscan.com",
       "txPath": "/tx/",
       "accountPath": "/account/",
-      "sampleTx": "9F895CF2DD64FB1F428CEFCF2A6585A813C3540FC9FE1EF42DB1DA2CB1DF55AB",
-      "sampleAccount": "0x9d1d97adfcd324bbd603d3872bd78e04098510b1"
+      "sampleTx": "0x150eac42070957115fd538b1f348fadd78d710fb641c248120efcf35d1e7e4f3",
+      "sampleAccount": "0xcf0f6b88ed72653b00fdebbffc90b98072cb3285"
     },
     "info": {
       "url": "https://greenfield.bnbchain.org",
@@ -4427,6 +4516,36 @@
       "source": "https://github.com/neonevm/neon-evm",
       "rpc": "https://neon-proxy-mainnet.solana.p2p.org/",
       "documentation": "https://docs.neonfoundation.io/docs/quick_start"
+    }
+  },
+  {
+    "id": "internet_computer",
+    "name": "Internet Computer",
+    "coinId": 223,
+    "symbol": "ICP",
+    "decimals": 8,
+    "blockchain": "InternetComputer",
+    "derivation": [
+      {
+        "path": "m/44'/223'/1'/0/0",
+        "xpub": "xpub",
+        "xpriv": "xpriv"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "explorer": {
+      "url": "https://dashboard.internetcomputer.org",
+      "txPath": "/transaction/",
+      "accountPath": "/account/",
+      "sampleTx": "9e32c54975adf84a1d98f19df41bbc34a752a899c32cc9c0000200b2c4308f85",
+      "sampleAccount": "529ea51c22e8d66e8302eabd9297b100fdb369109822248bb86939a671fbc55b"
+    },
+    "info": {
+      "url": "https://internetcomputer.org",
+      "source": "https://github.com/dfinity/ic",
+      "rpc": "",
+      "documentation": "https://internetcomputer.org/docs"
     }
   },
   {

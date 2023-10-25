@@ -83,6 +83,8 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeBase:
         case TWCoinTypeLinea:
         case TWCoinTypeGreenfield:
+        case TWCoinTypeMantle:
+        case TWCoinTypeZenEON:
             EXPECT_EQ(address, "0x9d8A62f656a8d1615C1294fd71e9CFb3E4855A4F");
             break;
 
@@ -378,6 +380,12 @@ TEST(Coin, DeriveAddress) {
             break;
         case TWCoinTypeSei:
             EXPECT_EQ(address, "sei1hkfq3zahaqkkzx5mjnamwjsfpq2jk7z05hw42q");
+            break;
+        case TWCoinTypeInternetComputer:
+            EXPECT_EQ(address, "cb3aa6a0471a417fc33d8e71f1d241750dfa29b4dc8f084265ce1301fb03b65b");
+            break;
+        case TWCoinTypeTia:
+            EXPECT_EQ(address, "celestia1hkfq3zahaqkkzx5mjnamwjsfpq2jk7z0g3wnkv");
             break;
             // no default branch here, intentionally, to better notice any missing coins
         }
