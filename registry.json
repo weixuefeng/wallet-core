@@ -1212,7 +1212,7 @@
     "id": "celestia",
     "name": "Celestia",
     "displayName": "Celestia",
-    "coinId": 20000118,
+    "coinId": 21000118,
     "symbol": "TIA",
     "decimals": 6,
     "blockchain": "Cosmos",
