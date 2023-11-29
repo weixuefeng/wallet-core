@@ -119,6 +119,12 @@ class Script {
     /// Builds the Ordinals inscripton for BRC20 transfer.
     static Proto::TransactionOutput buildBRC20InscribeTransfer(const std::string& ticker, uint64_t amount, const Data& publicKey);
 
+    /// Builds the Ordinals inscripton for BRC20 deploy.
+    static Proto::TransactionOutput buildBRC20Deploy(const std::string& ticker, uint64_t max, uint64_t limit, uint64_t decimals, const Data& publicKey);
+
+    /// Builds the Ordinals inscripton for BRC20 deploy.
+    static Proto::TransactionOutput buildBRC20Mint(const std::string& ticker, uint64_t amount, const Data& publicKey);
+
     /// Builds the Ordinals inscripton for NFTs.
     static Proto::TransactionOutput buildOrdinalNftInscription(const std::string& mimeType, const Data& payload, const Data& publicKey);
 

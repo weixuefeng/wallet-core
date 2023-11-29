@@ -551,4 +551,20 @@ Proto::TransactionOutput Script::buildOrdinalNftInscription(const std::string& m
     return out;
 }
 
+Proto::TransactionOutput Script::buildBRC20Deploy(const std::string& ticker, uint64_t max, uint64_t limit, uint64_t decimals, const Data& publicKey) {
+    TW::Bitcoin::Proto::TransactionOutput out;
+    Rust::CByteArrayWrapper res = TW::Rust::tw_bitcoin_legacy_build_brc20_deploy_inscription(ticker.data(), max, limit, decimals, 0, publicKey.data(), publicKey.size());
+    auto result = res.data;
+    out.ParseFromArray(result.data(), static_cast<int>(result.size()));
+    return out;
+}
+
+Proto::TransactionOutput Script::buildBRC20Mint(const std::string& ticker, uint64_t amount, const Data& publicKey) {
+    TW::Bitcoin::Proto::TransactionOutput out;
+    Rust::CByteArrayWrapper res = TW::Rust::tw_bitcoin_legacy_build_brc20_mint_inscription(ticker.data(), amount, 0, publicKey.data(), publicKey.size());
+    auto result = res.data;
+    out.ParseFromArray(result.data(), static_cast<int>(result.size()));
+    return out;
+}
+
 } // namespace TW::Bitcoin

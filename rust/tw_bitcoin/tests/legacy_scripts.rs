@@ -6,7 +6,7 @@ use bitcoin::{PublicKey, ScriptBuf};
 use secp256k1::XOnlyPublicKey;
 use std::ffi::CString;
 use tw_bitcoin::modules::transactions::{
-    BRC20TransferInscription, Brc20Ticker, OrdinalNftInscription,
+    BRC20TransferInscription, Brc20Ticker, OrdinalNftInscription, BRC20DeployInscription, BRC20MintInscription
 };
 use tw_encoding::hex;
 use tw_proto::Bitcoin::Proto as LegacyProto;
@@ -128,6 +128,100 @@ fn ffi_tw_bitcoin_legacy_build_brc20_transfer_inscription() {
     assert_eq!(
         proto.spendingScript,
         transfer.inscription().taproot_program().as_bytes()
+    );
+}
+
+
+#[test]
+fn ffi_tw_bitcoin_legacy_build_brc20_deploy_inscription() {
+    let pubkey_slice = hex::decode(PUBKEY).unwrap();
+    let pubkey = PublicKey::from_slice(&pubkey_slice).unwrap();
+
+    let ticker_str = "oadf";
+    let c_ticker = CString::new(ticker_str).unwrap();
+    let max = 100000;
+    let limit = 100;
+    let decimals = 1;
+
+    // Call the FFI function.
+    let raw = unsafe {
+        legacy_ffi::tw_bitcoin_legacy_build_brc20_deploy_inscription(
+            c_ticker.as_ptr(),
+            max,
+            limit,
+            decimals,
+            SATOSHIS,
+            pubkey_slice.as_ptr(),
+            pubkey_slice.len(),
+        )
+        .into_vec()
+    };
+
+    // Prepare the BRC20 payload + merkle root.
+    let ticker = Brc20Ticker::new(ticker_str.to_string()).unwrap();
+    let deploy = BRC20DeployInscription::new(pubkey, ticker, max, limit, decimals).unwrap();
+
+    let merkle_root = deploy
+        .inscription()
+        .spend_info()
+        .merkle_root()
+        .expect("incorrectly constructed Taproot merkle root");
+
+    // The expected script.
+    let xonly = XOnlyPublicKey::from(pubkey.inner);
+    let expected = ScriptBuf::new_v1_p2tr(&secp256k1::Secp256k1::new(), xonly, Some(merkle_root));
+
+    let proto: LegacyProto::TransactionOutput = tw_proto::deserialize(&raw).unwrap();
+    assert_eq!(proto.value, SATOSHIS);
+    assert_eq!(proto.script, expected.as_bytes());
+    assert_eq!(
+        proto.spendingScript,
+        deploy.inscription().taproot_program().as_bytes()
+    );
+}
+
+
+#[test]
+fn ffi_tw_bitcoin_legacy_build_brc20_mint_inscription() {
+    let pubkey_slice = hex::decode(PUBKEY).unwrap();
+    let pubkey = PublicKey::from_slice(&pubkey_slice).unwrap();
+
+    let ticker_str = "oadf";
+    let c_ticker = CString::new(ticker_str).unwrap();
+    let amount = 100000;
+
+    // Call the FFI function.
+    let raw = unsafe {
+        legacy_ffi::tw_bitcoin_legacy_build_brc20_mint_inscription(
+            c_ticker.as_ptr(),
+            amount,
+            SATOSHIS,
+            pubkey_slice.as_ptr(),
+            pubkey_slice.len(),
+        )
+        .into_vec()
+    };
+
+    // Prepare the BRC20 payload + merkle root.
+    let ticker = Brc20Ticker::new(ticker_str.to_string()).unwrap();
+    let mint = BRC20MintInscription::new(pubkey, ticker, amount).unwrap();
+
+    let merkle_root = mint
+        .inscription()
+        .spend_info()
+        .merkle_root()
+        .expect("incorrectly constructed Taproot merkle root");
+
+    // The expected script.
+    let xonly = XOnlyPublicKey::from(pubkey.inner);
+    let expected = ScriptBuf::new_v1_p2tr(&secp256k1::Secp256k1::new(), xonly, Some(merkle_root));
+
+    let proto: LegacyProto::TransactionOutput = tw_proto::deserialize(&raw).unwrap();
+    assert_eq!(proto.value, SATOSHIS);
+    assert_eq!(proto.script, expected.as_bytes());
+    assert_eq!(
+        proto.spendingScript,
+        mint.inscription().taproot_program().as_bytes()
     );
 }
 

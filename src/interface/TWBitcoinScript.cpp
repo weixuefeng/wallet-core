@@ -182,3 +182,23 @@ TWData *_Nullable TWBitcoinScriptBuildOrdinalNftInscription(TWString* mimeType, 
     auto serialized = TW::data(script.SerializeAsString());
     return TWDataCreateWithBytes(serialized.data(), serialized.size());
 }
+
+TWData *_Nullable TWBitcoinScriptBuildBRC20InscribeDeploy(TWString* ticker, TWString* max, TWString* limit, TWString* decimals, TWData* pubkey) {
+    auto* brcTicker = reinterpret_cast<const std::string*>(ticker);
+    auto* brcMax = reinterpret_cast<const std::string*>(max);
+    auto* brcLimit = reinterpret_cast<const TW::string*>(limit);
+    auto* brcDecimals = reinterpret_cast<const TW::string*>(decimals);
+    auto* brcPubkey = reinterpret_cast<const TW::Data*>(pubkey);
+    auto script = TW::Bitcoin::Script::buildBRC20Deploy(*brcTicker, std::stoull(*brcMax), std::stoull(*brcLimit), std::stoull(*brcDecimals), *brcPubkey);
+    auto serialized = TW::data(script.SerializeAsString());
+    return TWDataCreateWithBytes(serialized.data(), serialized.size());
+}
+
+TWData *_Nullable TWBitcoinScriptBuildBRC20InscribeMint(TWString* ticker, TWString* amount, TWData* pubkey) {
+    auto* brcTicker = reinterpret_cast<const std::string*>(ticker);
+    auto* brcAmount = reinterpret_cast<const std::string*>(amount);
+    auto* brcPubkey = reinterpret_cast<const TW::Data*>(pubkey);
+    auto script = TW::Bitcoin::Script::buildBRC20Mint(*brcTicker, std::stoull(*brcAmount), *brcPubkey);
+    auto serialized = TW::data(script.SerializeAsString());
+    return TWDataCreateWithBytes(serialized.data(), serialized.size());
+}
