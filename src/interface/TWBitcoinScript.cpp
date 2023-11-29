@@ -186,8 +186,8 @@ TWData *_Nullable TWBitcoinScriptBuildOrdinalNftInscription(TWString* mimeType, 
 TWData *_Nullable TWBitcoinScriptBuildBRC20InscribeDeploy(TWString* ticker, TWString* max, TWString* limit, TWString* decimals, TWData* pubkey) {
     auto* brcTicker = reinterpret_cast<const std::string*>(ticker);
     auto* brcMax = reinterpret_cast<const std::string*>(max);
-    auto* brcLimit = reinterpret_cast<const TW::string*>(limit);
-    auto* brcDecimals = reinterpret_cast<const TW::string*>(decimals);
+    auto* brcLimit = reinterpret_cast<const std::string*>(limit);
+    auto* brcDecimals = reinterpret_cast<const std::string*>(decimals);
     auto* brcPubkey = reinterpret_cast<const TW::Data*>(pubkey);
     auto script = TW::Bitcoin::Script::buildBRC20Deploy(*brcTicker, std::stoull(*brcMax), std::stoull(*brcLimit), std::stoull(*brcDecimals), *brcPubkey);
     auto serialized = TW::data(script.SerializeAsString());
