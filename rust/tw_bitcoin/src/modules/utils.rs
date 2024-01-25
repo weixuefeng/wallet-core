@@ -47,6 +47,25 @@ pub fn hard_clone_proto_input(proto: Proto::Input<'_>) -> Result<Proto::Input<'s
                     transfer_amount: brc20.transfer_amount,
                 }),
             ),
+            ProtoInputBuilder::brc20_deploy(deploy_info) => new_builder(
+                ProtoInputBuilder::brc20_deploy(Proto::mod_Input::InputBrc20Deploy {
+                    one_prevout: deploy_info.one_prevout,
+                    pubkey: deploy_info.pubkey.to_vec().into(),
+                    ticker: deploy_info.ticker.to_string().into(),
+                    max: deploy_info.max,
+                    limit: deploy_info.limit,
+                    decimals: deploy_info.decimals,
+                    
+                }),
+            ),
+            ProtoInputBuilder::brc20_mint(mint_info) => new_builder(
+                ProtoInputBuilder::brc20_mint(Proto::mod_Input::InputBrc20Mint {
+                    one_prevout: mint_info.one_prevout,
+                    pubkey: mint_info.pubkey.to_vec().into(),
+                    ticker: mint_info.ticker.to_string().into(),
+                    amount: mint_info.amount,
+                }),
+            ),
             ProtoInputBuilder::ordinal_inscribe(ord) => new_builder(
                 ProtoInputBuilder::ordinal_inscribe(Proto::mod_Input::InputOrdinalInscription {
                     one_prevout: ord.one_prevout,
@@ -166,7 +185,22 @@ pub fn hard_clone_proto_output(proto: Proto::Output<'_>) -> Result<Proto::Output
                     payload: ord.payload.to_vec().into(),
                 }),
             ),
-            ProtoOutputBuilder::None => {
+            ProtoOutputBuilder::brc20_deploy(deploy) => new_builder(
+                ProtoOutputBuilder::brc20_deploy(Proto::mod_Output::OutputBrc20Deploy {
+                    pubkey: deploy.pubkey.to_vec().into(),
+                    ticker: deploy.ticker.to_string().into(),
+                    limit: deploy.limit,
+                    max: deploy.max,
+                    decimals: deploy.decimals
+                }),
+            ),
+            ProtoOutputBuilder::brc20_mint(mint) => new_builder(
+                ProtoOutputBuilder::brc20_mint(Proto::mod_Output::OutputBrc20Mint {
+                    pubkey: mint.pubkey.to_vec().into(),
+                    ticker: mint.ticker.to_string().into(),
+                    amount: mint.amount,
+                }),
+            ),            ProtoOutputBuilder::None => {
                 return Err(Error::from(Proto::Error::Error_missing_output_builder))
             },
         },

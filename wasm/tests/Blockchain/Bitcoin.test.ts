@@ -13,6 +13,7 @@ describe("Bitcoin", () => {
   it("test Bitcoin SigningInput / SigningOutput", () => {
     assert.isNotNull(TW.Bitcoin.Proto.SigningInput);
     assert.isNotNull(TW.Binance.Proto.SigningOutput);
+    assert.isNotNull(TW.Bitcoin.Proto.SigningOutput);
   });
 
   // Successfully broadcasted: https://www.blockchain.com/explorer/transactions/btc/3e3576eb02667fac284a5ecfcb25768969680cc4c597784602d0a33ba7c654b7

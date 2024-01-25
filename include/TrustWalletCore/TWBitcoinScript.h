@@ -203,6 +203,29 @@ struct TWBitcoinScript* _Nonnull TWBitcoinScriptBuildPayToWitnessScriptHash(TWDa
 TW_EXPORT_STATIC_METHOD
 TWData* _Nonnull TWBitcoinScriptBuildBRC20InscribeTransfer(TWString* _Nonnull ticker, TWString* _Nonnull amount, TWData* _Nonnull pubkey);
 
+/// Builds the Ordinals inscripton for BRC20 deploy.
+///
+/// \param ticker ticker of the brc20
+/// \param max uint64 deploy max
+/// \param limit uint64 deploy limit
+/// \param decimals uint64 deploy decimals
+/// \param pubkey Non-null pointer to a pubkey
+/// \note Must be deleted with \TWBitcoinScriptDelete
+/// \return A pointer to the built script
+TW_EXPORT_STATIC_METHOD
+TWData* _Nonnull TWBitcoinScriptBuildBRC20InscribeDeploy(TWString* _Nonnull ticker, TWString* _Nonnull max, TWString* _Nonnull limit, TWString* _Nonnull decimals, TWData* _Nonnull pubkey);
+
+
+/// Builds the Ordinals inscripton for BRC20 mint.
+///
+/// \param ticker ticker of the brc20
+/// \param amount uint64 mint amount
+/// \param pubkey Non-null pointer to a pubkey
+/// \note Must be deleted with \TWBitcoinScriptDelete
+/// \return A pointer to the built script
+TW_EXPORT_STATIC_METHOD
+TWData* _Nonnull TWBitcoinScriptBuildBRC20InscribeMint(TWString* _Nonnull ticker, TWString* _Nonnull amount, TWData* _Nonnull pubkey);
+
 /// Builds the Ordinals inscripton for NFT construction.
 ///
 /// \param mimeType the MIME type of the payload

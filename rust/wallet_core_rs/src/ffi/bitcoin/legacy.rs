@@ -195,6 +195,119 @@ pub unsafe extern "C" fn tw_bitcoin_legacy_build_brc20_transfer_inscription(
 
 #[no_mangle]
 #[deprecated]
+// Builds the Ordinals inscripton for BRC20 deploy.
+pub unsafe extern "C" fn tw_bitcoin_legacy_build_brc20_deploy_inscription(
+    // The 4-byte ticker.
+    ticker: *const c_char,
+    _max: u64,
+    _limit: u64,
+    _decimals: u64,
+    _satoshis: i64,
+    pubkey: *const u8,
+    pubkey_len: usize,
+) -> CByteArray {
+    // Convert Recipient
+    let slice = try_or_else!(
+        CByteArrayRef::new(pubkey, pubkey_len).as_slice(),
+        CByteArray::null
+    );
+
+    let recipient = try_or_else!(PublicKey::from_slice(slice), CByteArray::null);
+
+    // Convert ticket.
+    let ticker = match CStr::from_ptr(ticker).to_str() {
+        Ok(input) => input,
+        Err(_) => return CByteArray::null(),
+    };
+
+    let output = Proto::Output {
+        value: _satoshis as u64,
+        to_recipient: ProtoOutputRecipient::builder(Proto::mod_Output::OutputBuilder {
+            variant: ProtoOutputBuilder::brc20_deploy(
+                Proto::mod_Output::OutputBrc20Deploy {
+                    pubkey: recipient.to_bytes().into(),
+                    ticker: ticker.into(),
+                    max: _max,
+                    limit: _limit,
+                    decimals: _decimals,
+                },
+            ),
+        }),
+    };
+
+    let res = try_or_else!(
+        tw_bitcoin::modules::transactions::OutputBuilder::utxo_from_proto(&output),
+        CByteArray::null
+    );
+
+    // Prepare and serialize protobuf structure.
+    let proto = LegacyProto::TransactionOutput {
+        value: res.value as i64,
+        script: res.script_pubkey,
+        spendingScript: res.taproot_payload,
+    };
+
+    let serialized = tw_proto::serialize(&proto).expect("failed to serialized transaction output");
+    CByteArray::from(serialized)
+}
+
+
+#[no_mangle]
+#[deprecated]
+// Builds the Ordinals inscripton for BRC20 mint.
+pub unsafe extern "C" fn tw_bitcoin_legacy_build_brc20_mint_inscription(
+    // The 4-byte ticker.
+    ticker: *const c_char,
+    _amount: u64,
+    _satoshis: i64,
+    pubkey: *const u8,
+    pubkey_len: usize,
+) -> CByteArray {
+    // Convert Recipient
+    let slice = try_or_else!(
+        CByteArrayRef::new(pubkey, pubkey_len).as_slice(),
+        CByteArray::null
+    );
+
+    let recipient = try_or_else!(PublicKey::from_slice(slice), CByteArray::null);
+
+    // Convert ticket.
+    let ticker = match CStr::from_ptr(ticker).to_str() {
+        Ok(input) => input,
+        Err(_) => return CByteArray::null(),
+    };
+
+    let output = Proto::Output {
+        value: _satoshis as u64,
+        to_recipient: ProtoOutputRecipient::builder(Proto::mod_Output::OutputBuilder {
+            variant: ProtoOutputBuilder::brc20_mint(
+                Proto::mod_Output::OutputBrc20Mint {
+                    pubkey: recipient.to_bytes().into(),
+                    ticker: ticker.into(),
+                    amount: _amount
+                },
+            ),
+        }),
+    };
+
+    let res = try_or_else!(
+        tw_bitcoin::modules::transactions::OutputBuilder::utxo_from_proto(&output),
+        CByteArray::null
+    );
+
+    // Prepare and serialize protobuf structure.
+    let proto = LegacyProto::TransactionOutput {
+        value: res.value as i64,
+        script: res.script_pubkey,
+        spendingScript: res.taproot_payload,
+    };
+
+    let serialized = tw_proto::serialize(&proto).expect("failed to serialized transaction output");
+    CByteArray::from(serialized)
+}
+
+#[no_mangle]
+#[deprecated]
 // Builds the Ordinals inscripton for BRC20 transfer.
 pub unsafe extern "C" fn tw_bitcoin_legacy_build_nft_inscription(
     mime_type: *const c_char,
