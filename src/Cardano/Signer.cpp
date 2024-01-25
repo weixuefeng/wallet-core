@@ -167,12 +167,14 @@ Common::Proto::SigningError Signer::assembleSignatures(std::vector<std::pair<Dat
         if (privKeyFind != privateKeys.end()) {
             privateKeyData = privKeyFind->second;
         } else {
+            // update, no private for estimate transaction size
             // private key not found
-            if (sizeEstimationOnly) {
-                privateKeyData = placeholderPrivateKey;
-            } else {
-                return Common::Proto::Error_missing_private_key;
-            }
+            // if (sizeEstimationOnly) {
+            //     privateKeyData = placeholderPrivateKey;
+            // } else {
+            //     return Common::Proto::Error_missing_private_key;
+            // }
+            privateKeyData = placeholderPrivateKey;
         }
         const auto privateKey = PrivateKey(privateKeyData);
         const auto publicKey = privateKey.getPublicKey(TWPublicKeyTypeED25519Cardano);
