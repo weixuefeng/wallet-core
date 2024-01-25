@@ -154,7 +154,22 @@ TWPrivateKey *TWHDWalletGetPrivateKeyByChainCode(TWString* _Nonnull  chainCode, 
     return new TWPrivateKey{ PrivateKey(*privateKey) };
 }
 
+TWPrivateKey *TWHDWalletGetPrivateKeyByChainCodeCardano(TWString* _Nonnull  key, TWString* _Nonnull  ext, TWString* _Nonnull  chainCode,enum TWCoinType coin, TWString* _Nonnull  derivationPath) {
+    const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
+    auto privateKey = HDWallet<>::getPrivateKeyByChainCodeCardano(*reinterpret_cast<const std::string*>(key), *reinterpret_cast<const std::string*>(ext),*reinterpret_cast<const std::string*>(chainCode), coin, derivationPathObject);
+    if (!privateKey) {
+        return nullptr;
+    }
+    return new TWPrivateKey{ PrivateKey(*privateKey) };
+}
+
 TWString *_Nonnull TWHDWalletGetHDNode(TWString *_Nonnull mnemonic, enum TWCoinType coin, TWString *_Nonnull derivationPath) {
     const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
     return new std::string(HDWallet<>::getHDNode(*reinterpret_cast<const std::string*>(mnemonic), coin, derivationPathObject));
+}
+
+
+TWString *_Nonnull TWHDWalletGetHDNodeCardano(TWString *_Nonnull mnemonic, enum TWCoinType coin, TWString *_Nonnull derivationPath) {
+    const auto derivationPathObject = DerivationPath(*reinterpret_cast<const std::string*>(derivationPath));
+    return new std::string(HDWallet<>::getHDNodeCardano(*reinterpret_cast<const std::string*>(mnemonic), coin, derivationPathObject));
 }
