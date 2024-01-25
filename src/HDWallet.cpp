@@ -336,6 +336,64 @@ std::string HDWallet<seedSize>::getHDNode(const std::string& mnemonic, TWCoinTyp
     return res;
 }
 
+template <std::size_t seedSize>
+std::string HDWallet<seedSize>::getHDNodeCardano(const std::string& mnemonic, TWCoinType coin, const DerivationPath& derivationPath) {
+    TWCurve c = curve(coin);
+    const auto wallet = HDWallet(mnemonic, "");
+    auto node = getNode(wallet, c, derivationPath);
+
+    auto pkData = Data(node.private_key, node.private_key + PrivateKey::_size);
+    auto extData = Data(node.private_key_extension, node.private_key_extension + PrivateKey::_size);
+    auto chainCode = Data(node.chain_code, node.chain_code + PrivateKey::_size);
+    auto res = Base58::encode(pkData) + "," + Base58::encode(extData) + "," + Base58::encode(chainCode);
+    return res;
+}
+
+template <std::size_t seedSize>
+std::optional<PrivateKey> HDWallet<seedSize>::getPrivateKeyByChainCodeCardano(const std::string& key, const std::string& ext,const std::string& chainCode, TWCoinType coin, const DerivationPath& derivationPath) {
+    // default path
+    TWCurve c = curve(coin);
+    const char* curveNameStr = curveName(c);
+    HDNode node;
+    node.public_key[0] = 0x0;
+    node.curve = get_curve_by_name(curveNameStr);
+    node.child_num = 0;
+    node.depth = 0;
+    auto deChain = Base58::decode(chainCode);
+    auto deKey = Base58::decode(key);
+    auto deExt = Base58::decode(ext);
+    std::memcpy(node.chain_code, &deChain[0], deChain.size());
+    std::memcpy(node.private_key, &deKey[0], deKey.size());
+    std::memcpy(node.private_key_extension, &deExt[0], deExt.size());
+
+    for (auto& index : derivationPath.indices) {
+        hdnode_private_ckd_cardano(&node, index.derivationIndex());
+    }
+    HDNode node2;
+    node2.public_key[0] = 0x0;
+    node2.curve = get_curve_by_name(curveNameStr);
+    node2.child_num = 0;
+    node2.depth = 0;
+    std::memcpy(node2.chain_code, &deChain[0], deChain.size());
+    std::memcpy(node2.private_key, &deKey[0], deKey.size());
+    std::memcpy(node2.private_key_extension, &deExt[0], deExt.size());
+    DerivationPath stakingPath = derivationPath;
+    stakingPath.indices[1].value = 2;
+    for (auto& index : stakingPath.indices) {
+        hdnode_private_ckd_cardano(&node2, index.derivationIndex());
+    }
+    auto pkData = Data(node.private_key, node.private_key + PrivateKey::_size);
+    auto extData = Data(node.private_key_extension, node.private_key_extension + PrivateKey::_size);
+    auto chainCode1 = Data(node.chain_code, node.chain_code + PrivateKey::_size);
+    // repeat with staking path
+    auto pkData2 = Data(node2.private_key, node2.private_key + PrivateKey::_size);
+    auto extData2 = Data(node2.private_key_extension, node2.private_key_extension + PrivateKey::_size);
+    auto chainCodet = Data(node2.chain_code, node2.chain_code + PrivateKey::_size);
+    TW::memzero(&node);
+    return PrivateKey(pkData, extData, chainCode1, pkData2, extData2, chainCodet);
+}
+
+
 // for gate wallet derivation ed25519, like sol, sui ...
 template <std::size_t seedSize>
 std::optional<PrivateKey> HDWallet<seedSize>::getPrivateKeyByChainCode(const std::string& chainCode, const std::string& key, TWCoinType coin, const DerivationPath& derivationPath) {

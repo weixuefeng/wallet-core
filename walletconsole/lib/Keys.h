@@ -44,6 +44,7 @@ public:
     bool dumpXpub(const string& coinid, string& res);
     /// Derive a private key from the mnemonic with derivation path
     bool priDP(const string& coinid, const string& dp, string& res);
+    bool test(const string& coinid);
 };
 
 } // namespace TW::WalletConsole

@@ -169,4 +169,21 @@ bool Keys::priDP(const string& coinid, const string& dp, string& res) {
     return true;
 }
 
+bool Keys::test(const string& coinid) {
+    _out << "coinid:" << coinid << endl;
+    Coin coin;
+    if (!_coins.findCoin(coinid, coin)) { return false; }
+    TWCoinType ctype = (TWCoinType)coin.c;
+    TWPurpose purpose = TW::purpose(ctype);
+    TWHDVersion xpubVersion = TW::xpubVersion(ctype);
+    DerivationPath dp3("m/1852'/1815'");
+    string chainCode = HDWallet<>::getHDNodeCardano("license inmate news mean flush seven onion tool spell bus blood session bracket picnic hire", ctype, dp3);
+    _out << "chainCode is: " << chainCode << endl;
+    DerivationPath dp4("m/1'/0/0");
+    auto priKey = HDWallet<>::getPrivateKeyByChainCodeCardano("DQr1chnhyddKAJRk27kDNnqsu6gwXSWddPYdYArffiyk", "JDHJkXB5Q6vx24WhqWkSpTjcwyYFVq6ku64xSm6mQWax", "7rMEiLeMGWCzEUgLwiDHGM9WxjCGCxYT2jz3d7KBQzTB",ctype, dp4);
+    string res_out = hex(priKey->bytes);
+    _out << "privatekey: " << res_out << endl;
+    return true;
+}
+
 } // namespace TW::WalletConsole

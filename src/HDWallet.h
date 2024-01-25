@@ -136,9 +136,10 @@ public:
     static PrivateKey bip32DeriveRawSeed(TWCoinType coin, const Data& seed, const DerivationPath& path);
 
     static std::optional<PrivateKey> getPrivateKeyByChainCode(const std::string& chainCode, const std::string& key, TWCoinType coin, const DerivationPath& derivationPath);
+    static std::optional<PrivateKey> getPrivateKeyByChainCodeCardano(const std::string& key, const std::string& ext, const std::string& chainCode,TWCoinType coin, const DerivationPath& derivationPath);
 
     static std::string getHDNode(const std::string& mnemonic, TWCoinType coin, const DerivationPath& derivationPath);
-
+    static std::string getHDNodeCardano(const std::string& mnemonic, TWCoinType coin, const DerivationPath& derivationPath);
 
   private:
     void updateSeedAndEntropy(bool check = true);
