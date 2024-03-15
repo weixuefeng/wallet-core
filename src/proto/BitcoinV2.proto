@@ -52,7 +52,6 @@ enum Error {
     Error_bad_address_recipient = 35;
     Error_ordinal_mime_type_too_large = 38;
     Error_ordinal_payload_too_large = 40;
-    Error_unknow = 60;
 }
 
 message SigningInput {
@@ -142,10 +141,6 @@ message Input {
             InputBrc20Inscription brc20_inscribe = 9;
             // Create an Ordinal (NFT) inscriptiohn.
             InputOrdinalInscription ordinal_inscribe = 10;
-            // brc20 deploy
-            InputBrc20Deploy brc20_deploy = 11;
-            // brc20 mint
-            InputBrc20Mint brc20_mint = 12;
         }
     }
 
@@ -199,30 +194,6 @@ message Input {
         // The BRC20 token transfer amount.
         string transfer_amount = 4;
     }
-
-    message InputBrc20Deploy {
-        bool one_prevout = 1;
-        // The recipient of the inscription, usually the sender.
-        bytes pubkey = 2;
-        // The ticker of the brc20.
-        string ticker = 3;
-        // Total supply amount.
-        uint64 max = 4;
-        // Mint limit.
-        uint64 limit = 5;
-        // The BRC20 decimals
-        uint64 decimals = 6;
-    }
-
-    message InputBrc20Mint {
-        bool one_prevout = 1;
-        // The recipient of the inscription, usually the sender.
-        bytes pubkey = 2;
-        // The ticker of the brc20.
-        string ticker = 3;
-        // The mint amount.
-        uint64 amount = 4;
-    }
 }
 
 message Output {
@@ -255,8 +226,6 @@ message Output {
             bytes p2tr_dangerous_assume_tweaked = 7;
             OutputBrc20Inscription brc20_inscribe = 8;
             OutputOrdinalInscription ordinal_inscribe = 9;
-            OutputBrc20Deploy brc20_deploy = 10;
-            OutputBrc20Mint brc20_mint = 11;
         }
     }
 
@@ -290,28 +259,6 @@ message Output {
         string ticker = 2;
         // The BRC20 token transfer amount.
         string transfer_amount = 3;
-    }
-
-    message OutputBrc20Deploy {
-       // The recipient of the inscription, usually the sender.
-        bytes pubkey = 1;
-        // The ticker of the brc20.
-        string ticker = 2;
-        // Total supply amount.
-        uint64 max = 3;
-        // Mint limit.
-        uint64 limit = 4;
-        // The BRC20 decimals
-        uint64 decimals = 5;
-    }
-
-    message OutputBrc20Mint {
-        // The recipient of the inscription, usually the sender.
-        bytes pubkey = 1;
-        // The ticker of the brc20.
-        string ticker = 2;
-        // The mint amount.
-        uint64 amount = 3;
     }
 }
 
