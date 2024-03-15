@@ -1,8 +1,6 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 #include "Coin.h"
 
@@ -66,6 +64,8 @@
 #include "Sui/Entry.h"
 #include "Greenfield/Entry.h"
 #include "InternetComputer/Entry.h"
+#include "NativeEvmos/Entry.h"
+#include "NativeInjective/Entry.h"
 // end_of_coin_includes_marker_do_not_modify
 
 using namespace TW;
@@ -123,6 +123,8 @@ TheOpenNetwork::Entry tonDP;
 Sui::Entry SuiDP;
 Greenfield::Entry GreenfieldDP;
 InternetComputer::Entry InternetComputerDP;
+NativeEvmos::Entry NativeEvmosDP;
+NativeInjective::Entry NativeInjectiveDP;
 // end_of_coin_dipatcher_declarations_marker_do_not_modify
 
 CoinEntry* coinDispatcher(TWCoinType coinType) {
@@ -182,6 +184,8 @@ CoinEntry* coinDispatcher(TWCoinType coinType) {
         case TWBlockchainSui: entry = &SuiDP; break;
         case TWBlockchainGreenfield: entry = &GreenfieldDP; break;
         case TWBlockchainInternetComputer: entry = &InternetComputerDP; break;
+        case TWBlockchainNativeEvmos: entry = &NativeEvmosDP; break;
+        case TWBlockchainNativeInjective: entry = &NativeInjectiveDP; break;
         // end_of_coin_dipatcher_switch_marker_do_not_modify
 
         default: entry = nullptr; break;
@@ -315,12 +319,6 @@ void TW::anyCoinCompileWithSignatures(TWCoinType coinType, const Data& txInputDa
     auto* dispatcher = coinDispatcher(coinType);
     assert(dispatcher != nullptr);
     dispatcher->compile(coinType, txInputData, signatures, publicKeys, txOutputOut);
-}
-
-Data TW::anyCoinBuildTransactionInput(TWCoinType coinType, const std::string& from, const std::string& to, const uint256_t& amount, const std::string& asset, const std::string& memo, const std::string& chainId) {
-    auto* dispatcher = coinDispatcher(coinType);
-    assert(dispatcher != nullptr);
-    return dispatcher->buildTransactionInput(coinType, from, to, amount, asset, memo, chainId);
 }
 
 // Coin info accessors

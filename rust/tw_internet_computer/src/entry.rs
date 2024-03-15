@@ -1,17 +1,17 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 use std::str::FromStr;
 
+use tw_coin_entry::modules::transaction_decoder::NoTransactionDecoder;
 use tw_coin_entry::{
     coin_context::CoinContext,
     coin_entry::CoinEntry,
     error::{AddressError, AddressResult, SigningError},
     modules::{
         json_signer::NoJsonSigner, message_signer::NoMessageSigner, plan_builder::NoPlanBuilder,
+        wallet_connector::NoWalletConnector,
     },
     prefix::NoPrefix,
     signing_output_error,
@@ -28,20 +28,17 @@ pub struct InternetComputerEntry;
 
 impl CoinEntry for InternetComputerEntry {
     type AddressPrefix = NoPrefix;
-
     type Address = AccountIdentifier;
-
     type SigningInput<'a> = Proto::SigningInput<'a>;
-
     type SigningOutput = Proto::SigningOutput<'static>;
-
     type PreSigningOutput = CompilerProto::PreSigningOutput<'static>;
 
+    // Optional modules:
     type JsonSigner = NoJsonSigner;
-
     type PlanBuilder = NoPlanBuilder;
-
     type MessageSigner = NoMessageSigner;
+    type WalletConnector = NoWalletConnector;
+    type TransactionDecoder = NoTransactionDecoder;
 
     #[inline]
     fn parse_address(
@@ -49,6 +46,15 @@ impl CoinEntry for InternetComputerEntry {
         _coin: &dyn CoinContext,
         address: &str,
         _prefix: Option<Self::AddressPrefix>,
+    ) -> AddressResult<Self::Address> {
+        Self::Address::from_str(address)
+    }
+
+    #[inline]
+    fn parse_address_unchecked(
+        &self,
+        _coin: &dyn CoinContext,
+        address: &str,
     ) -> AddressResult<Self::Address> {
         Self::Address::from_str(address)
     }

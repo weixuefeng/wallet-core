@@ -29,13 +29,23 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
+
+            listOf(
+                iosX64(),
+                iosArm64(),
+                iosSimulatorArm64()
+            ).forEach {
+                it.binaries.all {
+                    linkerOpts += "-ld64"
+                }
+            }
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("com.trustwallet:wallet-core-kotlin:4.0.0")
+                implementation("com.trustwallet:wallet-core-kotlin:4.0.28")
             }
         }
         val commonTest by getting {

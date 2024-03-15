@@ -1,8 +1,6 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 use crate::ecdsa::{nist256p1, secp256k1};
 use crate::traits::VerifyingKeyTrait;
@@ -133,6 +131,28 @@ impl PublicKey {
                 Some(secp256k1)
             },
             _ => None,
+        }
+    }
+
+    pub fn to_ed25519(&self) -> Option<&ed25519::sha512::PublicKey> {
+        match self {
+            PublicKey::Ed25519(ed25519) => Some(ed25519),
+            _ => None,
+        }
+    }
+
+    /// Returns a public key type.
+    pub fn public_key_type(&self) -> PublicKeyType {
+        match self {
+            PublicKey::Secp256k1(_) => PublicKeyType::Secp256k1,
+            PublicKey::Secp256k1Extended(_) => PublicKeyType::Secp256k1Extended,
+            PublicKey::Nist256p1(_) => PublicKeyType::Nist256p1,
+            PublicKey::Nist256p1Extended(_) => PublicKeyType::Nist256p1Extended,
+            PublicKey::Ed25519(_) => PublicKeyType::Ed25519,
+            PublicKey::Ed25519Blake2b(_) => PublicKeyType::Ed25519Blake2b,
+            PublicKey::Curve25519Waves(_) => PublicKeyType::Curve25519Waves,
+            PublicKey::Ed25519ExtendedCardano(_) => PublicKeyType::Ed25519ExtendedCardano,
+            PublicKey::Starkex(_) => PublicKeyType::Starkex,
         }
     }
 }

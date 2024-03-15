@@ -1,8 +1,6 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 use crate::blockchain_type::BlockchainType;
 use crate::coin_type::CoinType;
@@ -10,6 +8,7 @@ use crate::error::{RegistryError, RegistryResult};
 use lazy_static::lazy_static;
 use serde::Deserialize;
 use std::collections::HashMap;
+use tw_hash::hasher::Hasher;
 use tw_keypair::tw::PublicKeyType;
 
 type RegistryMap = HashMap<CoinType, CoinItem>;
@@ -26,9 +25,13 @@ lazy_static! {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CoinItem {
+    pub id: String,
+    pub name: String,
     pub coin_id: CoinType,
     pub blockchain: BlockchainType,
     pub public_key_type: PublicKeyType,
+    pub address_hasher: Option<Hasher>,
+    pub hrp: Option<String>,
 }
 
 #[inline]
@@ -44,6 +47,13 @@ pub fn registry_iter() -> impl Iterator<Item = &'static CoinItem> {
 #[inline]
 pub fn supported_coin_items() -> impl Iterator<Item = &'static CoinItem> {
     registry_iter().filter(|item| !matches!(item.blockchain, BlockchainType::Unsupported))
+}
+
+#[inline]
+pub fn coin_items_by_blockchain(
+    blockchain: BlockchainType,
+) -> impl Iterator<Item = &'static CoinItem> {
+    registry_iter().filter(move |item| item.blockchain == blockchain)
 }
 
 fn parse_registry_json() -> RegistryMap {

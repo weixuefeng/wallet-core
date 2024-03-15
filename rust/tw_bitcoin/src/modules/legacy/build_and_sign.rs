@@ -5,7 +5,7 @@ use bitcoin::taproot::{LeafVersion, NodeInfo, TaprootSpendInfo};
 use bitcoin::{Network, PrivateKey, PublicKey, ScriptBuf};
 use secp256k1::XOnlyPublicKey;
 use tw_coin_entry::coin_entry::CoinEntry;
-use tw_coin_entry::test_utils::empty_context::EmptyCoinContext;
+use tw_coin_entry::test_utils::test_context::TestCoinContext;
 use tw_encoding::hex;
 use tw_misc::traits::ToBytesVec;
 use tw_proto::Bitcoin::Proto as LegacyProto;
@@ -19,6 +19,8 @@ use tw_proto::Utxo::Proto as UtxoProto;
 pub fn taproot_build_and_sign_transaction(
     legacy: LegacyProto::SigningInput,
 ) -> Result<LegacyProto::SigningOutput> {
+    let coin = TestCoinContext::default();
+
     // Convert the appropriate lock time.
     let native_lock_time = LockTime::from_consensus(legacy.lock_time);
     let lock_time = match native_lock_time {
@@ -42,7 +44,7 @@ pub fn taproot_build_and_sign_transaction(
         } else {
             legacy
                 .private_key
-                .get(0)
+                .first()
                 .ok_or_else(|| Error::from(Proto::Error::Error_legacy_no_private_key))?
         };
 
@@ -77,7 +79,7 @@ pub fn taproot_build_and_sign_transaction(
         version: 2,
         private_key: legacy
             .private_key
-            .get(0)
+            .first()
             .map(|pk| pk.to_vec().into())
             .unwrap_or_default(),
         lock_time: Some(lock_time),
@@ -91,7 +93,7 @@ pub fn taproot_build_and_sign_transaction(
     };
 
     // Build and sign the Bitcoin transaction.
-    let signed = crate::entry::BitcoinEntry.sign(&EmptyCoinContext, signing_input);
+    let signed = crate::entry::BitcoinEntry.sign(&coin, signing_input);
 
     // Check for error.
     if signed.error != Proto::Error::OK {
@@ -100,6 +102,7 @@ pub fn taproot_build_and_sign_transaction(
 
     let transaction = signed
         .transaction
+        .as_ref()
         .expect("transaction not returned from signer");
 
     // Convert the returned transaction data into the (legacy) `Transaction`
@@ -139,10 +142,12 @@ pub fn taproot_build_and_sign_transaction(
     // Put the `Transaction` into the `SigningOutput`, return.
     let legacy_output = LegacyProto::SigningOutput {
         transaction: Some(legacy_transaction),
-        encoded: signed.encoded,
+        encoded: signed.encoded.clone(),
         transaction_id: txid_hex.into(),
         error: CommonProto::SigningError::OK,
         error_message: Default::default(),
+        // Set the Bitcoin 2.0 result as well.
+        signing_result_v2: Some(signed),
     };
 
     Ok(legacy_output)

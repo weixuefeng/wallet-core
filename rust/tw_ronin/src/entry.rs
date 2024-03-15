@@ -1,8 +1,6 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 use crate::address::Address;
 use crate::ronin_context::RoninContext;
@@ -12,6 +10,8 @@ use tw_coin_entry::coin_entry::{CoinEntry, PublicKeyBytes, SignatureBytes};
 use tw_coin_entry::derivation::Derivation;
 use tw_coin_entry::error::{AddressError, AddressResult};
 use tw_coin_entry::modules::plan_builder::NoPlanBuilder;
+use tw_coin_entry::modules::transaction_decoder::NoTransactionDecoder;
+use tw_coin_entry::modules::wallet_connector::NoWalletConnector;
 use tw_coin_entry::prefix::NoPrefix;
 use tw_evm::evm_entry::EvmEntry;
 use tw_evm::modules::compiler::Compiler;
@@ -35,6 +35,8 @@ impl CoinEntry for RoninEntry {
     type JsonSigner = EthJsonSigner<RoninContext>;
     type PlanBuilder = NoPlanBuilder;
     type MessageSigner = EthMessageSigner;
+    type WalletConnector = NoWalletConnector;
+    type TransactionDecoder = NoTransactionDecoder;
 
     #[inline]
     fn parse_address(
@@ -42,6 +44,15 @@ impl CoinEntry for RoninEntry {
         _coin: &dyn CoinContext,
         address: &str,
         _prefix: Option<Self::AddressPrefix>,
+    ) -> AddressResult<Self::Address> {
+        Address::from_str(address)
+    }
+
+    #[inline]
+    fn parse_address_unchecked(
+        &self,
+        _coin: &dyn CoinContext,
+        address: &str,
     ) -> AddressResult<Self::Address> {
         Address::from_str(address)
     }

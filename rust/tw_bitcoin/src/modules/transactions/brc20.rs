@@ -125,10 +125,21 @@ impl BRC20DeployInscription {
             recipient,
         )?;
 
-        Ok(BRC20DeployInscription(inscription))
-    }
-    pub fn inscription(&self) -> &OrdinalsInscription {
-        &self.0
+impl BRC20TransferPayload {
+    const PROTOCOL_ID: &'static str = "brc-20";
+    const MIME: &'static [u8] = b"text/plain;charset=utf-8";
+}
+
+impl BRC20TransferPayload {
+    const OPERATION: &'static str = "transfer";
+
+    fn new(ticker: Brc20Ticker, amount: String) -> Self {
+        BRC20TransferPayload {
+            protocol: Self::PROTOCOL_ID.to_string(),
+            operation: Self::OPERATION.to_string(),
+            ticker,
+            amount,
+        }
     }
 }
 
@@ -139,7 +150,7 @@ impl BRC20TransferInscription {
     pub fn new(
         recipient: PublicKey,
         ticker: Brc20Ticker,
-        value: u64,
+        value: String,
     ) -> Result<BRC20TransferInscription> {
         let data: BRC20TransferPayload = BRC20TransferPayload::new(ticker, value);
 

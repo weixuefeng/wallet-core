@@ -7,7 +7,7 @@ use tw_bitcoin::aliases::*;
 use tw_bitcoin::entry::BitcoinEntry;
 use tw_bitcoin::modules::transactions::{BRC20TransferInscription, Brc20Ticker};
 use tw_coin_entry::coin_entry::CoinEntry;
-use tw_coin_entry::test_utils::empty_context::EmptyCoinContext;
+use tw_coin_entry::test_utils::test_context::TestCoinContext;
 use tw_misc::traits::ToBytesVec;
 use tw_proto::BitcoinV2::Proto;
 use tw_proto::Utxo::Proto as UtxoProto;
@@ -17,7 +17,7 @@ use tw_proto::Utxo::Proto as UtxoProto;
 /// reconstruct the BRC20 transfer tests, but without using the convenience
 /// builders.
 fn coin_entry_custom_script_path() {
-    let coin = EmptyCoinContext;
+    let coin = TestCoinContext::default();
 
     let alice_private_key = hex("e253373989199da27c48680e3a3fc0f648d50f9a727ef17a7fe6a4dc3b159129");
     let alice_pubkey = hex("030f209b6ada5edb42c77fd2bc64ad650ae38314c8f451f3e36d80bc8e26f132cb");
@@ -41,8 +41,9 @@ fn coin_entry_custom_script_path() {
     // Build the BRC20 transfer outside the library, only provide essential
     // information to the builder.
     let ticker = Brc20Ticker::new("oadf".to_string()).unwrap();
+    let amount = "20".to_string();
     let inscribe_to = PublicKey::from_slice(&alice_pubkey).unwrap();
-    let transfer = BRC20TransferInscription::new(inscribe_to, ticker, 20).unwrap();
+    let transfer = BRC20TransferInscription::new(inscribe_to, ticker, amount).unwrap();
     let merkle_root = transfer.inscription().spend_info().merkle_root().unwrap();
 
     // Provide the public key ("internal key") and the merkle root directly to the builder.
@@ -105,7 +106,7 @@ fn coin_entry_custom_script_path() {
         .control_block(&(payload.to_owned(), LeafVersion::TapScript))
         .unwrap();
 
-    // Provide the the payload and control block directly to the builder.
+    // Provide the payload and control block directly to the builder.
     let tx1 = Proto::Input {
         txid: txid.as_slice().into(),
         vout: 0,

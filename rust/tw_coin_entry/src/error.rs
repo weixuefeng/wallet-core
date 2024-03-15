@@ -1,11 +1,10 @@
-// Copyright © 2017-2023 Trust Wallet.
+// SPDX-License-Identifier: Apache-2.0
 //
-// This file is part of Trust. The full Trust copyright notice, including
-// terms governing use, modification, and redistribution, is contained in the
-// file LICENSE at the root of the source code distribution tree.
+// Copyright © 2017 Trust Wallet.
 
 use std::fmt;
 use std::fmt::Formatter;
+use tw_encoding::EncodingError;
 use tw_keypair::KeyPairError;
 use tw_number::NumberError;
 use tw_proto::Common::Proto;
@@ -26,14 +25,22 @@ macro_rules! signing_output_error {
 
 pub type AddressResult<T> = Result<T, AddressError>;
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum AddressError {
     UnknownCoinType,
+    Unsupported,
     MissingPrefix,
     FromHexError,
+    FromBase58Error,
+    FromBech32Error,
     PublicKeyTypeMismatch,
     UnexpectedAddressPrefix,
+    UnexpectedHasher,
+    InvalidHrp,
+    InvalidRegistry,
     InvalidInput,
+    InvalidChecksum,
+    Internal,
 }
 
 pub type SigningResult<T> = Result<T, SigningError>;
@@ -54,6 +61,18 @@ impl From<AddressError> for SigningError {
     #[inline]
     fn from(_err: AddressError) -> Self {
         SigningError(SigningErrorType::Error_invalid_address)
+    }
+}
+
+impl From<serde_json::Error> for SigningError {
+    fn from(_value: serde_json::Error) -> Self {
+        SigningError(SigningErrorType::Error_input_parse)
+    }
+}
+
+impl From<EncodingError> for SigningError {
+    fn from(_e: EncodingError) -> Self {
+        SigningError(SigningErrorType::Error_input_parse)
     }
 }
 
@@ -108,6 +127,7 @@ impl fmt::Display for SigningError {
             SigningErrorType::Error_invalid_params => "Incorrect input parameter",
             SigningErrorType::Error_invalid_requested_token_amount => "Invalid input token amount",
             SigningErrorType::Error_not_supported => "Operation not supported for the chain",
+            SigningErrorType::Error_dust_amount_requested => "Requested amount is too low (less dust)",
         };
         write!(f, "{str}")
     }
