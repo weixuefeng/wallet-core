@@ -1,4 +1,4 @@
-use super::brc20::{BRC20TransferInscription, Brc20Ticker, BRC20DeployInscription, BRC20MintInscription};
+use super::brc20::{BRC20TransferInscription, Brc20Ticker};
 use super::OrdinalNftInscription;
 use crate::aliases::*;
 use crate::{Error, Result};
@@ -140,66 +140,6 @@ impl InputClaimBuilder {
                         let mut w = Witness::new();
                         w.push(sig.to_vec());
                         w.push(transfer.inscription().taproot_program());
-                        w.push(control_block.serialize());
-                        w
-                    })
-                },
-                ProtoInputBuilder::brc20_deploy(deploy_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(deploy_info.pubkey.as_ref())?;
-                    let ticker = Brc20Ticker::new(deploy_info.ticker.to_string())?;
-
-                    // Construct the BRC20 transfer inscription.
-                    let deploly =
-                        BRC20DeployInscription::new(pubkey, ticker, deploy_info.max, deploy_info.limit, deploy_info.decimals)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // Create a control block for that inscription.
-                    let control_block = deploly
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            deploly.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    let sig = bitcoin::taproot::Signature::from_slice(signature.as_ref())?;
-
-                    // The spending script itself.
-                    (ScriptBuf::new(), {
-                        let mut w = Witness::new();
-                        w.push(sig.to_vec());
-                        w.push(deploly.inscription().taproot_program());
-                        w.push(control_block.serialize());
-                        w
-                    })
-                },
-                ProtoInputBuilder::brc20_mint(mint_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(mint_info.pubkey.as_ref())?;
-                    let ticker = Brc20Ticker::new(mint_info.ticker.to_string())?;
-
-                    // Construct the BRC20 transfer inscription.
-                    let mint =
-                        BRC20MintInscription::new(pubkey, ticker, mint_info.amount)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // Create a control block for that inscription.
-                    let control_block = mint
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            mint.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    let sig = bitcoin::taproot::Signature::from_slice(signature.as_ref())?;
-
-                    // The spending script itself.
-                    (ScriptBuf::new(), {
-                        let mut w = Witness::new();
-                        w.push(sig.to_vec());
-                        w.push(mint.inscription().taproot_program());
                         w.push(control_block.serialize());
                         w
                     })

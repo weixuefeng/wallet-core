@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use super::brc20::{BRC20TransferInscription, Brc20Ticker, BRC20DeployInscription, BRC20MintInscription};
+use super::brc20::{BRC20TransferInscription, Brc20Ticker};
 use super::OrdinalNftInscription;
 use crate::aliases::*;
 use crate::{Error, Result};
@@ -168,70 +168,6 @@ impl OutputBuilder {
                         ScriptBuf::new_v1_p2tr(&secp, xonly, Some(merkle_root)),
                         Some(control_block.serialize()),
                         Some(transfer.inscription().taproot_program().to_vec()),
-                    )
-                },
-                ProtoOutputBuilder::brc20_deploy(deploy_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(deploy_info.pubkey.as_ref())?;
-                    let xonly = XOnlyPublicKey::from(pubkey.inner);
-
-                    let ticker = Brc20Ticker::new(deploy_info.ticker.to_string())?;
-                    let deploy =
-                        BRC20DeployInscription::new(pubkey, ticker, deploy_info.max, deploy_info.limit, deploy_info.decimals)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // Construct the control block.
-                    let control_block = deploy
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            deploy.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    // Construct the merkle root.
-                    let merkle_root = deploy
-                        .inscription()
-                        .spend_info()
-                        .merkle_root()
-                        .expect("badly constructed Taproot merkle root");
-
-                    (
-                        ScriptBuf::new_v1_p2tr(&secp, xonly, Some(merkle_root)),
-                        Some(control_block.serialize()),
-                        Some(deploy.inscription().taproot_program().to_vec()),
-                    )
-                },
-                ProtoOutputBuilder::brc20_mint(mint_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(mint_info.pubkey.as_ref())?;
-                    let xonly = XOnlyPublicKey::from(pubkey.inner);
-
-                    let ticker = Brc20Ticker::new(mint_info.ticker.to_string())?;
-                    let mint =
-                        BRC20MintInscription::new(pubkey, ticker, mint_info.amount)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // Construct the control block.
-                    let control_block = mint
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            mint.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    // Construct the merkle root.
-                    let merkle_root = mint
-                        .inscription()
-                        .spend_info()
-                        .merkle_root()
-                        .expect("badly constructed Taproot merkle root");
-
-                    (
-                        ScriptBuf::new_v1_p2tr(&secp, xonly, Some(merkle_root)),
-                        Some(control_block.serialize()),
-                        Some(mint.inscription().taproot_program().to_vec()),
                     )
                 },
                 ProtoOutputBuilder::None => {

@@ -1,4 +1,4 @@
-use super::brc20::{BRC20TransferInscription, Brc20Ticker, BRC20DeployInscription, BRC20MintInscription};
+use super::brc20::{BRC20TransferInscription, Brc20Ticker};
 use crate::aliases::*;
 use crate::modules::transactions::OrdinalNftInscription;
 use crate::{Error, Result};
@@ -256,103 +256,6 @@ impl InputBuilder {
                             1 + 72 +
                             // the payload/witness
                             transfer.inscription().taproot_program().len() as u64 +
-                            // length + control block
-                            1 + control_block.size() as u64
-                        ),
-                    )
-                },
-                ProtoInputBuilder::brc20_deploy(deploy_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(deploy_info.pubkey.as_ref())?;
-                    let ticker = Brc20Ticker::new(deploy_info.ticker.to_string())?;
-                    let deploy =
-                        BRC20DeployInscription::new(pubkey, ticker, deploy_info.max, deploy_info.limit, deploy_info.decimals)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // We construct a control block to estimate the fee,
-                    // otherwise we do not need it here.
-                    let control_block = deploy
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            deploy.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    let leaf_hash = Some(TapLeafHash::from_script(
-                        deploy.inscription().taproot_program(),
-                        bitcoin::taproot::LeafVersion::TapScript,
-                    ));
-
-                    let signing_method = if deploy_info.one_prevout {
-                        UtxoProto::SigningMethod::TaprootOnePrevout
-                    } else {
-                        UtxoProto::SigningMethod::TaprootAll
-                    };
-
-                    let script_pubkey = ScriptBuf::from(deploy.inscription().taproot_program());
-
-                    (
-                        signing_method,
-                        script_pubkey,
-                        leaf_hash,
-                        // witness bytes, scale factor NOT applied.
-                        (
-                            // indicator of witness item (1)
-                            1 +
-                            // length + Schnorr signature (can be 71 or 72)
-                            1 + 72 +
-                            // the payload/witness
-                            deploy.inscription().taproot_program().len() as u64 +
-                            // length + control block
-                            1 + control_block.size() as u64
-                        ),
-                    )
-                },
-                ProtoInputBuilder::brc20_mint(mint_info) => {
-                    let pubkey = bitcoin::PublicKey::from_slice(mint_info.pubkey.as_ref())?;
-                    let ticker = Brc20Ticker::new(mint_info.ticker.to_string())?;
-
-                    let mint =
-                        BRC20MintInscription::new(pubkey, ticker, mint_info.amount)
-                            .expect("invalid BRC20 transfer construction");
-
-                    // We construct a control block to estimate the fee,
-                    // otherwise we do not need it here.
-                    let control_block = mint
-                        .inscription()
-                        .spend_info()
-                        .control_block(&(
-                            mint.inscription().taproot_program().to_owned(),
-                            LeafVersion::TapScript,
-                        ))
-                        .expect("badly constructed control block");
-
-                    let leaf_hash = Some(TapLeafHash::from_script(
-                        mint.inscription().taproot_program(),
-                        bitcoin::taproot::LeafVersion::TapScript,
-                    ));
-
-                    let signing_method = if mint_info.one_prevout {
-                        UtxoProto::SigningMethod::TaprootOnePrevout
-                    } else {
-                        UtxoProto::SigningMethod::TaprootAll
-                    };
-
-                    let script_pubkey = ScriptBuf::from(mint.inscription().taproot_program());
-
-                    (
-                        signing_method,
-                        script_pubkey,
-                        leaf_hash,
-                        // witness bytes, scale factor NOT applied.
-                        (
-                            // indicator of witness item (1)
-                            1 +
-                            // length + Schnorr signature (can be 71 or 72)
-                            1 + 72 +
-                            // the payload/witness
-                            mint.inscription().taproot_program().len() as u64 +
                             // length + control block
                             1 + control_block.size() as u64
                         ),
