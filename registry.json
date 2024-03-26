@@ -4729,5 +4729,35 @@
       "rpc": "https://evm.gatenode.cc",
       "documentation": "https://www.gatechain.io/docs/en/home/"
     }
+  },
+  {
+    "id": "Avail",
+    "name": "Avail",
+    "coinId": 709,
+    "symbol": "AVL",
+    "decimals": 18,
+    "blockchain": "Polkadot",
+    "derivation": [
+      {
+        "path": "m/44'/709'/0'/0'/0'"
+      }
+    ],
+    "curve": "ed25519",
+    "publicKeyType": "ed25519",
+    "addressHasher": "keccak256",
+    "ss58Prefix": 42,
+    "explorer": {
+      "url": "https://goldberg.avail.tools/#/explorer",
+      "txPath": "",
+      "accountPath": "",
+      "sampleTx": "0x7545466073d4656ea07fe9c17d028df9418d956b44f7cfb8a3e7984d0c4bcf59",
+      "sampleAccount": "5E9jwq3JKJBW2LRLPEVhnHCXemvdyQvsRHRD3z5QSDqBaHXW"
+    },
+    "info": {
+      "url": "",
+      "source": "",
+      "rpc": "",
+      "documentation": "https://polkadot.js.org/api/substrate/rpc.html"
+    }
   }
 ]

@@ -394,6 +394,9 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeDydx:
             EXPECT_EQ(address, "dydx1hkfq3zahaqkkzx5mjnamwjsfpq2jk7z0sz38vk");
             break;
+        case TWCoinTypeAvail:
+            EXPECT_EQ(address, "5HTX7XGnLK4KcHY71i7wxXZCxRmbZHQYu3dPty6FJferRoWr");
+            break;
             // end_of_coin_address_derivation_tests_marker_do_not_modify
             // no default branch here, intentionally, to better notice any missing coins
         }
