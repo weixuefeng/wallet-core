@@ -4880,5 +4880,35 @@
       "rpc": "",
       "documentation": "https://polkadot.js.org/api/substrate/rpc.html"
     }
+  },
+  {
+    "id": "nibi",
+    "name": "Nibiru",
+    "displayName": "Nibiru",
+    "coinId": 23000118,
+    "symbol": "NIBI",
+    "decimals": 6,
+    "blockchain": "Cosmos",
+    "chainId": "cataclysm-1",
+    "derivation": [
+      {
+        "path": "m/44'/118'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1",
+    "hrp": "nibi",
+    "addressHasher": "sha256ripemd",
+    "explorer": {
+      "url": "https://explorer.nibiru.fi/cataclysm-1",
+      "txPath": "/tx/",
+      "accountPath": "/account/",
+      "sampleTx": "FF370C65D8D67B8236F9D3A8D2B1256337C60C1965092CADD1FA970288FCE99B",
+      "sampleAccount": "nibi1mry47pkga5tdswtluy0m8teslpalkdq0fy5h4x"
+    },
+    "info": {
+      "url": "https://nibiru.fi/",
+      "documentation": "https://nibiru.fi/docs"
+    }
   }
 ]

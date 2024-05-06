@@ -111,9 +111,8 @@ This list is generated from [./registry.json](../registry.json)
 | 5741564 | Waves            | WAVES  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/waves/info/logo.png" width="32" />        | <https://wavesplatform.com>   |
 | 10000025 | Cronos Chain     | CRO    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png" width="32" />       | <https://cronos.org>          |
 | 10000060 | Native Injective | INJ    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nativeinjective/info/logo.png" width="32" /> | <https://injective.com>       |
-| 10000070 | Optimism Ethereum | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png" width="32" />     | <https://optimism.io/>        |
-| 10000086 | Gate Chain       | GT     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/gate/info/logo.png" width="32" />         | <https://gatechain.io/>       |
 | 10000070 | OP Mainnet       | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png" width="32" />     | <https://optimism.io/>        |
+| 10000086 | Gate Chain       | GT     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/gate/info/logo.png" width="32" />         | <https://gatechain.io/>       |
 | 10000100 | Gnosis Chain     | xDAI   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/xdai/info/logo.png" width="32" />         | <https://www.xdaichain.com>   |
 | 10000118 | Osmosis          | OSMO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/osmosis/info/logo.png" width="32" />      | <https://osmosis.zone/>       |
 | 10000145 | Smart Bitcoin Cash | BCH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartbch/info/logo.png" width="32" />     | <https://smartbch.org/>       |
@@ -154,6 +153,7 @@ This list is generated from [./registry.json](../registry.json)
 | 20009001 | Native Evmos     | EVMOS  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nativeevmos/info/logo.png" width="32" />  | <https://evmos.org/>          |
 | 21000118 | Celestia         | TIA    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tia/info/logo.png" width="32" />          | <https://celestia.org/>       |
 | 22000118 | dYdX             | DYDX   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/dydx/info/logo.png" width="32" />         | <https://dydx.exchange>       |
+| 23000118 | Nibiru           | NIBI   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nibi/info/logo.png" width="32" />         | <https://nibiru.fi/>          |
 | 30000118 | Juno             | JUNO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/juno/info/logo.png" width="32" />         | <https://www.junonetwork.io/> |
 | 30000714 | TBNB             | BNB    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tbinance/info/logo.png" width="32" />     | <https://www.bnbchain.org>    |
 | 40000118 | Stride           | STRD   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/stride/info/logo.png" width="32" />       | <https://stride.zone/>        |
