@@ -10,7 +10,7 @@ static const std::string gNibiAddr = "nibi1mry47pkga5tdswtluy0m8teslpalkdq0fy5h4
 static const std::string gNibiHrp = "nibi";
 
 TEST(TWNibiAnyAddress, AllNibiAddressTests) {
-    CosmosAddressParameters parameters{.hrp = gNibiHrp, .coinType = TWCoinTypeNibi, .address = gNibiAddr};
+    CosmosAddressParameters parameters{.hrp = gNibiHrp, .coinType = TWCoinTypeNibiru, .address = gNibiAddr};
     TestCosmosAddressParameters(parameters);
 }
 

@@ -189,7 +189,7 @@ enum TWCoinType {
     TWCoinTypeGateChain = 10000086,
     TWCoinTypeVara = 913,
     TWCoinTypeAvail = 709,
-    TWCoinTypeNibi = 23000118
+    TWCoinTypeNibiru = 23000118
     // end_of_tw_coin_type_marker_do_not_modify
 };
 

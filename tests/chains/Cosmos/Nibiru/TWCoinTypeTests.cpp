@@ -13,7 +13,7 @@
 namespace TW::Cosmos::tests {
 
 TEST(TWNibiCoinType, TWCoinType) {
-    const auto coin = TWCoinTypeNibi;
+    const auto coin = TWCoinTypeNibiru;
     const auto symbol = WRAPS(TWCoinTypeConfigurationGetSymbol(coin));
     const auto id = WRAPS(TWCoinTypeConfigurationGetID(coin));
     const auto name = WRAPS(TWCoinTypeConfigurationGetName(coin));
