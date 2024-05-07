@@ -401,6 +401,9 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeAvail:
             EXPECT_EQ(address, "5HTX7XGnLK4KcHY71i7wxXZCxRmbZHQYu3dPty6FJferRoWr");
             break;
+        case TWCoinTypeNibiru:
+            EXPECT_EQ(address, "nibi1mry47pkga5tdswtluy0m8teslpalkdq0fy5h4x");
+            break;
             // end_of_coin_address_derivation_tests_marker_do_not_modify
             // no default branch here, intentionally, to better notice any missing coins
         }
