@@ -49,7 +49,7 @@ StoredKey StoredKey::createWithMnemonicAddDefaultAddress(const std::string& name
 }
 
 StoredKey StoredKey::createWithPrivateKey(const std::string& name, const Data& password, const Data& privateKeyData, TWStoredKeyEncryption encryption) {
-    return StoredKey(StoredKeyType::privateKey, name, password, privateKeyData, TWStoredKeyEncryptionLevelDefault, encryption);
+    return StoredKey(StoredKeyType::privateKey, name, password, privateKeyData, TWStoredKeyEncryptionLevelStandard, encryption);
 }
 
 StoredKey StoredKey::createWithPrivateKeyAddDefaultAddress(const std::string& name, const Data& password, TWCoinType coin, const Data& privateKeyData, TWStoredKeyEncryption encryption) {
