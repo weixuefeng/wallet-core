@@ -4943,19 +4943,19 @@
     "id": "xion",
     "name": "Xion",
     "displayName": "Xion",
-    "coinId": 10000080,
+    "coinId": 24000118,
     "symbol": "XION",
     "decimals": 6,
     "blockchain": "Cosmos",
     "derivation": [
       {
-        "path": "m/44'/60'/0'/0/0"
+        "path": "m/44'/118'/0'/0/0"
       }
     ],
     "curve": "secp256k1",
-    "publicKeyType": "secp256k1Extended",
+    "publicKeyType": "secp256k1",
     "hrp": "xion",
-    "addressHasher": "keccak256",
+    "addressHasher": "sha256ripemd",
     "chainId": "xion-testnet-1",
     "explorer": {
       "url": "https://explorer.burnt.com/xion-testnet-1",
