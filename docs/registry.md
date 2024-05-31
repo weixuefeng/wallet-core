@@ -112,6 +112,7 @@ This list is generated from [./registry.json](../registry.json)
 | 10000025 | Cronos Chain     | CRO    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png" width="32" />       | <https://cronos.org>          |
 | 10000060 | Native Injective | INJ    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nativeinjective/info/logo.png" width="32" /> | <https://injective.com>       |
 | 10000070 | OP Mainnet       | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png" width="32" />     | <https://optimism.io/>        |
+| 10000080 | Xion             | XION   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/xion/info/logo.png" width="32" />         | <https://xion.burnt.com>      |
 | 10000086 | Gate Chain       | GT     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/gate/info/logo.png" width="32" />         | <https://gatechain.io/>       |
 | 10000100 | Gnosis Chain     | xDAI   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/xdai/info/logo.png" width="32" />         | <https://www.xdaichain.com>   |
 | 10000118 | Osmosis          | OSMO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/osmosis/info/logo.png" width="32" />      | <https://osmosis.zone/>       |

@@ -4938,5 +4938,35 @@
       "rpc": "https://api.mainnet-beta.sonic.game",
       "documentation": "https://docs.sonic.game/developers/getting-started"
     }
+  },
+  {
+    "id": "xion",
+    "name": "Xion",
+    "displayName": "Xion",
+    "coinId": 10000080,
+    "symbol": "XION",
+    "decimals": 6,
+    "blockchain": "Cosmos",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "hrp": "xion",
+    "addressHasher": "keccak256",
+    "chainId": "xion-testnet-1",
+    "explorer": {
+      "url": "https://explorer.burnt.com/xion-testnet-1",
+      "txPath": "/txs/",
+      "accountPath": "/account/",
+      "sampleTx": "5A728125FDD24891BD0F77100939B8408EFC322BD3E1F13F93ED3E59C7377B89",
+      "sampleAccount": "xion18du5xeqs25khmvvkmqle35cwslnup753gkel88dvdrfzetfvegms6kp3sa"
+    },
+    "info": {
+      "url": "https://xion.burnt.com",
+      "documentation": "https://docs.burnt.com/xion"
+    }
   }
 ]
