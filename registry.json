@@ -4910,5 +4910,33 @@
       "url": "https://nibiru.fi/",
       "documentation": "https://nibiru.fi/docs"
     }
+  },
+  {
+    "id": "sonic",
+    "name": "Sonic",
+    "coinId": 10000501,
+    "symbol": "SOL",
+    "decimals": 9,
+    "blockchain": "Solana",
+    "derivation": [
+      {
+        "path": "m/44'/501'/0'"
+      }
+    ],
+    "curve": "ed25519",
+    "publicKeyType": "ed25519",
+    "explorer": {
+      "url": "https://explorer.sonic.game",
+      "txPath": "/tx/",
+      "accountPath": "/account/",
+      "sampleTx": "2Zo5rhcUrjGfthFGKSmGvUBTy1Dv7W8QaTogPvhYp6N6cMWJHohYTdCqJUz6ZtH62YuHfCtVAeadZHqK3ucGBypa",
+      "sampleAccount": "ECGQiei8BAewmdyshHKXBAfTLjKSdDKLRbF1wAjxeQRF"
+    },
+    "info": {
+      "url": "https://www.sonic.game/",
+      "source": "https://github.com/solana-labs/solana",
+      "rpc": "https://api.mainnet-beta.sonic.game",
+      "documentation": "https://docs.sonic.game/developers/getting-started"
+    }
   }
 ]
