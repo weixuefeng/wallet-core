@@ -4956,9 +4956,9 @@
     "publicKeyType": "secp256k1",
     "hrp": "xion",
     "addressHasher": "sha256ripemd",
-    "chainId": "xion-testnet-1",
+    "chainId": "xion-mainnet-1",
     "explorer": {
-      "url": "https://explorer.burnt.com/xion-testnet-1",
+      "url": "https://explorer.burnt.com/xion-mainnet-1",
       "txPath": "/txs/",
       "accountPath": "/account/",
       "sampleTx": "5A728125FDD24891BD0F77100939B8408EFC322BD3E1F13F93ED3E59C7377B89",
