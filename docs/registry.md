@@ -156,6 +156,7 @@ This list is generated from [./registry.json](../registry.json)
 | 22000118 | dYdX             | DYDX   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/dydx/info/logo.png" width="32" />         | <https://dydx.exchange>       |
 | 23000118 | Nibiru           | NIBI   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nibi/info/logo.png" width="32" />         | <https://nibiru.fi/>          |
 | 24000118 | Xion             | XION   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/xion/info/logo.png" width="32" />         | <https://xion.burnt.com>      |
+| 25000118 | Nubit            | NUB    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nubit/info/logo.png" width="32" />        | <https://nibiru.fi/>          |
 | 30000118 | Juno             | JUNO   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/juno/info/logo.png" width="32" />         | <https://www.junonetwork.io/> |
 | 30000714 | TBNB             | BNB    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tbinance/info/logo.png" width="32" />     | <https://www.bnbchain.org>    |
 | 40000118 | Stride           | STRD   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/stride/info/logo.png" width="32" />       | <https://stride.zone/>        |
