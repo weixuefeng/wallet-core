@@ -192,8 +192,10 @@ enum TWCoinType {
     TWCoinTypeNibiru = 23000118,
     TWCoinTypeSonic = 10000501,
     TWCoinTypeXion = 24000118,
-    // end_of_tw_coin_type_marker_do_not_modify
     TWCoinTypeNubit = 25000118,
+    TWCoinTypeMove = 10000637,
+    // end_of_tw_coin_type_marker_do_not_modify
+
 };
 
 /// Returns the blockchain for a coin type.

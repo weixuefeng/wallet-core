@@ -123,6 +123,7 @@ This list is generated from [./registry.json](../registry.json)
 | 10000330 | Terra            | LUNA   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/terrav2/info/logo.png" width="32" />      | <https://terra.money>         |
 | 10000501 | Sonic            | SOL    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/sonic/info/logo.png" width="32" />        | <https://www.sonic.game/>     |
 | 10000553 | Huobi ECO Chain  | HT     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/heco/info/logo.png" width="32" />         | <https://www.hecochain.com/en-us> |
+| 10000637 | Move             | MOVE   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/move/info/logo.png" width="32" />         | <https://docs.movementlabs.xyz/> |
 | 10000787 | Acala EVM        | ACA    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/acalaevm/info/logo.png" width="32" />     | <https://acala.network>       |
 | 10000990 | Coreum           | CORE   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/coreum/info/logo.png" width="32" />       | <https://www.coreum.com/>     |
 | 10001088 | Metis            | METIS  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/metis/info/logo.png" width="32" />        | <https://www.metis.io/>       |
