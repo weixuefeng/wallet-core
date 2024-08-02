@@ -392,6 +392,7 @@ fn test_solana_sign_create_token_account() {
         main_address: "B1iGmDJdvmxyUiYM8UEo2Uw2D58EmUrw4KyLYMmrhf8V".into(),
         token_mint_address: "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt".into(),
         token_address: "EDNd1ycsydWYwVmrYZvqYazFqwk1QjBgAUKFjBoz1jKP".into(),
+        is_token_2022: false
     };
     let input = Proto::SigningInput {
         private_key: b58("9YtuoD4sH4h88CVM8DSnkfoAaLY7YeGC2TarDJ8eyMS5"),
@@ -413,6 +414,7 @@ fn test_solana_sign_create_token_account_5ktpn1() {
         main_address: "Eg5jqooyG6ySaXKbQUu4Lpvu2SqUPZrNkM4zXs9iUDLJ".into(),
         token_mint_address: "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt".into(),
         token_address: "ANVCrmRw7Ww7rTFfMbrjApSPXEEcZpBa6YEiBdf98pAf".into(),
+        is_token_2022: false
     };
     let input = Proto::SigningInput {
         private_key: "4b9d6f57d28b06cbfa1d4cc710953e62d653caf853415c56ffd9d150acdeb7f7"
@@ -438,6 +440,7 @@ fn test_solana_sign_create_token_account_for_other_3e6ufv() {
         main_address: "3xJ3MoUVFPNFEHfWdtNFa8ajXUHsJPzXcBSWMKLd76ft".into(),
         token_mint_address: "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt".into(),
         token_address: "67BrwFYt7qUnbAcYBVx7sQ4jeD2KWN1ohP6bMikmmQV3".into(),
+        is_token_2022: false
     };
     let input = Proto::SigningInput {
         private_key: "4b9d6f57d28b06cbfa1d4cc710953e62d653caf853415c56ffd9d150acdeb7f7"
@@ -469,6 +472,7 @@ fn test_solana_sign_create_token_account_with_priority_fee_price() {
         // WBTC
         token_mint_address: "3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh".into(),
         token_address: "94JfTH8qCeBQDBatvULREG43msjSQscT7oHnqx7jppX".into(),
+        is_token_2022: false
     };
 
     let input = Proto::SigningInput {
@@ -571,18 +575,18 @@ fn test_solana_sign_create_and_transfer_token() {
 #[test]
 fn test_solana_sign_create_and_transfer_token_2() {
     let create_transfer_token = Proto::CreateAndTransferToken {
-        recipient_main_address: "3WUX9wASxyScbA7brDipioKfXS1XEYkQ4vo3Kej9bKei".into(),
-        token_mint_address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU".into(),
-        recipient_token_address: "BwTAyrCEdkjNyGSGVNSSGh6phn8KQaLN638Evj7PVQfJ".into(),
-        sender_token_address: "5sS5Z8GAdVHqZKRqEvpDauHvvLgbDveiyfi81uh25mrf".into(),
+        recipient_main_address: "EbHdsfVpWzeQV4TceYQ2xENS8meBHyztyTKVSFtgHPUw".into(),
+        token_mint_address: "EwCjyiekaKNt7AW6p1Avapkq8F7jQWce4ZZpEhBpzbvT".into(),
+        recipient_token_address: "HULsEKdPtCk9gdWDJbrdgityfccP8Z9dEQocjH8x3dmi".into(),
+        sender_token_address: "9pe2oSekwvBYBi4u6T4mjNLGPyFukvSDDPF1ukieTSJC".into(),
         // 0.004
         amount: 4000,
-        decimals: 6,
+        decimals: 9,
         ..Proto::CreateAndTransferToken::default()
     };
     let input = Proto::SigningInput {
-        private_key: b58("9YtuoD4sH4h88CVM8DSnkfoAaLY7YeGC2TarDJ8eyMS5"),
-        recent_blockhash: "AfzzEC8NVXoxKoHdjXLDVzqwqvvZmgPuqyJqjuHiPY1D".into(),
+        private_key: b58("MCyXa2gTJELxTPemyVi5ydDcQ3vVgFyddQYXj6UM3tw"),
+        recent_blockhash: "HoG8sQoCibuY9Rq1WzdhWfrdTKnwrgGDoDYandBqvRBN".into(),
         transaction_type: TransactionType::create_and_transfer_token_transaction(
             create_transfer_token,
         ),
@@ -591,10 +595,40 @@ fn test_solana_sign_create_and_transfer_token_2() {
 
     let mut signer = AnySignerHelper::<Proto::SigningOutput>::default();
     let output = signer.sign(CoinType::Solana, input);
-
+    println!("raw: {}", output.encoded);
     assert_eq!(output.error, SigningError::OK);
-    assert_eq!(output.encoded, "2qkvFTcMk9kPaHtd7idJ1gJc4zTkuYDUJsC67kXvHjv3zwEyUx92QyhhSeBjL6h3Zaisj2nvTWid2UD1N9hbg9Ty7vSHLc7mcFVvy3yJmN9tz99iLKsf15rEeKUk3crXWLtKZEpcXJurN7vrxKwjQJnVob2RjyxwVfho1oNZ72BHvqToRM1W2KbcYhxK4d9zB4QY5tR2dzgCHWqAjf9Yov3y9mPBYCQBtw2GewrVMDbg5TK81E9BaWer3BcEafc3NCnRfcFEp7ZUXsGAgJYx32uUoJPP8ByTqBsp2JWgHyZhoz1WUUYRqWKZthzotErVetjSik4h5GcXk9Nb6kzqEf4nKEZ22eyrP5dv3eZMuGUUpMYUT9uF16T72s4TTwqiWDPFkidD33tACx74JKGoDraHEvEeAPrv6iUmC675kMuAV4EtVspVc5SnKXgRWRxb4dcH3k7K4ckjSxYZwg8UhTXUgPxA936jBr2HeQuPLmNVn2muA1HfL2DnyrobUP9vHpbL3HHgM2fckeXy8LAcjnoE9TTaAKX32wo5xoMj9wJmmtcU6YbXN4KgZ");
+    assert_eq!(output.encoded, "3QwYtbXuRSy9rq9jvmJCeYJCCcDZBR59X8bbbEUgrG6FwCXBso6gqw1WyPkZD3FU6CGXxJCE45117bnz9qKStZPzEdtJzdHoEMS7eBxex5jfSjD3pfBa5H7ikeiUnMq59nsfj6kuncyJPESR4QE1aUJYVEneG69LEFWAfGMfjkKh7oUNj22f45jT7mRF4n52MsFWmXf6sLDgZSGKefvrxSEeSkt2JvyMkc4Abk3TTd9x7EAXmHJxomnTfBAwSP4XUL54fLHL8nDZvtFpiZ3S7Mii1idFYewiNHihVnbqK22mQjuuczJzFkrfaaSs5mYbicnQwvC2xiPRB26ZFLcRrn5oXunRCuwPGoXGaHyLSgNL1ohB9htyezmwrvohNf9eF6NYwe6WSoXcMsZyc14YEPDuWAjfbWjfcWzzFFj3DsKfNzhLToWs4y7mPpNz6ZgLFTshYWr3WyxxwKJDspM8RwEJ6YqYBJpeUv2TuvxJ5779G7D5C2x2w1SF1x3ixFKPDiXjvoovEqZgkwWDbrwvx49RYF37JBxxiqe7z6BHNyVezNvF61hFaUDrx");
 }
+
+
+
+#[test]
+fn test_solana_sign_create_and_transfer_token_2022() {
+    let create_transfer_token: Proto::CreateAndTransferToken = Proto::CreateAndTransferToken {
+        recipient_main_address: "EbHdsfVpWzeQV4TceYQ2xENS8meBHyztyTKVSFtgHPUw".into(),
+        token_mint_address: "BSQCmMAFB9itonyVSLsUxX92Ne1rgBZFqothBk3q91k6".into(),
+        recipient_token_address: "FzsLNpzsLMBbm1LWpM6P3W4tKrCkd8KqnMmADNvArW5d".into(),
+        sender_token_address: "EQxRyhzjyhRX4TJXt7FmQ3HfFdRcu49krjxHMszidQYS".into(),
+        amount: 1000000000,
+        decimals: 9,
+        is_token_2022: true,
+        ..Proto::CreateAndTransferToken::default()
+    };
+    let input = Proto::SigningInput {
+        private_key: b58("MCyXa2gTJELxTPemyVi5ydDcQ3vVgFyddQYXj6UM3tw"),
+        recent_blockhash: "9S1R94w4KzF15EYP5iP7gTigvyPd4JRfEkcUdhsirxgA".into(),
+        transaction_type: TransactionType::create_and_transfer_token_transaction(
+            create_transfer_token,
+        ),
+        ..Proto::SigningInput::default()
+    };
+    let mut signer = AnySignerHelper::<Proto::SigningOutput>::default();
+    let output = signer.sign(CoinType::Solana, input);
+    assert_eq!(output.error, SigningError::OK);
+    assert_eq!(output.encoded, "2hBQNSnumbABqKWgpeAFnCEYqb27FMMiZBn4BHrfv2CeYvzyhhrWhPm2uVHRjiJ4CwUFrFZgoTBKDhHqqDYkFVCnU82DAvsEjAQCcKGET16CGr14wNbmhL34KZv9qwvpiyRRBwDN8DJy9kLcRdYXKr8Vx5Emm5iaUu33BMbqLpcETN7HB4wFWrxrDyYgP6jbaC8v3g1wyp3xp7Q3LJ9NXki4ATmjV2T1MrpSzTjJAgQvhsx7mb2BARU7Bdrp92qgNrNWkpwr6vru2CF5UVJRySjYHaJo8YdKKMwFR8ZuwUfhbk9FFdSVGhxqX8pfj6NmUU55KMrxTtupjgifKuFZng7avzsRmysHZuBNeywrip7Gw66MaBsbsYons5jFarqUpboXyHiF4R1RQX4eQYqfmDPksv7Dh68M2wCcmiUcu3AdMMs4VHwWmkks3WfAGKKL1cN54f7SN5yP1FoGAMRbtLSCS5GCFt2pnQfkMmwqrNBtDT2pYB4f3iuGfXdHJ7APcoFtyBfUfwShUnYPq5KX3bgwAB73C38R1Hrh9e7mJJCG8i5d1CtLH12N4");
+    // https://explorer.solana.com/tx/Lg1xWzsC9GatQMu1ZXv23t7snC92RRvbKJe22bsS76GUb8C8a9q3HPkiUnFoK6AWKSoNSsmko1EBnvKkCnL8b7w?cluster=devnet
+}
+
 
 #[test]
 fn test_solana_sign_create_and_transfer_token_with_memo_and_references() {
@@ -611,6 +645,7 @@ fn test_solana_sign_create_and_transfer_token_with_memo_and_references() {
             "CuieVDEDtLo7FypA9SbLM9saXFdb1dsshEkyErMqkRQq".into(),
             "tFpP7tZUt6zb7YZPpQ11kXNmsc5YzpMXmahGMvCHhqS".into(),
         ],
+        is_token_2022: false
     };
     let input = Proto::SigningInput {
         private_key: b58("66ApBuKpo2uSzpjGBraHq7HP8UZMUJzp3um8FdEjkC9c"),

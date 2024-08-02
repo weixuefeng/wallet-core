@@ -81,7 +81,6 @@ impl<'a> MessageBuilder<'a> {
             .try_into_message_components()?;
 
         let compiled_instructions = compile_instructions(&instructions, &account_keys)?;
-
         if self.input.v0_msg {
             Ok(VersionedMessage::V0(v0::Message {
                 header: message_header,
@@ -333,6 +332,7 @@ impl<'a> MessageBuilder<'a> {
             other_main_address,
             token_mint_address,
             token_address,
+            create_token_acc.is_token_2022
         );
         let mut builder = InstructionBuilder::default();
         builder
@@ -378,6 +378,7 @@ impl<'a> MessageBuilder<'a> {
             signer,
             token_transfer.amount,
             decimals,
+            token_transfer.is_token_2022
         )
         .with_references(references);
 
@@ -432,6 +433,7 @@ impl<'a> MessageBuilder<'a> {
             recipient_main_address,
             token_mint_address,
             recipient_token_address,
+            create_and_transfer.is_token_2022
         );
         let transfer_instruction = TokenInstructionBuilder::transfer_checked(
             sender_token_address,
@@ -440,6 +442,7 @@ impl<'a> MessageBuilder<'a> {
             signer,
             create_and_transfer.amount,
             decimals,
+            create_and_transfer.is_token_2022
         )
         .with_references(references);
 

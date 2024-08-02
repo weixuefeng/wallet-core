@@ -75,24 +75,26 @@ impl CompiledKeys {
             ordered_keys,
             key_meta_map,
         } = self;
-
         let filter = |account, is_signer: bool, is_writable: bool| -> Option<SolanaAddress> {
             let meta = key_meta_map.get(account).copied().unwrap_or_default();
             (meta.is_signer == is_signer && meta.is_writable == is_writable).then_some(*account)
         };
 
-        let writable_signer_keys: Vec<SolanaAddress> = ordered_keys
+        let mut writable_signer_keys: Vec<SolanaAddress> = ordered_keys
             .iter()
             .filter_map(|key| filter(key, true, true))
             .collect();
-        let readonly_signer_keys: Vec<SolanaAddress> = ordered_keys
+        writable_signer_keys.sort();
+        let mut readonly_signer_keys: Vec<SolanaAddress> = ordered_keys
             .iter()
             .filter_map(|key| filter(key, true, false))
             .collect();
-        let writable_non_signer_keys: Vec<SolanaAddress> = ordered_keys
+        readonly_signer_keys.sort();
+        let mut writable_non_signer_keys: Vec<SolanaAddress> = ordered_keys
             .iter()
             .filter_map(|key| filter(key, false, true))
             .collect();
+        writable_non_signer_keys.sort();
         let readonly_non_signer_keys: Vec<SolanaAddress> = ordered_keys
             .iter()
             .filter_map(|key| filter(key, false, false))
@@ -110,14 +112,12 @@ impl CompiledKeys {
             num_readonly_unsigned_accounts: try_into_u8(readonly_non_signer_keys.len())
                 .context("Too many accounts in the transaction")?,
         };
-
         let static_account_keys: Vec<_> = std::iter::empty()
             .chain(writable_signer_keys)
             .chain(readonly_signer_keys)
             .chain(writable_non_signer_keys)
             .chain(readonly_non_signer_keys)
             .collect();
-
         Ok((header, static_account_keys))
     }
 }

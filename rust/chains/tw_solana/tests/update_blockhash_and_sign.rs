@@ -25,3 +25,5 @@ fn test_update_recent_blockhash_and_sign() {
     let expected = "AdQl49kO1FxfkAnAuK9KSQEGLzxHNYLqBrYGFN711q7aT/qyrzYMn/7/IdFBy6yMhjOA1CkwZsgmqmbu+XKvVAUBAAEDZsL1CMnFVcrMn7JtiOiN1U4hC7WovOVof2DX51xM0H/GizyJTHgrBanCf8bGbrFNTn0x3pCGq30hKbywSTr6AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAseKSLpOE0fdq67Jk9Ckme2c3SYD//nqcykr/oci67zEBAgIAAQwCAAAAKgAAAAAAAAA=";
     assert_eq!(output.encoded, expected);
 }
+
+
