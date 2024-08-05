@@ -16,7 +16,7 @@ fn test_get_default_token_address_impl(
     let token_mint_address = SolanaAddress::from_str(token_mint_address).unwrap();
     let expected = SolanaAddress::from_str(expected).unwrap();
 
-    let actual = StakeProgram::get_associated_token_address(main_address, token_mint_address)
+    let actual = StakeProgram::get_associated_token_address(main_address, token_mint_address, false)
         .expect("!get_associated_token_address");
     assert_eq!(actual, expected);
 }

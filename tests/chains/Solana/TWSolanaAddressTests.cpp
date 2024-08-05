@@ -31,7 +31,7 @@ TEST(TWSolanaProgram, defaultTokenAddress) {
 
     auto solanaAddress = WRAP(TWSolanaAddress, TWSolanaAddressCreateWithString(solAddress.get()));
     auto description = WRAPS(TWSolanaAddressDescription(solanaAddress.get()));
-    auto tokenAddress = WRAPS(TWSolanaAddressDefaultTokenAddress(solanaAddress.get(), serumToken.get()));
+    auto tokenAddress = WRAPS(TWSolanaAddressDefaultTokenAddress(solanaAddress.get(), serumToken.get(), false));
 
     assertStringsEqual(tokenAddress, "EDNd1ycsydWYwVmrYZvqYazFqwk1QjBgAUKFjBoz1jKP");
     assertStringsEqual(description, "B1iGmDJdvmxyUiYM8UEo2Uw2D58EmUrw4KyLYMmrhf8V");
@@ -45,5 +45,5 @@ TEST(TWSolanaProgram, defaultTokenAddressError) {
     auto solanaAddress = WRAP(TWSolanaAddress, TWSolanaAddressCreateWithString(solAddress.get()));
     auto description = WRAPS(TWSolanaAddressDescription(solanaAddress.get()));
 
-    EXPECT_EQ(TWSolanaAddressDefaultTokenAddress(solanaAddress.get(), serumToken.get()), nullptr);
+    EXPECT_EQ(TWSolanaAddressDefaultTokenAddress(solanaAddress.get(), serumToken.get(), false), nullptr);
 }

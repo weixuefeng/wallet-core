@@ -38,11 +38,13 @@ impl StakeProgram {
     pub fn get_associated_token_address(
         main_address: SolanaAddress,
         token_mint_address: SolanaAddress,
+        is_token_2022: bool
     ) -> AddressResult<SolanaAddress> {
+        let program  = if is_token_2022 { TOKEN_2022_PROGRAM_ID_ADDRESS.bytes() } else { TOKEN_PROGRAM_ID_ADDRESS.bytes() };
         SolanaAddress::find_program_address(
             &[
                 main_address.bytes().as_slice(),
-                TOKEN_PROGRAM_ID_ADDRESS.bytes().as_slice(),
+                 program.as_slice(),
                 token_mint_address.bytes().as_slice(),
             ],
             *ASSOCIATED_TOKEN_PROGRAM_ID_ADDRESS,

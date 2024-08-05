@@ -20,6 +20,7 @@ use tw_solana::program::stake_program::StakeProgram;
 pub unsafe extern "C" fn tw_solana_address_default_token_address(
     address: *const TWString,
     token_mint_address: *const TWString,
+    is_token_2022: bool,
 ) -> *mut TWString {
     let main_address = try_or_else!(TWString::from_ptr_as_ref(address), std::ptr::null_mut);
     let main_address = try_or_else!(main_address.as_str(), std::ptr::null_mut);
@@ -37,7 +38,7 @@ pub unsafe extern "C" fn tw_solana_address_default_token_address(
     );
 
     let token_address = try_or_else!(
-        StakeProgram::get_associated_token_address(main_address, token_mint_address),
+        StakeProgram::get_associated_token_address(main_address, token_mint_address, is_token_2022),
         std::ptr::null_mut
     );
 
