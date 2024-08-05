@@ -11,7 +11,6 @@ publishing {
 
     repositories {
         maven {
-            name = "GitHubPackages"
             url = uri("https://nexus-web.fulltrust.link/repository/dev-mobile-release")
             credentials {
                 username = "dev-mobile"
