@@ -3,7 +3,7 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         release(MavenPublication) {
-             artifact('./build/outputs/trustwalletcore-release.aar'){
+             artifact('./build/outputs/aar/trustwalletcore-release.aar'){
                 groupId GROUP
                 artifactId 'trustwalletcore'
                 version VERSION_NAME
