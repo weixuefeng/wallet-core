@@ -3,15 +3,10 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         release(MavenPublication) {
-            afterEvaluate {
-                from components.release
+             artifact('./build/outputs/trustwalletcore-release.aar'){
+                groupId GROUP
                 artifactId 'trustwalletcore'
-                pom {
-                    withXml {
-                        def node = asNode()
-                        node.remove(node.get('dependencies'))
-                    }
-                }
+                version VERSION_NAME
             }
         }
     }
