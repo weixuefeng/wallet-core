@@ -5,6 +5,7 @@ publishing {
         release(MavenPublication) {
             afterEvaluate {
                 from components.release
+                artifactId 'trustwalletcore'
             }
         }
     }
