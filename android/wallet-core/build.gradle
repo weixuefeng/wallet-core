@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-group = 'com.gateio.lib'
+group = GROUP
+version = VERSION_NAME
+archivesBaseName = 'trustwalletcore'
 
 android {
     namespace 'wallet.core'
