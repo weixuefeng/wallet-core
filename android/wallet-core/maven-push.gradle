@@ -6,6 +6,12 @@ publishing {
             afterEvaluate {
                 from components.release
                 artifactId 'trustwalletcore'
+                pom {
+                    withXml {
+                        def node = asNode()
+                        node.remove(node.get('dependencies'))
+                    }
+                }
             }
         }
     }
