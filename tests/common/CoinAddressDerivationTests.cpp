@@ -51,7 +51,7 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeFantom:
         case TWCoinTypeGoChain:
         case TWCoinTypeKavaEvm:
-        case TWCoinTypeKlaytn:
+        case TWCoinTypeKaia:
         case TWCoinTypeKuCoinCommunityChain:
         case TWCoinTypeMeter:
         case TWCoinTypeMetis:
@@ -89,6 +89,7 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeLightlink:
         case TWCoinTypeBlast:
         case TWCoinTypeBounceBit:
+        case TWCoinTypeZkLinkNova:
             // end_of_evm_address_derivation_tests_marker_do_not_modify
             EXPECT_EQ(address, "0x9d8A62f656a8d1615C1294fd71e9CFb3E4855A4F");
             break;
@@ -189,7 +190,7 @@ TEST(Coin, DeriveAddress) {
             EXPECT_EQ(address, "0:ef64d51f95ef17973b737277cfecbd2a8d551141be2f58f5fb362575fc3eb5b0");
             break;
         case TWCoinTypeTON:
-            EXPECT_EQ(address, "EQAoYT8nMLfeNh6h0uIoK_wLm9JkvxiGxJDr6GRXJGu2ZhpY");
+            EXPECT_EQ(address, "UQAoYT8nMLfeNh6h0uIoK_wLm9JkvxiGxJDr6GRXJGu2Zked");
             break;
         case TWCoinTypeFIO:
             EXPECT_EQ(address, "FIO5TrYnZP1RkDSUMzBY4GanCy6AP68kCMdkAb5EACkAwkdgRLShz");
@@ -403,6 +404,8 @@ TEST(Coin, DeriveAddress) {
             break;
         case TWCoinTypeNibiru:
             EXPECT_EQ(address, "nibi1mry47pkga5tdswtluy0m8teslpalkdq0fy5h4x");
+        case TWCoinTypePactus:
+            EXPECT_EQ(address, "pc1rehvlc6tfn79z0zjqqaj8zas5j5h9c2fe59a4ff");
             break;
             // end_of_coin_address_derivation_tests_marker_do_not_modify
             // no default branch here, intentionally, to better notice any missing coins

@@ -24,6 +24,12 @@
         "path": "m/84'/1'/0'/0/0",
         "xpub": "zpub",
         "xprv": "zprv"
+      },
+      {
+        "name": "taproot",
+        "path": "m/86'/0'/0'/0/0",
+        "xpub": "zpub",
+        "xprv": "zprv"
       }
     ],
     "curve": "secp256k1",
@@ -745,11 +751,11 @@
     "curve": "ed25519",
     "publicKeyType": "ed25519",
     "explorer": {
-      "url": "https://explorer.sui.io/",
-      "txPath": "/txblock/",
-      "accountPath": "/address/",
-      "sampleTx": "5i8fbSL6r8yw2xcKmXxwkzHu3wpiyMLsyf2htCvDH8Ao",
-      "sampleAccount": "0x259ff8074ab425cbb489f236e18e08f03f1a7856bdf7c7a2877bd64f738b5015"
+      "url": "https://suiscan.xyz/mainnet",
+      "txPath": "/tx/",
+      "accountPath": "/account/",
+      "sampleTx": "68wBKsZyYXmCUydDmabQ71kTcFWTfDG7tFmTLk1HgNdN",
+      "sampleAccount": "0x54e80d76d790c277f5a44f3ce92f53d26f5894892bf395dee6375988876be6b2"
     },
     "info": {
       "url": "https://sui.io/",
@@ -1495,7 +1501,7 @@
     "coinId": 145,
     "symbol": "BCH",
     "decimals": 8,
-    "blockchain": "Bitcoin",
+    "blockchain": "BitcoinCash",
     "derivation": [
       {
         "path": "m/44'/145'/0'/0/0",
@@ -1601,7 +1607,7 @@
     "publicKeyType": "ed25519Blake2b",
     "url": "https://nano.org",
     "explorer": {
-      "url": "https://www.nanolooker.com",
+      "url": "https://nanexplorer.com/nano",
       "txPath": "/block/",
       "accountPath": "/account/",
       "sampleTx": "C264DB7BF40738F0CEFF19B606746CB925B713E4B8699A055699E0DC8ABBC70F",
@@ -1822,9 +1828,9 @@
     "curve": "ed25519",
     "publicKeyType": "ed25519",
     "explorer": {
-      "url": "https://algoexplorer.io",
+      "url": "https://allo.info",
       "txPath": "/tx/",
-      "accountPath": "/address/",
+      "accountPath": "/account/",
       "sampleTx": "CR7POXFTYDLC7TV3IXHA7AZKWABUJC52BACLHJQNXAKZJGRPQY3A",
       "sampleAccount": "J4AEINCSSLDA7LNBNWM4ZXFCTLTOZT5LG3F5BLMFPJYGFWVCMU37EZI2AM"
     },
@@ -2577,9 +2583,9 @@
     "chainId": "820",
     "addressHasher": "keccak256",
     "explorer": {
-      "url": "https://explorer.callisto.network",
+      "url": "https://explorer.callistodao.org",
       "txPath": "/tx/",
-      "accountPath": "/addr/"
+      "accountPath": "/address/"
     },
     "info": {
       "url": "https://callisto.network",
@@ -3150,7 +3156,7 @@
     "id": "polygon",
     "name": "Polygon",
     "coinId": 966,
-    "symbol": "MATIC",
+    "symbol": "POL",
     "decimals": 18,
     "blockchain": "Ethereum",
     "derivation": [
@@ -3171,9 +3177,9 @@
     },
     "info": {
       "url": "https://polygon.technology",
-      "source": "https://github.com/maticnetwork/contracts",
+      "source": "https://github.com/maticnetwork",
       "rpc": "https://polygon-rpc.com",
-      "documentation": "https://eth.wiki/json-rpc/API"
+      "documentation": "https://docs.polygon.technology"
     }
   },
   {
@@ -3222,7 +3228,7 @@
     "publicKeyType": "secp256k1",
     "hrp": "thor",
     "addressHasher": "sha256ripemd",
-    "chainId": "thorchain-mainnet-v1",
+    "chainId": "thorchain-1",
     "explorer": {
       "url": "https://viewblock.io/thorchain",
       "txPath": "/tx/",
@@ -3233,7 +3239,7 @@
     "info": {
       "url": "https://thorchain.org",
       "source": "https://gitlab.com/thorchain/thornode",
-      "rpc": "https://seed.thorchain.info",
+      "rpc": "https://thornode.ninerealms.com",
       "documentation": "https://docs.thorchain.org"
     }
   },
@@ -3709,7 +3715,7 @@
     "coinId": 899,
     "symbol": "XEC",
     "decimals": 2,
-    "blockchain": "Bitcoin",
+    "blockchain": "BitcoinCash",
     "derivation": [
       {
         "path": "m/44'/899'/0'/0/0",
@@ -3846,7 +3852,7 @@
     "chainId": "10000",
     "addressHasher": "keccak256",
     "explorer": {
-      "url": "https://www.smartscan.cash",
+      "url": "https://www.smartscout.cash",
       "txPath": "/tx/",
       "accountPath": "/address/",
       "sampleTx": "0x6413466b455b17d03c7a8ce2d7f99fec34bcd338628bdd2d0580a21e3197a4d9",
@@ -3908,7 +3914,7 @@
     "chainId": "288",
     "addressHasher": "keccak256",
     "explorer": {
-      "url": "https://blockexplorer.boba.network",
+      "url": "https://eth.bobascan.com",
       "txPath": "/tx/",
       "accountPath": "/address/",
       "sampleTx": "0x31533707c3feb3b10f7deeea387ff8893f229253e65ca6b14d2400bf95b5d103",
@@ -4099,10 +4105,10 @@
     }
   },
   {
-    "id": "klaytn",
-    "name": "Klaytn",
+    "id": "kaia",
+    "name": "Kaia",
     "coinId": 10008217,
-    "symbol": "KLAY",
+    "symbol": "KAIA",
     "decimals": 18,
     "blockchain": "Ethereum",
     "derivation": [
@@ -4114,16 +4120,16 @@
     "publicKeyType": "secp256k1Extended",
     "chainId": "8217",
     "explorer": {
-      "url": "https://scope.klaytn.com",
+      "url": "https://kaiascan.io",
       "txPath": "/tx/",
       "accountPath": "/account/",
       "sampleTx": "0x93ea92687845fe7bb6cacd69c76a16a2a3c2bbb85a8a93ff0e032d0098d583d7",
       "sampleAccount": "0x2ad9656bf5b82caf10847b431012e28e301e83ba"
     },
     "info": {
-      "url": "https://klaytn.foundation",
-      "rpc": "https://public-node-api.klaytnapi.com/v1/cypress",
-      "documentation": "https://docs.klaytn.foundation"
+      "url": "https://kaia.io",
+      "rpc": "https://public-en.node.kaia.io",
+      "documentation": "https://docs.kaia.io"
     }
   },
   {
@@ -4285,6 +4291,7 @@
     "blockchain": "Bitcoin",
     "derivation": [
       {
+        "name": "segwit",
         "path": "m/44'/105105'/0'/0/0",
         "xpub": "xpub",
         "xprv": "xprv"
@@ -4559,7 +4566,7 @@
     "coinId": 607,
     "symbol": "TON",
     "decimals": 9,
-    "blockchain": "The Open Network",
+    "blockchain": "TheOpenNetwork",
     "derivation": [
       {
         "path": "m/44'/607'/0'"
@@ -4568,9 +4575,9 @@
     "curve": "ed25519",
     "publicKeyType": "ed25519",
     "explorer": {
-      "url": "https://tonscan.org",
-      "txPath": "/tx/",
-      "accountPath": "/address/",
+      "url": "https://tonviewer.com",
+      "txPath": "/transaction/",
+      "accountPath": "/",
       "sampleTx": "fJXfn0EVhV09HFuEgUHu4Cchb24nUQtIMwSzmzk2tLs=",
       "sampleAccount": "EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N"
     },
@@ -4790,6 +4797,64 @@
       "source": "https://github.com/BounceBit-Labs",
       "rpc": "https://fullnode-mainnet.bouncebitapi.com",
       "documentation": "https://docs.bouncebit.io"
+    }
+  },
+  {
+    "id": "zklinknova",
+    "name": "ZkLinkNova",
+    "displayName": "zkLink Nova Mainnet",
+    "coinId": 810180,
+    "symbol": "ETH",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "810180",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://explorer.zklink.io",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0xeb5eb8710369c89115a83f3e744c15c9d388030cfce2fd3a653dbd18f2947400",
+      "sampleAccount": "0xF95115BaD9a4585B3C5e2bfB50579f17163A45aA"
+    },
+    "info": {
+      "url": "https://zklink.io",
+      "source": "https://github.com/zkLinkProtocol",
+      "rpc": "https://rpc.zklink.io",
+      "documentation": "https://docs.zklink.io"
+    }
+  },
+  {
+    "id": "pactus",
+    "name": "Pactus",
+    "coinId": 21888,
+    "symbol": "PAC",
+    "decimals": 9,
+    "blockchain": "Pactus",
+    "derivation": [
+      {
+        "path": "m/44'/21888'/3'/0'"
+      }
+    ],
+    "curve": "ed25519",
+    "publicKeyType": "ed25519",
+    "hrp": "pc",
+    "explorer": {
+      "url": "https://pacviewer.com",
+      "txPath": "/transaction/",
+      "accountPath": "/address/"
+    },
+    "info": {
+      "url": "https://pactus.org",
+      "source": "https://github.com/pactus-project/pactus",
+      "rpc": "https://docs.pactus.org/api/http",
+      "documentation": "https://docs.pactus.org"
     }
   },
   {

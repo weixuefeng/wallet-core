@@ -65,7 +65,9 @@ enum TWBlockchain {
     TWBlockchainInternetComputer = 52,
     TWBlockchainNativeEvmos = 53, // Cosmos
     TWBlockchainNativeInjective = 54, // Cosmos
-    TWBlockchainAvail = 55, // Avail
+    TWBlockchainBitcoinCash = 55,
+    TWBlockchainPactus = 56,
+    TWBlockchainAvail = 1000, // Avail
 };
 
 TW_EXTERN_C_END

@@ -45,11 +45,10 @@ class CoinAddressDerivationTests {
 
         ETHEREUM, SMARTCHAIN, POLYGON, OPTIMISM, ZKSYNC, ARBITRUM, ARBITRUMNOVA, ECOCHAIN, AVALANCHECCHAIN, XDAI,
         FANTOM, CELO, CRONOSCHAIN, SMARTBITCOINCASH, KUCOINCOMMUNITYCHAIN, BOBA, METIS,
-        AURORA, EVMOS, MOONRIVER, MOONBEAM, KAVAEVM, KLAYTN, METER, OKXCHAIN, POLYGONZKEVM, SCROLL,
+        AURORA, EVMOS, MOONRIVER, MOONBEAM, KAVAEVM, KAIA, METER, OKXCHAIN, POLYGONZKEVM, SCROLL,
         CONFLUXESPACE, ACALAEVM, OPBNB, NEON, BASE, LINEA, GREENFIELD, MANTLE, ZENEON, MANTAPACIFIC,
-        ZETAEVM, MERLIN, LIGHTLINK, BLAST, BOUNCEBIT, GATECHAIN
+        ZETAEVM, MERLIN, LIGHTLINK, BLAST, BOUNCEBIT, ZKLINKNOVA, GATECHAIN
         -> assertEquals("0x8f348F300873Fd5DA36950B2aC75a26584584feE", address)
-
         RONIN -> assertEquals("ronin:8f348F300873Fd5DA36950B2aC75a26584584feE", address)
         ETHEREUMCLASSIC -> assertEquals("0x078bA3228F3E6C08bEEac9A005de0b7e7089aD1c", address)
         GOCHAIN -> assertEquals("0x5940ce4A14210d4Ccd0ac206CE92F21828016aC2", address)
@@ -122,7 +121,7 @@ class CoinAddressDerivationTests {
         NATIVEEVMOS -> assertEquals("evmos13u6g7vqgw074mgmf2ze2cadzvkz9snlwstd20d", address)
         NERVOS -> assertEquals("ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqdtyq04tvp02wectaumxn0664yw2jd53lqk4mxg3", address)
         EVERSCALE -> assertEquals("0:0c39661089f86ec5926ea7d4ee4223d634ba4ed6dcc2e80c7b6a8e6d59f79b04", address)
-        TON -> assertEquals("EQDgEMqToTacHic7SnvnPFmvceG5auFkCcAw0mSCvzvKUfk9", address)
+        TON -> assertEquals("UQDgEMqToTacHic7SnvnPFmvceG5auFkCcAw0mSCvzvKUaT4", address)
         APTOS -> assertEquals("0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", address)
         NEBL -> assertEquals("NgDVaXAwNgBwb88xLiFKomfBmPkEh9F2d7", address)
         SUI -> assertEquals("0xada112cfb90b44ba889cc5d39ac2bf46281e4a91f7919c693bcd9b8323e81ed2", address)
@@ -155,5 +154,6 @@ class CoinAddressDerivationTests {
         NATIVEZETACHAIN -> assertEquals("zeta13u6g7vqgw074mgmf2ze2cadzvkz9snlwywj304", address)
         DYDX -> assertEquals("dydx142j9u5eaduzd7faumygud6ruhdwme98qeayaky", address)
         NIBI -> assertEquals("nibi1mry47pkga5tdswtluy0m8teslpalkdq0fy5h4x", address)
+        PACTUS -> assertEquals("pc1r7ys2g5a4xc2qtm0t4q987m4mvs57w5g0v4pvzg", address)
     }
 }

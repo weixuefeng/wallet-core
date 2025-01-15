@@ -126,7 +126,7 @@ enum TWCoinType {
     TWCoinTypeMoonriver = 10001285,
     TWCoinTypeMoonbeam = 10001284,
     TWCoinTypeKavaEvm = 10002222,
-    TWCoinTypeKlaytn = 10008217,
+    TWCoinTypeKaia = 10008217,
     TWCoinTypeMeter = 18000,
     TWCoinTypeOKXChain = 996,
     TWCoinTypeStratis = 105105,
@@ -194,6 +194,8 @@ enum TWCoinType {
     TWCoinTypeXion = 24000118,
     TWCoinTypeNubit = 25000118,
     TWCoinTypeMove = 10000637,
+    TWCoinTypeZkLinkNova = 810180,
+    TWCoinTypePactus = 21888,
     // end_of_tw_coin_type_marker_do_not_modify
 
 };
