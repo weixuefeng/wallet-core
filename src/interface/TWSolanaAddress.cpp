@@ -16,7 +16,7 @@ void TWSolanaAddressDelete(struct TWSolanaAddress* _Nonnull address) {
     delete address;
 }
 
-TWString* _Nullable TWSolanaAddressDefaultTokenAddress(struct TWSolanaAddress* _Nonnull address, TWString* _Nonnull tokenMintAddress, bool isToken2022) {
+TWString* _Nullable TWSolanaAddressDefaultTokenAddress(struct TWSolanaAddress* _Nonnull address, TWString* _Nonnull tokenMintAddress) {
     try {
         if (address == nullptr || tokenMintAddress == nullptr) {
             return nullptr;
@@ -24,7 +24,7 @@ TWString* _Nullable TWSolanaAddressDefaultTokenAddress(struct TWSolanaAddress* _
         Rust::TWStringWrapper tokenMint = TWStringUTF8Bytes(tokenMintAddress);
         Rust::TWStringWrapper mainAddress = address->impl.string();
 
-        Rust::TWStringWrapper newTokenAddress = Rust::tw_solana_address_default_token_address(mainAddress.get(), tokenMint.get(), isToken2022);
+        Rust::TWStringWrapper newTokenAddress = Rust::tw_solana_address_default_token_address(mainAddress.get(), tokenMint.get());
 
         if (!newTokenAddress) {
             return nullptr;

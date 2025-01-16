@@ -25,6 +25,8 @@ enum TWDerivation {
     TWDerivationSolanaSolana = 6,
     TWDerivationStratisSegwit = 7,
     TWDerivationBitcoinTaproot = 8,
+    TWDerivationBitcoinTestnetSegwit = 9,
+    TWDerivationBitcoinTestnetLegacy = 10,
     // end_of_derivation_enum - USED TO GENERATE CODE
 };
 

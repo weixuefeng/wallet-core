@@ -21,7 +21,6 @@ use tw_solana::program::stake_program::StakeProgram;
 pub unsafe extern "C" fn tw_solana_address_default_token_address(
     address: *const TWString,
     token_mint_address: *const TWString,
-    is_token_2022: bool,
 ) -> *mut TWString {
     tw_solana_address_token_address_impl(address, token_mint_address, *TOKEN_PROGRAM_ID_ADDRESS)
 }
