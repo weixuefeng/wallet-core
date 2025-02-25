@@ -7,10 +7,10 @@ archivesBaseName = 'trustwalletcore'
 
 android {
     namespace 'wallet.core'
-    compileSdkVersion 32
-    ndkVersion '23.1.7779620'
+    compileSdk 35
+    ndkVersion '28.0.12674087'
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
         versionCode 1
         versionName "1.0"
         externalNativeBuild {
@@ -20,10 +20,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-        disable 'InvalidPackage'
-    }
 
     buildTypes {
         release {
@@ -53,6 +49,15 @@ android {
         singleVariant('release') {
             withSourcesJar()
         }
+    }
+    lint {
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

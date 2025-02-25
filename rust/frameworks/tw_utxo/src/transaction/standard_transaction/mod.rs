@@ -2,6 +2,8 @@
 //
 // Copyright © 2017 Trust Wallet.
 
+use super::transaction_sighash::taproot1_sighash::Taproot1Sighash;
+use super::UtxoTaprootPreimageArgs;
 use crate::encode::compact_integer::CompactInteger;
 use crate::encode::stream::Stream;
 use crate::encode::Encodable;
@@ -16,24 +18,23 @@ use crate::transaction::transaction_sighash::legacy_sighash::LegacySighash;
 use crate::transaction::transaction_sighash::witness0_sighash::Witness0Sighash;
 use crate::transaction::{TransactionPreimage, UtxoPreimageArgs};
 use tw_coin_entry::error::prelude::*;
-use tw_hash::hasher::sha256_d;
+use tw_hash::hasher::{Hasher, StatefulHasher};
 use tw_hash::H256;
 
-use super::transaction_sighash::taproot1_sighash::Taproot1Sighash;
-use super::UtxoTaprootPreimageArgs;
+pub const DEFAULT_TX_HASHER: Hasher = Hasher::Sha256d;
 
 pub mod builder;
 
 /// Must be zero.
-const WITNESS_MARKER: u8 = 0;
+pub const WITNESS_MARKER: u8 = 0;
 /// Must be nonzero.
-const WITNESS_FLAG: u8 = 1;
+pub const WITNESS_FLAG: u8 = 1;
 
 // Sizes of various transaction fields.
-const WITNESS_FLAG_MARKER: usize = 2;
+pub const WITNESS_FLAG_MARKER: usize = 2;
 
 // The Segwit scale factor (witnesses are deducted).
-const SEGWIT_SCALE_FACTOR: usize = 4;
+pub const SEGWIT_SCALE_FACTOR: usize = 4;
 
 /// A standard Bitcoin transaction.
 ///
@@ -113,17 +114,16 @@ impl TransactionInterface for Transaction {
     fn weight(&self) -> usize {
         self.base_size() * 3 + self.total_size()
     }
-}
 
-impl Transaction {
-    /// TODO move to the `TransactionInterface` trait.
-    pub fn txid(&self) -> Vec<u8> {
+    fn txid(&self, hasher: Hasher) -> Vec<u8> {
         let encoded = self.without_witness().encode_out();
-        let mut tx_hash = sha256_d(&encoded);
+        let mut tx_hash = hasher.hash(&encoded);
         tx_hash.reverse();
         tx_hash
     }
+}
 
+impl Transaction {
     /// Returns the same transaction with [`TransactionInput::script_witness`] being empty.
     /// It's mostly used to calculate transaction hash (aka TXID).
     pub fn without_witness(&self) -> Transaction {
@@ -132,12 +132,6 @@ impl Transaction {
             input.set_witness(Witness::default());
         }
         without_witness
-    }
-
-    pub fn encode_out(&self) -> Vec<u8> {
-        let mut stream = Stream::new();
-        self.encode(&mut stream);
-        stream.out()
     }
 
     pub fn size(&self) -> usize {
@@ -281,6 +275,14 @@ impl TxInputInterface for TransactionInput {
 
     fn sequence(&self) -> u32 {
         self.sequence
+    }
+
+    fn script_sig(&self) -> &Script {
+        &self.script_sig
+    }
+
+    fn witness(&self) -> &Witness {
+        &self.witness
     }
 
     fn set_sequence(&mut self, sequence: u32) {
