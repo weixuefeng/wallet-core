@@ -97,6 +97,18 @@ impl UnsignedTransaction for UserOperation {
             signature: Signature::new(signature),
         })
     }
+
+    #[inline]
+    fn try_into_signed_r1(
+        self,
+        signature: tw_keypair::ecdsa::nist256p1::Signature,
+        _chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction> {
+        Ok(SignedUserOperation {
+            unsigned: self,
+            signature: Signature::new_r1(signature),
+        })
+    }
 }
 
 pub struct SignedUserOperation {

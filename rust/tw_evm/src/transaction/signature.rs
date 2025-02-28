@@ -4,7 +4,7 @@
 
 use crate::signature::replay_protection;
 use tw_hash::H520;
-use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::{nist256p1, secp256k1};
 use tw_keypair::{KeyPairError, KeyPairResult};
 use tw_number::U256;
 
@@ -27,6 +27,16 @@ pub struct Signature {
 impl Signature {
     #[inline]
     pub fn new(sign: secp256k1::Signature) -> Self {
+        Signature {
+            v: U256::from(sign.v()),
+            r: U256::from_big_endian(sign.r()),
+            s: U256::from_big_endian(sign.s()),
+            rsv: sign.to_bytes(),
+        }
+    }
+
+    #[inline]
+    pub fn new_r1(sign: nist256p1::Signature) -> Self {
         Signature {
             v: U256::from(sign.v()),
             r: U256::from_big_endian(sign.r()),
@@ -68,6 +78,17 @@ pub struct SignatureEip155 {
 impl SignatureEip155 {
     #[inline]
     pub fn new(sign: secp256k1::Signature, chain_id: U256) -> KeyPairResult<Self> {
+        let v =
+            replay_protection(chain_id, sign.v()).map_err(|_| KeyPairError::InvalidSignature)?;
+        Ok(SignatureEip155 {
+            v,
+            r: U256::from_big_endian(sign.r()),
+            s: U256::from_big_endian(sign.s()),
+        })
+    }
+
+    #[inline]
+    pub fn new_r1(sign: nist256p1::Signature, chain_id: U256) -> KeyPairResult<Self> {
         let v =
             replay_protection(chain_id, sign.v()).map_err(|_| KeyPairError::InvalidSignature)?;
         Ok(SignatureEip155 {

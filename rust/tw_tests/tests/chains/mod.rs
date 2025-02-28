@@ -18,6 +18,7 @@ mod komodo;
 mod kusama;
 mod native_evmos;
 mod native_injective;
+mod newchain;
 mod pactus;
 mod polkadot;
 mod polymesh;

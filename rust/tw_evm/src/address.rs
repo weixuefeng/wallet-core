@@ -11,7 +11,7 @@ use tw_coin_entry::coin_entry::CoinAddress;
 use tw_coin_entry::error::prelude::*;
 use tw_encoding::hex;
 use tw_hash::{sha3::keccak256, H160, H256};
-use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::{nist256p1, secp256k1};
 use tw_memory::Data;
 
 pub trait EvmAddress: FromStr<Err = AddressError> + Into<Address> {
@@ -39,6 +39,20 @@ impl Address {
 
     /// Initializes an address with a `secp256k1` public key.
     pub fn with_secp256k1_pubkey(pubkey: &secp256k1::PublicKey) -> Address {
+        /// `keccak256` returns 32 bytes, but Ethereum address is the last 20 bytes of the hash.
+        const ADDRESS_HASH_STARTS_AT: usize = H256::len() - H160::len();
+        const ADDRESS_HASH_RANGE: RangeFrom<usize> = ADDRESS_HASH_STARTS_AT..;
+
+        let pubkey_bytes = pubkey.uncompressed_without_prefix();
+        let hash = keccak256(pubkey_bytes.as_slice());
+        assert_eq!(hash.len(), H256::len());
+
+        let bytes = H160::try_from(&hash[ADDRESS_HASH_RANGE]).expect("Expected 20 byte array");
+
+        Address { bytes }
+    }
+
+    pub fn with_nist256p1_pubkey(pubkey: &nist256p1::PublicKey) -> Address {
         /// `keccak256` returns 32 bytes, but Ethereum address is the last 20 bytes of the hash.
         const ADDRESS_HASH_STARTS_AT: usize = H256::len() - H160::len();
         const ADDRESS_HASH_RANGE: RangeFrom<usize> = ADDRESS_HASH_STARTS_AT..;

@@ -190,13 +190,13 @@ enum TWCoinType {
     TWCoinTypeVara = 913,
     TWCoinTypeAvail = 709,
     TWCoinTypeNibiru = 23000118,
-    TWCoinTypeSonic = 10000501,
     TWCoinTypeXion = 24000118,
     TWCoinTypeNubit = 25000118,
     TWCoinTypeMove = 10000637,
     TWCoinTypeZkLinkNova = 810180,
     TWCoinTypePactus = 21888,
     TWCoinTypeSonic = 10000146,
+    TWCoinTypeNewChain = 1642,
     // end_of_tw_coin_type_marker_do_not_modify
 
 };

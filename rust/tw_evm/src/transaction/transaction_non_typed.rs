@@ -7,7 +7,7 @@ use crate::rlp::list::RlpList;
 use crate::transaction::signature::{EthSignature, SignatureEip155};
 use crate::transaction::{SignedTransaction, TransactionCommon, UnsignedTransaction};
 use tw_coin_entry::error::prelude::*;
-use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::{nist256p1, secp256k1};
 use tw_memory::Data;
 use tw_number::U256;
 
@@ -45,6 +45,19 @@ impl UnsignedTransaction for TransactionNonTyped {
         Ok(SignedTransactionNonTyped {
             unsigned: self,
             signature: SignatureEip155::new(signature, chain_id)?,
+            chain_id,
+        })
+    }
+
+    #[inline]
+    fn try_into_signed_r1(
+        self,
+        signature: nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction> {
+        Ok(SignedTransactionNonTyped {
+            unsigned: self,
+            signature: SignatureEip155::new_r1(signature, chain_id)?,
             chain_id,
         })
     }

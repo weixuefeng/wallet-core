@@ -31,6 +31,7 @@ use tw_sui::entry::SuiEntry;
 use tw_thorchain::entry::ThorchainEntry;
 use tw_ton::entry::TheOpenNetworkEntry;
 use tw_zcash::entry::ZcashEntry;
+use tw_newchain::entry::NewChainEntry;
 
 pub type CoinEntryExtStaticRef = &'static dyn CoinEntryExt;
 pub type EvmEntryExtStaticRef = &'static dyn EvmEntryExt;
@@ -48,6 +49,7 @@ const INTERNET_COMPUTER: InternetComputerEntry = InternetComputerEntry;
 const KOMODO: KomodoEntry = KomodoEntry;
 const NATIVE_EVMOS: NativeEvmosEntry = NativeEvmosEntry;
 const NATIVE_INJECTIVE: NativeInjectiveEntry = NativeInjectiveEntry;
+const NEW_CHAIN: NewChainEntry = NewChainEntry;
 const PACTUS: PactusEntry = PactusEntry;
 const POLKADOT: SubstrateEntry<PolkadotEntry> = SubstrateEntry(PolkadotEntry);
 const RIPPLE: RippleEntry = RippleEntry;
@@ -75,6 +77,7 @@ pub fn blockchain_dispatcher(blockchain: BlockchainType) -> RegistryResult<CoinE
         BlockchainType::Kusama => Ok(&POLKADOT),
         BlockchainType::NativeEvmos => Ok(&NATIVE_EVMOS),
         BlockchainType::NativeInjective => Ok(&NATIVE_INJECTIVE),
+        BlockchainType::NewChain => Ok(&NEW_CHAIN),
         BlockchainType::Pactus => Ok(&PACTUS),
         BlockchainType::Polkadot => Ok(&POLKADOT),
         BlockchainType::Ripple => Ok(&RIPPLE),

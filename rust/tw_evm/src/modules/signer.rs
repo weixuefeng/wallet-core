@@ -8,7 +8,7 @@ use std::borrow::Cow;
 use std::marker::PhantomData;
 use tw_coin_entry::error::prelude::*;
 use tw_coin_entry::signing_output_error;
-use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::{nist256p1, secp256k1};
 use tw_keypair::traits::SigningKeyTrait;
 use tw_number::U256;
 use tw_proto::Ethereum::Proto;
@@ -32,29 +32,57 @@ impl<Context: EvmContext> Signer<Context> {
         let chain_id = U256::from_big_endian_slice(&input.chain_id)
             .into_tw()
             .context("Invalid chain ID")?;
-        let private_key = secp256k1::PrivateKey::try_from(input.private_key.as_ref())?;
+        let use_nist256p1_sign = input.use_nist256p1_sign.clone();
+        if use_nist256p1_sign {
+            let private_key = nist256p1::PrivateKey::try_from(input.private_key.as_ref())?;
 
-        let unsigned = TxBuilder::<Context>::tx_from_proto(&input)?;
+            let unsigned = TxBuilder::<Context>::tx_from_proto(&input)?;
 
-        let pre_hash = unsigned.pre_hash(chain_id);
-        let signature = private_key.sign(pre_hash)?;
+            let pre_hash = unsigned.pre_hash(chain_id);
+            let signature = private_key.sign(pre_hash)?;
 
-        let signed = unsigned.try_into_signed(signature, chain_id)?;
+            let signed = unsigned.try_into_signed_r1(signature, chain_id)?;
 
-        let eth_signature = signed.signature();
+            let eth_signature = signed.signature();
 
-        let v = eth_signature
-            .v()
-            .to_big_endian_compact_min_len(SIGNATURE_V_MIN_LEN);
+            let v = eth_signature
+                .v()
+                .to_big_endian_compact_min_len(SIGNATURE_V_MIN_LEN);
 
-        Ok(Proto::SigningOutput {
-            encoded: Cow::from(signed.encode()),
-            v: Cow::from(v),
-            r: Cow::from(eth_signature.r().to_big_endian().to_vec()),
-            s: Cow::from(eth_signature.s().to_big_endian().to_vec()),
-            data: Cow::from(signed.payload()),
-            pre_hash: Cow::from(pre_hash.to_vec()),
-            ..Proto::SigningOutput::default()
-        })
+            Ok(Proto::SigningOutput {
+                encoded: Cow::from(signed.encode()),
+                v: Cow::from(v),
+                r: Cow::from(eth_signature.r().to_big_endian().to_vec()),
+                s: Cow::from(eth_signature.s().to_big_endian().to_vec()),
+                data: Cow::from(signed.payload()),
+                pre_hash: Cow::from(pre_hash.to_vec()),
+                ..Proto::SigningOutput::default()
+            })
+        } else {
+            let private_key = secp256k1::PrivateKey::try_from(input.private_key.as_ref())?;
+
+            let unsigned = TxBuilder::<Context>::tx_from_proto(&input)?;
+
+            let pre_hash = unsigned.pre_hash(chain_id);
+            let signature = private_key.sign(pre_hash)?;
+
+            let signed = unsigned.try_into_signed(signature, chain_id)?;
+
+            let eth_signature = signed.signature();
+
+            let v = eth_signature
+                .v()
+                .to_big_endian_compact_min_len(SIGNATURE_V_MIN_LEN);
+
+            Ok(Proto::SigningOutput {
+                encoded: Cow::from(signed.encode()),
+                v: Cow::from(v),
+                r: Cow::from(eth_signature.r().to_big_endian().to_vec()),
+                s: Cow::from(eth_signature.s().to_big_endian().to_vec()),
+                data: Cow::from(signed.payload()),
+                pre_hash: Cow::from(pre_hash.to_vec()),
+                ..Proto::SigningOutput::default()
+            })
+        }
     }
 }

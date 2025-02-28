@@ -85,6 +85,7 @@ This list is generated from [./registry.json](../registry.json)
 | 1023    | Harmony          | ONE    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/harmony/info/logo.png" width="32" />      | <https://harmony.one>         |
 | 1024    | Ontology         | ONT    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ontology/info/logo.png" width="32" />     | <https://ont.io>              |
 | 1030    | Conflux eSpace   | CFX    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cfxevm/info/logo.png" width="32" />       | <https://confluxnetwork.org>  |
+| 1642    | NewChain         | AB     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/newchain/info/logo.png" width="32" />     | <https://www.newtonproject.org> |
 | 1729    | Tezos            | XTZ    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tezos/info/logo.png" width="32" />        | <https://tezos.com>           |
 | 1815    | Cardano          | ADA    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cardano/info/logo.png" width="32" />      | <https://www.cardano.org>     |
 | 1890    | Lightlink Phoenix | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/lightlink/info/logo.png" width="32" />    | <https://lightlink.io>        |
@@ -124,7 +125,6 @@ This list is generated from [./registry.json](../registry.json)
 | 10000321 | KuCoin Community Chain | KCS    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/kcc/info/logo.png" width="32" />          | <https://www.kcc.io/>         |
 | 10000324 | zkSync Era       | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zksync/info/logo.png" width="32" />       | <https://portal.zksync.io/>   |
 | 10000330 | Terra            | LUNA   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/terrav2/info/logo.png" width="32" />      | <https://terra.money>         |
-| 10000501 | Sonic            | SOL    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/sonic/info/logo.png" width="32" />        | <https://www.sonic.game/>     |
 | 10000553 | Huobi ECO Chain  | HT     | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/heco/info/logo.png" width="32" />         | <https://www.hecochain.com/en-us> |
 | 10000637 | Move             | MOVE   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/move/info/logo.png" width="32" />         | <https://docs.movementlabs.xyz/> |
 | 10000787 | Acala EVM        | ACA    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/acalaevm/info/logo.png" width="32" />     | <https://acala.network>       |

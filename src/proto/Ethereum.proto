@@ -184,6 +184,9 @@ message SigningInput {
     // Optional list of addresses and storage keys that the transaction plans to access.
     // Used in `TransactionMode::Enveloped` only.
     repeated Access access_list = 12;
+
+    // only for 'new'
+    bool use_nist256p1_sign = 13;
 }
 
 // Result containing the signed and encoded transaction.

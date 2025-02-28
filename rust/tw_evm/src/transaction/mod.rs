@@ -12,7 +12,7 @@
 use crate::transaction::signature::EthSignature;
 use tw_coin_entry::error::prelude::*;
 use tw_hash::{sha3::keccak256, H256};
-use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::{nist256p1, secp256k1};
 use tw_memory::Data;
 use tw_number::U256;
 
@@ -39,6 +39,12 @@ pub trait UnsignedTransaction: TransactionCommon {
     fn try_into_signed(
         self,
         signature: secp256k1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction>;
+
+    fn try_into_signed_r1(
+        self,
+        signature: nist256p1::Signature,
         chain_id: U256,
     ) -> SigningResult<Self::SignedTransaction>;
 }
@@ -68,6 +74,12 @@ pub trait UnsignedTransactionBox: TransactionCommon {
         signature: secp256k1::Signature,
         chain_id: U256,
     ) -> SigningResult<Box<dyn SignedTransactionBox>>;
+
+    fn try_into_signed_r1(
+        self: Box<Self>,
+        signature: nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Box<dyn SignedTransactionBox>>;
 }
 
 impl<T> UnsignedTransactionBox for T
@@ -87,7 +99,16 @@ where
         signature: secp256k1::Signature,
         chain_id: U256,
     ) -> SigningResult<Box<dyn SignedTransactionBox>> {
-        let signed = <Self as UnsignedTransaction>::try_into_signed(*self, signature, chain_id)?;
+        let signed: <T as UnsignedTransaction>::SignedTransaction = <Self as UnsignedTransaction>::try_into_signed(*self, signature, chain_id)?;
+        Ok(Box::new(signed))
+    }
+
+    fn try_into_signed_r1(
+        self: Box<Self>,
+        signature: nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Box<dyn SignedTransactionBox>> {
+        let signed: <T as UnsignedTransaction>::SignedTransaction = <Self as UnsignedTransaction>::try_into_signed_r1(*self, signature, chain_id)?;
         Ok(Box::new(signed))
     }
 }

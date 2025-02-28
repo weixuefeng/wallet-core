@@ -13,6 +13,7 @@ members = [
     "chains/tw_komodo",
     "chains/tw_native_evmos",
     "chains/tw_native_injective",
+    "chains/tw_newchain",
     "chains/tw_pactus",
     "chains/tw_polkadot",
     "chains/tw_ripple",

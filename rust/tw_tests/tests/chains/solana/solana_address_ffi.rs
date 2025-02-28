@@ -19,7 +19,6 @@ fn test_solana_address_default_token_address() {
         TWStringHelper::wrap(tw_solana_address_default_token_address(
             main_address.ptr(),
             token_mint_address.ptr(),
-            false
         ))
     }
     .to_string()

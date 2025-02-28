@@ -611,7 +611,6 @@ fn test_solana_sign_create_and_transfer_token_2022() {
         sender_token_address: "EQxRyhzjyhRX4TJXt7FmQ3HfFdRcu49krjxHMszidQYS".into(),
         amount: 1000000000,
         decimals: 9,
-        is_token_2022: true,
         ..Proto::CreateAndTransferToken::default()
     };
     let input = Proto::SigningInput {
@@ -952,32 +951,6 @@ fn test_solana_sign_raw_message_v0() {
     assert_eq!(output.error, SigningError::OK);
     // Successfully broadcasted: https://explorer.solana.com/tx/4ffBzXxLPYEEdCYpQGETkCTCCsH6iTdmKzwUZXZZgFemdhRpxQwboguFFoKCeGF3SsZPzuwwE7LbRwLgJbsyRqyP?cluster=testnet
     assert_eq!(output.encoded, "6NijVxwQoDjqt6A41HXCK9kXwNDp48uLgvRyE8uz6NY5dEzaEDLzjzuMnc5TGatHZZUXehKrzUGzbg9jPSdn6pVsMc9TXNH6JGe5RJLmHwWey3MC1p8Hs2zhjw5P439P57NToatraDX9ZwvBtK4EzZzRjWbyGdicheTPjeYKCzvPCLxDkTFtPCM9VZGGXSN2Bne92NLDvf6ntNm5pxsPkZGxPe4w9Eq26gkE83hZyrYXKaiDh8TbqbHatSkw");
-}
-
-#[test]
-fn test_solana_sign_create_and_transfer_token_2022() {
-    let create_transfer_token: Proto::CreateAndTransferToken = Proto::CreateAndTransferToken {
-        recipient_main_address: "EbHdsfVpWzeQV4TceYQ2xENS8meBHyztyTKVSFtgHPUw".into(),
-        token_mint_address: "BSQCmMAFB9itonyVSLsUxX92Ne1rgBZFqothBk3q91k6".into(),
-        recipient_token_address: "FzsLNpzsLMBbm1LWpM6P3W4tKrCkd8KqnMmADNvArW5d".into(),
-        sender_token_address: "EQxRyhzjyhRX4TJXt7FmQ3HfFdRcu49krjxHMszidQYS".into(),
-        amount: 1000000000,
-        decimals: 9,
-        token_program_id: Proto::TokenProgramId::Token2022Program,
-        ..Proto::CreateAndTransferToken::default()
-    };
-    let input = Proto::SigningInput {
-        private_key: b58("MCyXa2gTJELxTPemyVi5ydDcQ3vVgFyddQYXj6UM3tw"),
-        recent_blockhash: "5oba9g5nWnvutTTb935aBMkHBYGXoak1ot4U2p34zEiJ".into(),
-        transaction_type: TransactionType::create_and_transfer_token_transaction(
-            create_transfer_token,
-        ),
-        ..Proto::SigningInput::default()
-    };
-    let mut signer = AnySignerHelper::<Proto::SigningOutput>::default();
-    let output = signer.sign(CoinType::Solana, input);
-    assert_eq!(output.error, SigningError::OK);
-    assert_eq!(output.encoded, "2xzg9AVGv8wWEn9S4m8954WSzh2MUQPCTCyFmyrSs4DJCkSaZRMAbGL8NcyDeJFT3RwUabHsX1m5CFuqzJ5Jg9knNwG6uBjYjWjNjGLBEBURa3ARqziaMAL2mZY8uZwaZETE33WZeSxNrm7zv1jJYLfqbWxquEedGND9vB9AuEspHg7TCZxfJbzY4W8QtLqyQ598z9adxWgwNXanHzqu7B4bNsp1wfKPPyx8AGQaVSx6fepaevDEZX9h2Rg1daW9TjVpktp7EHrriYVs4m44WJ18fejWLyqituXqQPdhos5oZ3e5vNXE8KcgARKXtwsXCGwwKwc9ZEVNvUp6qyUZZV8os2FHorodrT9g3Xrso5dgdsRCb42AUrKHyDdXMpRA1PmeZX6UdzgL8knt2xfzCFxzGPuMKeTtvZKFcEPJvNg73CSMPVH1mm3jz75nATdChR7xu5R4m5Gy8vhr5ndEnb8fM5P1gv6hDbfmesAEf5wye4mKTVAC4B8Mhf8WC8YNaGUG7CcxeQZXrjEfUQenboArhqbxqHFYrURK3GJLAQojXmkwSMGwv4TYL");
 }
 
 #[test]

@@ -22,6 +22,7 @@ pub enum BlockchainType {
     Kusama,
     NativeEvmos,
     NativeInjective,
+    NewChain,
     Pactus,
     Polkadot,
     Ripple,
