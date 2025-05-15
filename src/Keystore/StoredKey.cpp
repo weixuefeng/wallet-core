@@ -42,7 +42,7 @@ StoredKey StoredKey::createWithMnemonicRandom(const std::string& name, const Dat
 }
 
 StoredKey StoredKey::createWithMnemonicAddDefaultAddress(const std::string& name, const Data& password, const std::string& mnemonic, TWCoinType coin, TWStoredKeyEncryption encryption) {
-    StoredKey key = createWithMnemonic(name, password, mnemonic, TWStoredKeyEncryptionLevelDefault, encryption);
+    StoredKey key = createWithMnemonic(name, password, mnemonic, TWStoredKeyEncryptionLevelStandard, encryption);
     const auto wallet = key.wallet(password);
     key.account(coin, &wallet);
     return key;
