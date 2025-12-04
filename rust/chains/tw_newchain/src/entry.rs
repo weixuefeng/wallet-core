@@ -65,7 +65,7 @@ impl CoinEntry for NewChainEntry {
         _prefix: Option<Self::AddressPrefix>,
     ) -> AddressResult<Self::Address> {
         let public_key = public_key
-            .to_nist256r1()
+            .to_nist256p1()
             .ok_or(AddressError::PublicKeyTypeMismatch)?;
         Ok(Address::with_nist256p1_pubkey(public_key))
     }
