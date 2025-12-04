@@ -10,6 +10,7 @@ use crate::transaction::signature::{EthSignature, Signature};
 use crate::transaction::{SignedTransaction, TransactionCommon, UnsignedTransaction};
 use tw_coin_entry::error::prelude::*;
 use tw_keypair::ecdsa::secp256k1;
+use tw_keypair::ecdsa::nist256p1;
 use tw_memory::Data;
 use tw_number::U256;
 
@@ -53,6 +54,18 @@ impl UnsignedTransaction for TransactionEip7702 {
             unsigned: self,
             signature: Signature::new(signature),
             chain_id,
+        })
+    }
+    
+    fn try_into_signed_r1(
+        self,
+        signature: nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction> {
+         Ok(SignedTransactionEip7702 {
+            unsigned: self,
+            signature: Signature::new_r1(signature),
+            chain_id
         })
     }
 }

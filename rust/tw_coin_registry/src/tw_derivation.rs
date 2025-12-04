@@ -20,6 +20,8 @@ pub enum TWDerivation {
     BitcoinTaproot = 8,
     PactusMainnet = 9,
     PactusTestnet = 10,
+    BitcoinTestnetSegwit = 11,
+    BitcoinTestnetLegacy = 12,
     // end_of_derivation_enum - USED TO GENERATE CODE
     #[default]
     Default = 0,
@@ -29,8 +31,8 @@ impl From<TWDerivation> for Derivation {
     fn from(derivation: TWDerivation) -> Self {
         match derivation {
             TWDerivation::Default | TWDerivation::Custom => Derivation::Default,
-            TWDerivation::BitcoinSegwit | TWDerivation::StratisSegwit => Derivation::Segwit,
-            TWDerivation::BitcoinLegacy | TWDerivation::LitecoinLegacy => Derivation::Legacy,
+            TWDerivation::BitcoinSegwit | TWDerivation::StratisSegwit | TWDerivation::BitcoinTestnetSegwit => Derivation::Segwit,
+            TWDerivation::BitcoinLegacy | TWDerivation::LitecoinLegacy | TWDerivation::BitcoinTestnetLegacy => Derivation::Legacy,
             TWDerivation::BitcoinTestnet => Derivation::Testnet,
             TWDerivation::SolanaSolana => Derivation::Default,
             TWDerivation::BitcoinTaproot => Derivation::Taproot,

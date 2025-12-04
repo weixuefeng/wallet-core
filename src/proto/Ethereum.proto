@@ -274,7 +274,7 @@ message SigningInput {
     repeated Access access_list = 12;
 
     // only for 'new'
-    bool use_nist256p1_sign = 13;
+    bool use_nist256p1_sign = 14;
     
     // EIP7702 authorization.
     // Used in `TransactionMode::SetOp` or `TransactionMode::UserOp`.

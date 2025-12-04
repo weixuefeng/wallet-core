@@ -194,6 +194,17 @@ impl UnsignedTransaction for UserOperationV0_7 {
             signature: Signature::new(signature),
         })
     }
+    
+    fn try_into_signed_r1(
+        self,
+        signature: tw_keypair::ecdsa::nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction> {
+         Ok(SignedUserOperationV0_7 {
+            unsigned: self,
+            signature: Signature::new_r1(signature),
+        })
+    }
 }
 
 #[derive(Serialize)]
