@@ -31,7 +31,7 @@ function download_dependencies() {
 function build_gtest() {
     # Build gtest
     GTEST_DIR="$ROOT/build/local/src/gtest"
-    cd ${GTEST_DIR}/googletest-release-$GTEST_VERSION
+    cd ${GTEST_DIR}/googletest-$GTEST_VERSION
     $CMAKE -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX -H.
     $MAKE -j4
     $MAKE install
@@ -68,7 +68,7 @@ function build_protobuf() {
     $CMAKE --install build --prefix $PREFIX
     $CMAKE --build build --target clean
 
-    if [[ -x "$(command -v swift)" && $(uname) == "Darwin" ]]; then
+    if [[ -x "$(command -v swift)" && $(uname -s) == "Darwin" ]]; then
         build_swift_plugin
     fi
 }

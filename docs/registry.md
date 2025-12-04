@@ -65,6 +65,7 @@ This list is generated from [./registry.json](../registry.json)
 | 508     | MultiversX       | eGLD   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/elrond/info/logo.png" width="32" />       | <https://multiversx.com/>     |
 | 529     | Secret           | SCRT   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/secret/info/logo.png" width="32" />       | <https://scrt.network/>       |
 | 564     | Agoric           | BLD    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/agoric/info/logo.png" width="32" />       | <https://agoric.com>          |
+| 595     | Polymesh         | POLYX  | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polymesh/info/logo.png" width="32" />     | <https://polymesh.network>    |
 | 607     | TON              | TON    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ton/info/logo.png" width="32" />          | <https://ton.org>             |
 | 637     | Aptos            | APT    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/aptos/info/logo.png" width="32" />        | <https://aptoslabs.com/>      |
 | 709     | Avail            | AVL    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/Avail/info/logo.png" width="32" />        | <>                            |
@@ -100,6 +101,8 @@ This list is generated from [./registry.json](../registry.json)
 | 7332    | Zen EON          | ZEN    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zeneon/info/logo.png" width="32" />       | <https://eon.horizen.io>      |
 | 8453    | Base             | ETH    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/info/logo.png" width="32" />         | <https://base.mirror.xyz/>    |
 | 8964    | NULS             | NULS   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/nuls/info/logo.png" width="32" />         | <https://nuls.io>             |
+| 9745    | Plasma Mainnet   | XPL    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/plasma/info/logo.png" width="32" />       | <https://plasma.to>           |
+| 10143   | Monad            | MON    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/monad/info/logo.png" width="32" />        | <https://www.monad.xyz>       |
 | 14001   | WAX              | WAXP   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/wax/info/logo.png" width="32" />          | <http://wax.io>               |
 | 18000   | Meter            | MTR    | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/meter/info/logo.png" width="32" />        | <https://meter.io/>           |
 | 19167   | Flux             | FLUX   | <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/zelcash/info/logo.png" width="32" />      | <https://runonflux.io>        |

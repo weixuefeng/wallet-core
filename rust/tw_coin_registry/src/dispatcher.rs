@@ -13,6 +13,7 @@ use tw_bitcoin::entry::BitcoinEntry;
 use tw_bitcoincash::entry::BitcoinCashEntry;
 use tw_coin_entry::coin_entry_ext::CoinEntryExt;
 use tw_cosmos::entry::CosmosEntry;
+use tw_decred::entry::DecredEntry;
 use tw_ethereum::entry::EthereumEntry;
 use tw_evm::evm_entry::EvmEntryExt;
 use tw_greenfield::entry::GreenfieldEntry;
@@ -23,6 +24,7 @@ use tw_native_evmos::entry::NativeEvmosEntry;
 use tw_native_injective::entry::NativeInjectiveEntry;
 use tw_pactus::entry::PactusEntry;
 use tw_polkadot::entry::PolkadotEntry;
+use tw_polymesh::entry::PolymeshEntry;
 use tw_ripple::entry::RippleEntry;
 use tw_ronin::entry::RoninEntry;
 use tw_solana::entry::SolanaEntry;
@@ -42,6 +44,7 @@ const BINANCE: BinanceEntry = BinanceEntry;
 const BITCOIN: BitcoinEntry = BitcoinEntry;
 const BITCOIN_CASH: BitcoinCashEntry = BitcoinCashEntry;
 const COSMOS: CosmosEntry = CosmosEntry;
+const DECRED: DecredEntry = DecredEntry;
 const ETHEREUM: EthereumEntry = EthereumEntry;
 const GREENFIELD: GreenfieldEntry = GreenfieldEntry;
 const GROESTLCOIN: GroestlcoinEntry = GroestlcoinEntry;
@@ -52,6 +55,7 @@ const NATIVE_INJECTIVE: NativeInjectiveEntry = NativeInjectiveEntry;
 const NEW_CHAIN: NewChainEntry = NewChainEntry;
 const PACTUS: PactusEntry = PactusEntry;
 const POLKADOT: SubstrateEntry<PolkadotEntry> = SubstrateEntry(PolkadotEntry);
+const POLYMESH: SubstrateEntry<PolymeshEntry> = SubstrateEntry(PolymeshEntry);
 const RIPPLE: RippleEntry = RippleEntry;
 const RONIN: RoninEntry = RoninEntry;
 const SOLANA: SolanaEntry = SolanaEntry;
@@ -69,6 +73,7 @@ pub fn blockchain_dispatcher(blockchain: BlockchainType) -> RegistryResult<CoinE
         BlockchainType::Bitcoin => Ok(&BITCOIN),
         BlockchainType::BitcoinCash => Ok(&BITCOIN_CASH),
         BlockchainType::Cosmos => Ok(&COSMOS),
+        BlockchainType::Decred => Ok(&DECRED),
         BlockchainType::Ethereum => Ok(&ETHEREUM),
         BlockchainType::Greenfield => Ok(&GREENFIELD),
         BlockchainType::Groestlcoin => Ok(&GROESTLCOIN),
@@ -80,6 +85,7 @@ pub fn blockchain_dispatcher(blockchain: BlockchainType) -> RegistryResult<CoinE
         BlockchainType::NewChain => Ok(&NEW_CHAIN),
         BlockchainType::Pactus => Ok(&PACTUS),
         BlockchainType::Polkadot => Ok(&POLKADOT),
+        BlockchainType::Polymesh => Ok(&POLYMESH),
         BlockchainType::Ripple => Ok(&RIPPLE),
         BlockchainType::Ronin => Ok(&RONIN),
         BlockchainType::Solana => Ok(&SOLANA),

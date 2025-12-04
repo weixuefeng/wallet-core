@@ -3,9 +3,8 @@
 // Copyright © 2017 Trust Wallet.
 
 use crate::chains::polkadot::{
-    balance_call, helper_encode, helper_encode_and_maybe_sign, helper_sign, polymesh_call,
-    staking_call, ACCOUNT_2, GENESIS_HASH, POLYMESH_GENESIS_HASH, PRIVATE_KEY, PRIVATE_KEY_2,
-    PRIVATE_KEY_IOS, PRIVATE_KEY_POLKADOT,
+    balance_call, helper_encode, helper_encode_and_maybe_sign, helper_sign, staking_call,
+    ACCOUNT_2, GENESIS_HASH, PRIVATE_KEY, PRIVATE_KEY_2, PRIVATE_KEY_IOS, PRIVATE_KEY_POLKADOT,
 };
 use std::borrow::Cow;
 use tw_any_coin::any_address::AnyAddress;
@@ -427,148 +426,6 @@ fn test_polkadot_sign_chill_and_unbond() {
     );
 }
 
-// TEST(TWAnySignerPolkadot, PolymeshEncodeAndSign)
-#[test]
-fn test_polymesh_encode_and_sign() {
-    // tx on mainnet
-    // https://polymesh.subscan.io/extrinsic/0x9a4283cc38f7e769c53ad2d1c5cf292fc85a740ec1c1aa80c180847e51928650
-
-    let block_hash = "898bba6413c38f79a284aec8749f297f6c8734c501f67517b5a6aadc338d1102"
-        .decode_hex()
-        .unwrap();
-    let genesis_hash = POLYMESH_GENESIS_HASH.decode_hex().unwrap();
-
-    let input = Proto::SigningInput {
-        network: 12,
-        multi_address: true,
-        nonce: 1,
-        block_hash: block_hash.into(),
-        genesis_hash: genesis_hash.into(),
-        spec_version: 3010,
-        transaction_version: 2,
-        era: Some(Proto::Era {
-            block_number: 4298130,
-            period: 64,
-        }),
-        message_oneof: balance_call(Proto::mod_Balance::OneOfmessage_oneof::transfer(Transfer {
-            to_address: "2FSoQykVV3uWe5ChZuazMDHBoaZmCPPuoYx5KHL5VqXooDQW".into(),
-            value: Cow::Owned(U256::from(1000000u64).to_big_endian().to_vec()),
-            // The original C++ test had the wrong memo, since it didn't space pad the memo to 32 bytes.
-            memo: "MEMO PADDED WITH SPACES         ".into(),
-            call_indices: custom_call_indices(0x05, 0x01),
-            ..Default::default()
-        })),
-        ..Default::default()
-    };
-
-    let public_key = "4322cf71da08f9d56181a707af7c0c437dfcb93e6caac9825a5aba57548142ee";
-    let signature = "0791ee378775eaff34ef7e529ab742f0d81d281fdf20ace0aa765ca484f5909c4eea0a59c8dbbc534c832704924b424ba3230c38acd0ad5360cef023ca2a420f";
-
-    // Compile and verify the ED25519 signature.
-    let (preimage, signed) =
-        helper_encode_and_compile(CoinType::Polkadot, input, signature, public_key, true);
-
-    assert_eq!(preimage, "050100849e2f6b165d4b28b39ef3d98f86c0520d82bc349536324365c10af08f323f8302093d00014d454d4f2050414444454420574954482053504143455320202020202020202025010400c20b0000020000006fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063898bba6413c38f79a284aec8749f297f6c8734c501f67517b5a6aadc338d1102");
-    // This signed tranaction is different from the original C++ test, but matches the transaction on Polymesh.
-    assert_eq!(signed, "bd0284004322cf71da08f9d56181a707af7c0c437dfcb93e6caac9825a5aba57548142ee000791ee378775eaff34ef7e529ab742f0d81d281fdf20ace0aa765ca484f5909c4eea0a59c8dbbc534c832704924b424ba3230c38acd0ad5360cef023ca2a420f25010400050100849e2f6b165d4b28b39ef3d98f86c0520d82bc349536324365c10af08f323f8302093d00014d454d4f20504144444544205749544820535041434553202020202020202020");
-}
-
-// TEST(TWAnySignerPolkadot, PolymeshEncodeBondAndNominate)
-#[test]
-fn test_polymesh_encode_bond_and_nominate() {
-    // tx on mainnet
-    // https://polymesh.subscan.io/extrinsic/0xd516d4cb1f5ade29e557586e370e98c141c90d87a0b7547d98c6580eb2afaeeb
-
-    let block_hash = "ab67744c78f1facfec9e517810a47ae23bc438315a01dac5ffee46beed5ad3d8"
-        .decode_hex()
-        .unwrap();
-    let genesis_hash = POLYMESH_GENESIS_HASH.decode_hex().unwrap();
-
-    let input = Proto::SigningInput {
-        network: 12,
-        multi_address: true,
-        nonce: 0,
-        block_hash: block_hash.into(),
-        genesis_hash: genesis_hash.into(),
-        spec_version: 6003050,
-        transaction_version: 4,
-        era: Some(Proto::Era {
-            block_number: 15742961,
-            period: 64,
-        }),
-        message_oneof: staking_call(Proto::mod_Staking::OneOfmessage_oneof::bond_and_nominate(
-            Proto::mod_Staking::BondAndNominate {
-                controller: "2EYbDVDVWiFbXZWJgqGDJsiH5MfNeLr5fxqH3tX84LQZaETG".into(),
-                value: Cow::Owned(U256::from(4000000u64).to_big_endian().to_vec()), // 4.0 POLYX
-                reward_destination: Proto::RewardDestination::STAKED.into(),
-                nominators: vec!["2Gw8mSc4CUMxXMKEDqEsumQEXE5yTF8ACq2KdHGuigyXkwtz".into()],
-                call_indices: custom_call_indices(0x29, 0x02),
-                bond_call_indices: custom_call_indices(0x11, 0x00),
-                nominate_call_indices: custom_call_indices(0x11, 0x05),
-                ..Default::default()
-            },
-        )),
-        ..Default::default()
-    };
-
-    let preimage = helper_encode(CoinType::Polkadot, &input);
-
-    assert_eq!(preimage, "2902081100005ccc5c9276ab7976e7c93c70c190fbf1761578c07b892d0d1fe65972f6a290610224f4000011050400c6766ff780e1f506e41622f7798ec9323ab3b8bea43767d8c107e1e920581958150300006a995b00040000006fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063ab67744c78f1facfec9e517810a47ae23bc438315a01dac5ffee46beed5ad3d8");
-
-    // Can't compile a transaction with an SR25519 signature.
-    /*
-    // The public key is an SR25519 key and the signature is an SR25519 signature.
-    let public_key = "5ccc5c9276ab7976e7c93c70c190fbf1761578c07b892d0d1fe65972f6a29061";
-    let signature = "685a2fd4b1bdf7775c55eb97302a0f86b0c10848fd9db3a7f6bbe912c4c2fa28bed16f6032852ec14f27f0553523dd2fc181a6dca79f19f9c7ed6cb660cf6480";
-
-    let (preimage, signed) =
-        helper_encode_and_compile(CoinType::Polkadot, input, signature, public_key, true);
-    assert_eq!(signed, "d90284005ccc5c9276ab7976e7c93c70c190fbf1761578c07b892d0d1fe65972f6a2906101685a2fd4b1bdf7775c55eb97302a0f86b0c10848fd9db3a7f6bbe912c4c2fa28bed16f6032852ec14f27f0553523dd2fc181a6dca79f19f9c7ed6cb660cf6480150300002902081100005ccc5c9276ab7976e7c93c70c190fbf1761578c07b892d0d1fe65972f6a290610224f4000011050400c6766ff780e1f506e41622f7798ec9323ab3b8bea43767d8c107e1e920581958");
-    */
-}
-
-// TEST(TWAnySignerPolkadot, PolymeshEncodeChillAndUnbond)
-#[test]
-fn test_polymesh_encode_chill_and_unbond() {
-    // extrinsic on mainnet
-    // https://mainnet-app.polymesh.network/#/extrinsics/decode/0x29020811061102027a030a
-
-    let block_hash = "ab67744c78f1facfec9e517810a47ae23bc438315a01dac5ffee46beed5ad3d8"
-        .decode_hex()
-        .unwrap();
-    let genesis_hash = POLYMESH_GENESIS_HASH.decode_hex().unwrap();
-
-    let input = Proto::SigningInput {
-        network: 12,
-        multi_address: true,
-        nonce: 0,
-        block_hash: block_hash.into(),
-        genesis_hash: genesis_hash.into(),
-        spec_version: 6003050,
-        transaction_version: 4,
-        era: Some(Proto::Era {
-            block_number: 15742961,
-            period: 64,
-        }),
-        message_oneof: staking_call(Proto::mod_Staking::OneOfmessage_oneof::chill_and_unbond(
-            Proto::mod_Staking::ChillAndUnbond {
-                value: Cow::Owned(U256::from(42000000u64).to_big_endian().to_vec()), // 42.0 POLYX
-                call_indices: custom_call_indices(0x29, 0x02),
-                chill_call_indices: custom_call_indices(0x11, 0x06),
-                unbond_call_indices: custom_call_indices(0x11, 0x02),
-                ..Default::default()
-            },
-        )),
-        ..Default::default()
-    };
-
-    let preimage = helper_encode(CoinType::Polkadot, &input);
-
-    assert_eq!(
-        preimage,
-        "29020811061102027a030a150300006a995b00040000006fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063ab67744c78f1facfec9e517810a47ae23bc438315a01dac5ffee46beed5ad3d8");
-}
-
 // TEST(TWAnySignerPolkadot, Statemint_encodeTransaction_transfer)
 #[test]
 fn test_statemint_encode_transaction_transfer() {
@@ -802,97 +659,6 @@ fn test_statemint_encode_transaction_usdt_transfer_keep_alive() {
     assert_eq!(signed, "5102840081f5dd1432e5dd60aa71819e1141ad5e54d6f4277d7d128030154114444b8c9100d22583408806c005a24caf16f2084691f4c6dcb6015e6645adc86fc1474369b0e0b7dbcc0ef25b17eae43844aff6fb42a0b279a19e822c76043cac015be5e40a00200001c00700003206011f0050e47b3c8aef60bc4fc744d8d979cb0eb2d45fa25c2e9da74e1e5ebd9e117518821a0600");
 }
 
-// TEST(TWAnySignerPolkadot, encodeTransaction_Add_authorization)
-#[test]
-fn test_encode_transaction_add_authorization() {
-    // tx on mainnet
-    // https://polymesh.subscan.io/extrinsic/0x7d9b9109027b36b72d37ba0648cb70e5254524d3d6752cc6b41601f4bdfb1af0
-
-    let block_hash = "ce0c2109db498e45abf8fd447580dcfa7b7a07ffc2bfb1a0fbdd1af3e8816d2b"
-        .decode_hex()
-        .unwrap();
-    let genesis_hash = POLYMESH_GENESIS_HASH.decode_hex().unwrap();
-
-    // Set empty "These".
-    let empty = Proto::mod_Identity::mod_AddAuthorization::Data {
-        data: vec![0x00u8].into(),
-    };
-    let input = Proto::SigningInput {
-        network: 12,
-        multi_address: true,
-        nonce: 5,
-        block_hash: block_hash.into(),
-        genesis_hash: genesis_hash.into(),
-        spec_version: 3010,
-        transaction_version: 2,
-        era: Some(Proto::Era {
-            block_number: 4395451,
-            period: 64,
-        }),
-        message_oneof: polymesh_call(Proto::mod_Identity::OneOfmessage_oneof::add_authorization(
-            Proto::mod_Identity::AddAuthorization {
-                target: "2HEVN4PHYKj7B1krQ9bctAQXZxHQQkANVNCcfbdYk2gZ4cBR".into(),
-                data: Some(Proto::mod_Identity::mod_AddAuthorization::AuthData {
-                    asset: Some(empty.clone()),
-                    extrinsic: Some(empty.clone()),
-                    portfolio: Some(empty.clone()),
-                }),
-                call_indices: custom_call_indices(0x07, 0x0d),
-                ..Default::default()
-            },
-        )),
-        ..Default::default()
-    };
-
-    let public_key = "4322cf71da08f9d56181a707af7c0c437dfcb93e6caac9825a5aba57548142ee";
-    let signature = "81e6561e4391862b5da961d7033baced1c4b25f0e27f938b02321af1118e0b859e1c2bd5607576a258f2c2befbc5f397ea4adb62938f30eb73c8060ab0eabf01";
-    let (_preimage, signed) =
-        helper_encode_and_compile(CoinType::Polkadot, input, signature, public_key, true);
-    assert_eq!(signed, "490284004322cf71da08f9d56181a707af7c0c437dfcb93e6caac9825a5aba57548142ee0081e6561e4391862b5da961d7033baced1c4b25f0e27f938b02321af1118e0b859e1c2bd5607576a258f2c2befbc5f397ea4adb62938f30eb73c8060ab0eabf01b5031400070d01d3b2f1c41b9b4522eb3e23329b81aca6cc0231167ecfa3580c5a71ff6d0610540501000100010000");
-}
-
-// TEST(TWAnySignerPolkadot, encodeTransaction_JoinIdentityAsKey)
-#[test]
-fn test_encode_transaction_join_identity_as_key() {
-    // tx on mainnet
-    // https://polymesh.subscan.io/extrinsic/0x9d7297d8b38af5668861996cb115f321ed681989e87024fda64eae748c2dc542
-
-    let block_hash = "45c80153c47f5d16acc7a66d473870e8d4574437a7d8c813f47da74cae3812c2"
-        .decode_hex()
-        .unwrap();
-    let genesis_hash = POLYMESH_GENESIS_HASH.decode_hex().unwrap();
-
-    let input = Proto::SigningInput {
-        network: 12,
-        multi_address: true,
-        nonce: 0,
-        block_hash: block_hash.into(),
-        genesis_hash: genesis_hash.into(),
-        spec_version: 3010,
-        transaction_version: 2,
-        era: Some(Proto::Era {
-            block_number: 4395527,
-            period: 64,
-        }),
-        message_oneof: polymesh_call(
-            Proto::mod_Identity::OneOfmessage_oneof::join_identity_as_key(
-                Proto::mod_Identity::JoinIdentityAsKey {
-                    auth_id: 21435,
-                    call_indices: custom_call_indices(0x07, 0x05),
-                    ..Default::default()
-                },
-            ),
-        ),
-        ..Default::default()
-    };
-
-    let public_key = "d3b2f1c41b9b4522eb3e23329b81aca6cc0231167ecfa3580c5a71ff6d061054";
-    let signature = "7f5adbb2749e2f0ace29b409c41dd717681495b1f22dc5358311646a9fb8af8a173fc47f1b19748fb56831c2128773e2976986685adee83c741ab49934d80006";
-    let (_preimage, signed) =
-        helper_encode_and_compile(CoinType::Polkadot, input, signature, public_key, true);
-    assert_eq!(signed, "c5018400d3b2f1c41b9b4522eb3e23329b81aca6cc0231167ecfa3580c5a71ff6d061054007f5adbb2749e2f0ace29b409c41dd717681495b1f22dc5358311646a9fb8af8a173fc47f1b19748fb56831c2128773e2976986685adee83c741ab49934d80006750000000705bb53000000000000");
-}
-
 // TEST(TWAnySignerPolkadot, Kusama_SignBond_NoController)
 #[test]
 fn test_kusama_sign_bond_no_controller() {
@@ -972,6 +738,58 @@ fn test_sign_transfer_kusama_new_spec() {
     let (preimage, signed) = helper_encode_and_maybe_sign(CoinType::Polkadot, input);
     assert_eq!(preimage, "0400001a2447c661c9b168bba4a2a178baef7d79eee006c1d145ffc832be76ff6ee9ce0300943577950159020000154a0f001a000000b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe0c731c2b7f5332749432eae61cd5a919592965b28181cf9b73b0a1258ea7330300");
     assert_eq!(signed.as_deref(), Some("450284009dca538b7a925b8ea979cc546464a3c5f81d2398a3a272f6f93bdf4803f2f78300fc5a463d3b6972ac7e0b701110f9d95d377be5b6a2f356765553104c04765fc0066c235c11dabde650d487760dc310003d607abceaf85a0a0f47f1a90e3680029501590200000400001a2447c661c9b168bba4a2a178baef7d79eee006c1d145ffc832be76ff6ee9ce0300943577"));
+}
+
+#[test]
+fn test_sign_transfer_kusama_asset_hub() {
+    let block_hash = "0xa08d580076533e7262904ea3105c7abb1923e10b4a44c2b8e2121fca23c99d63"
+        .decode_hex()
+        .unwrap();
+    let block_number = 11410063;
+    let genesis_hash = "0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a"
+        .decode_hex()
+        .unwrap();
+    // GtrrH11FcafS3wNr59t5PwZSr94Zatc3nj1dTN1ET3drJ5k
+    let private_key = "f5636ddc5583a9d3f95748328b56f36b5a4197f9b8473c546378eee3648b070f"
+        .decode_hex()
+        .unwrap();
+
+    let input = Proto::SigningInput {
+        network: 2,
+        private_key: private_key.into(),
+        multi_address: false,
+        nonce: 1,
+        block_hash: block_hash.into(),
+        genesis_hash: genesis_hash.into(),
+        spec_version: 1009002,
+        transaction_version: 15,
+        charge_native_as_asset_tx_payment: true,
+        era: Some(Proto::Era {
+            block_number,
+            period: 64,
+        }),
+        message_oneof: balance_call(Proto::mod_Balance::OneOfmessage_oneof::transfer(
+            Proto::mod_Balance::Transfer {
+                to_address: "DrRsYwWQN4QH6RCqyw5xLJbq8V37NodsJjuWKhMhx1GnJm1".into(),
+                value: Cow::Owned(U256::from(90_000_000_000u64).to_big_endian().to_vec()), // 0.09
+                call_indices: Some(Proto::CallIndices {
+                    variant: Proto::mod_CallIndices::OneOfvariant::custom(
+                        Proto::CustomCallIndices {
+                            module_index: 0x0A, // Balances pallet
+                            method_index: 0x00, // transfer_allow_death
+                        },
+                    ),
+                }),
+                ..Default::default()
+            },
+        )),
+        ..Default::default()
+    };
+
+    let (_preimage, signed) = helper_encode_and_maybe_sign(CoinType::Polkadot, input);
+    // Successfully broadcasted tx:
+    // https://assethub-kusama.subscan.io/extrinsic/0xc3dd4b245cbd31ca0b6ea17ad1f7aad12b5984e705da1bee8b127e1d338301a4
+    assert_eq!(signed.as_deref(), Some("49028400bf14d379a6d161a3cfcbb12dc1ae6c9a5e89c9c22924060e8fecab41e6124acf00a26875c8f4f1760319ffaa1a4a44d0841fec3a7d7abf0c820ac931574e18cda960bedbc32886fc9d050b4ebf291db1ded94e6ee55cfb83372cc800fceeacea03f500040000000a000038858d284516bcf0991d66e09c18815afb33c22f1d0d29cf43be56debd5777610700046bf414"));
 }
 
 // TEST(PolkadotExtrinsic, Polkadot_EncodePayloadWithNewSpec)

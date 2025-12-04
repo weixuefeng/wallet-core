@@ -1385,6 +1385,7 @@
     "p2shPrefix": 189,
     "publicKeyHasher": "sha256ripemd",
     "base58Hasher": "sha256d",
+    "hrp": "tex",
     "explorer": {
       "url": "https://blockchair.com/zcash",
       "txPath": "/transaction/",
@@ -4869,7 +4870,12 @@
     "blockchain": "Pactus",
     "derivation": [
       {
+        "name": "mainnet",
         "path": "m/44'/21888'/3'/0'"
+      },
+      {
+        "name": "testnet",
+        "path": "m/44'/21777'/3'/0'"
       }
     ],
     "curve": "ed25519",
@@ -4885,6 +4891,96 @@
       "source": "https://github.com/pactus-project/pactus",
       "rpc": "https://docs.pactus.org/api/http",
       "documentation": "https://docs.pactus.org"
+    }
+  },
+  {
+    "id": "polymesh",
+    "name": "Polymesh",
+    "coinId": 595,
+    "symbol": "POLYX",
+    "decimals": 6,
+    "blockchain": "Polymesh",
+    "derivation": [
+      {
+        "path": "m/44'/595'/0'/0'/0'"
+      }
+    ],
+    "curve": "ed25519",
+    "publicKeyType": "ed25519",
+    "addressHasher": "keccak256",
+    "ss58Prefix": 12,
+    "explorer": {
+      "url": "https://polymesh.subscan.io",
+      "txPath": "/extrinsic/",
+      "accountPath": "/account/",
+      "sampleTx": "0x98cb5e33d8ff3dd5838c384e2ef9e291314ed8db13f5d4f42cdd70bad54a5e04",
+      "sampleAccount": "2E5u4xA1TqswQ3jMJH96zekxwr2itvKu79fDC1mmnVZRh6Uv"
+    },
+    "info": {
+      "url": "https://polymesh.network",
+      "source": "https://github.com/PolymeshAssociation/Polymesh",
+      "rpc": "wss://rpc.polymesh.network/",
+      "documentation": "https://developers.polymesh.network/"
+    }
+  },
+  {
+    "id": "plasma",
+    "name": "Plasma",
+    "displayName": "Plasma Mainnet",
+    "coinId": 9745,
+    "symbol": "XPL",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "9745",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://plasmascan.to",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x3700212ec535b4c804363be87ba8a5f5668de6314ed41978f6ad71c5340d4d77",
+      "sampleAccount": "0x30A3E1F27B60c095E2c87bce1e2ffB24f381C8cd"
+    },
+    "info": {
+      "url": "https://plasma.to",
+      "rpc": "https://rpc.plasma.to",
+      "documentation": "https://plasmascan.to/documentation"
+    }
+  },
+  {
+    "id": "monad",
+    "name": "Monad",
+    "displayName": "Monad",
+    "coinId": 10143,
+    "symbol": "MON",
+    "decimals": 18,
+    "blockchain": "Ethereum",
+    "derivation": [
+      {
+        "path": "m/44'/60'/0'/0/0"
+      }
+    ],
+    "curve": "secp256k1",
+    "publicKeyType": "secp256k1Extended",
+    "chainId": "143",
+    "addressHasher": "keccak256",
+    "explorer": {
+      "url": "https://monvision.io",
+      "txPath": "/tx/",
+      "accountPath": "/address/",
+      "sampleTx": "0x8394f9f01bc2ae2cc93e19170bf80c303210f6f4198e5ec3cc99b0cba04962b6",
+      "sampleAccount": "0x6ab69B482987b0BA1f1c96BDbDC192a80CB09132"
+    },
+    "info": {
+      "url": "https://www.monad.xyz",
+      "rpc": "https://rpc.monad.xyz",
+      "documentation": "https://docs.monad.xyz"
     }
   },
   {
@@ -5125,5 +5221,4 @@
       "clientDocs": "https://eth.wiki/json-rpc/API"
     }
   }
-
 ]

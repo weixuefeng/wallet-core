@@ -91,6 +91,8 @@ TEST(Coin, DeriveAddress) {
         case TWCoinTypeBounceBit:
         case TWCoinTypeZkLinkNova:
         case TWCoinTypeSonic:
+        case TWCoinTypePlasma:
+        case TWCoinTypeMonad:
             // end_of_evm_address_derivation_tests_marker_do_not_modify
             EXPECT_EQ(address, "0x9d8A62f656a8d1615C1294fd71e9CFb3E4855A4F");
             break;
@@ -410,6 +412,8 @@ TEST(Coin, DeriveAddress) {
             break;
         case TWCoinTypeNewChain:
             EXPECT_EQ(address, "__TODO__");
+        case TWCoinTypePolymesh:
+            EXPECT_EQ(address, "2HqjMm2goapWvXQBqjjEdVaTZsUmunWwEq1TSToDR1pDzQ1F");
             break;
             // end_of_coin_address_derivation_tests_marker_do_not_modify
             // no default branch here, intentionally, to better notice any missing coins

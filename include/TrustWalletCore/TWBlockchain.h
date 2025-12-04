@@ -70,6 +70,7 @@ enum TWBlockchain {
     TWBlockchainKomodo = 57,
     TWBlockchainAvail = 1000, // Avail
     TWBlockchainNewChain = 59,
+    TWBlockchainPolymesh = 58, // Substrate
 };
 
 TW_EXTERN_C_END

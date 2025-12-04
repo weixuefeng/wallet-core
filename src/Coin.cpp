@@ -70,6 +70,7 @@
 #include "Pactus/Entry.h"
 #include "Komodo/Entry.h"
 #include "NewChain/Entry.h"
+#include "Polymesh/Entry.h"
 // end_of_coin_includes_marker_do_not_modify
 
 using namespace TW;
@@ -133,6 +134,7 @@ BitcoinCash::Entry BitcoinCashDP;
 Pactus::Entry PactusDP;
 Komodo::Entry KomodoDP;
 NewChain::Entry NewChainDP;
+Polymesh::Entry PolymeshDP;
 // end_of_coin_dipatcher_declarations_marker_do_not_modify
 
 CoinEntry* coinDispatcher(TWCoinType coinType) {
@@ -198,6 +200,7 @@ CoinEntry* coinDispatcher(TWCoinType coinType) {
         case TWBlockchainPactus: entry = &PactusDP; break;
         case TWBlockchainKomodo: entry = &KomodoDP; break;
         case TWBlockchainNewChain: entry = &NewChainDP; break;
+        case TWBlockchainPolymesh: entry = &PolymeshDP; break;
         // end_of_coin_dipatcher_switch_marker_do_not_modify
 
         default: entry = nullptr; break;
@@ -298,6 +301,12 @@ std::string TW::deriveAddress(TWCoinType coin, const PublicKey& publicKey, TWDer
     auto const* dispatcher = coinDispatcher(coin);
     assert(dispatcher != nullptr);
     return dispatcher->deriveAddress(coin, publicKey, derivation, addressPrefix);
+}
+
+PrivateKey TW::decodePrivateKey(TWCoinType coin, const std::string& privateKey) {
+    auto const* dispatcher = coinDispatcher(coin);
+    assert(dispatcher != nullptr);
+    return dispatcher->decodePrivateKey(coin, privateKey);
 }
 
 Data TW::addressToData(TWCoinType coin, const std::string& address) {

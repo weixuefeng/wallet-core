@@ -197,6 +197,9 @@ enum TWCoinType {
     TWCoinTypePactus = 21888,
     TWCoinTypeSonic = 10000146,
     TWCoinTypeNewChain = 1642,
+    TWCoinTypePolymesh = 595,
+    TWCoinTypePlasma = 9745,
+    TWCoinTypeMonad = 10143,
     // end_of_tw_coin_type_marker_do_not_modify
 
 };

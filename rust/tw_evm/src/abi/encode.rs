@@ -2,6 +2,8 @@
 //
 // Copyright © 2017 Trust Wallet.
 
+use crate::abi::param::Param;
+use crate::abi::param_token::NamedToken;
 use crate::abi::token::Token;
 use tw_hash::H256;
 use tw_memory::Data;
@@ -13,6 +15,19 @@ pub fn encode_tokens(tokens: &[Token]) -> Data {
         .into_iter()
         .flat_map(H256::take)
         .collect()
+}
+
+pub fn encode_tuple(tokens: Vec<Token>) -> Data {
+    let token_params: Vec<_> = tokens
+        .into_iter()
+        .map(|token| {
+            let param = Param::with_type(token.to_param_type());
+            NamedToken::with_param_and_token(&param, token)
+        })
+        .collect();
+    encode_tokens(&[Token::Tuple {
+        params: token_params,
+    }])
 }
 
 #[derive(Debug)]
@@ -719,7 +734,7 @@ mod tests {
 
     #[test]
     fn test_pad_u32() {
-        // this will fail if endianess is not supported
+        // this will fail if endianness is not supported
         assert_eq!(pad_u32(0x1)[31], 1);
         assert_eq!(pad_u32(0x100)[30], 1);
     }
