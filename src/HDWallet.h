@@ -120,6 +120,9 @@ public:
     /// Returns the BIP32 Root Key (private)
     std::string getRootKey(TWCoinType coin, TWHDVersion version) const;
 
+    /// clears the memory data
+    void clearMemoryData();
+
     /// Computes the public key from an extended public key representation.
     static std::optional<PublicKey> getPublicKeyFromExtended(const std::string& extended, TWCoinType coin, const DerivationPath& path);
 

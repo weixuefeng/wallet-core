@@ -45,6 +45,7 @@ struct TWHDWallet *_Nullable TWHDWalletCreateWithEntropy(TWData *_Nonnull entrop
 }
 
 void TWHDWalletDelete(struct TWHDWallet *wallet) {
+    wallet->impl.clearMemoryData();
     delete wallet;
 }
 

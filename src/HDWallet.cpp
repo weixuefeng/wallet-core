@@ -232,6 +232,14 @@ std::string HDWallet<seedSize>::deriveAddress(TWCoinType coin) const {
     return deriveAddress(coin, TWDerivationDefault);
 }
 
+template<size_t seedSize>
+void HDWallet<seedSize>::clearMemoryData()
+{
+    memzero(seed.data(), seed.size());
+    memzero(mnemonic.data(), mnemonic.size());
+    memzero(passphrase.data(), passphrase.size());
+}
+
 template <std::size_t seedSize>
 std::string HDWallet<seedSize>::getExtendedPrivateKeyAccount(TWPurpose purpose, TWCoinType coin, TWDerivation derivation, TWHDVersion version, uint32_t account) const {
     if (version == TWHDVersionNone) {
