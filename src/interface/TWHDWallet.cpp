@@ -44,6 +44,15 @@ struct TWHDWallet *_Nullable TWHDWalletCreateWithEntropy(TWData *_Nonnull entrop
     }
 }
 
+struct TWHDWallet *_Nullable TWHDWalletCreateWithSeed(TWData *_Nonnull seed) {
+    try {
+        auto* d = reinterpret_cast<const Data*>(seed);
+        return new TWHDWallet{ HDWallet(*d) };
+    } catch (...) {
+        return nullptr;
+    }
+}
+
 void TWHDWalletDelete(struct TWHDWallet *wallet) {
     delete wallet;
 }
