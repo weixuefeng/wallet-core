@@ -55,6 +55,18 @@ impl UnsignedTransaction for TransactionEip7702 {
             chain_id,
         })
     }
+    
+    fn try_into_signed_r1(
+        self,
+        signature: tw_keypair::ecdsa::nist256p1::Signature,
+        chain_id: U256,
+    ) -> SigningResult<Self::SignedTransaction> {
+        Ok(SignedTransactionEip7702 {
+            unsigned: self,
+            signature: Signature::new_r1(signature),
+            chain_id,
+        })
+    }
 }
 
 pub struct SignedTransactionEip7702 {
