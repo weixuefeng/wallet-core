@@ -115,7 +115,7 @@ std::array<byte, 32> hashBlockData(const PublicKey& publicKey, const Proto::Sign
 }
 
 Signer::Signer(const Proto::SigningInput& input)
-  : privateKey(Data(input.private_key().begin(), input.private_key().end())),
+  : privateKey(Data(input.private_key().begin(), input.private_key().end()), TWCurveED25519Blake2bNano),
     publicKey(privateKey.getPublicKey(TWPublicKeyTypeED25519Blake2b)),
     input(input),
     previous{previousFromInput(input)},
@@ -123,7 +123,7 @@ Signer::Signer(const Proto::SigningInput& input)
     blockHash(hashBlockData(publicKey, input)) {}
 
 
-Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) noexcept {
+Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
     Proto::SigningOutput output;
     try {
         auto signer = Signer(input);
@@ -141,9 +141,9 @@ std::string Signer::signJSON(const std::string& json, const Data& key) {
     return output.json();
 }
 
-std::array<byte, 64> Signer::sign() const noexcept {
+std::array<byte, 64> Signer::sign() const {
     auto digest = Data(blockHash.begin(), blockHash.end());
-    auto sig = privateKey.sign(digest, TWCurveED25519Blake2bNano);
+    auto sig = privateKey.sign(digest);
 
     std::array<byte, 64> signature = {0};
     std::copy_n(sig.begin(), signature.size(), signature.begin());

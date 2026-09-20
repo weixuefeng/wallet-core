@@ -18,8 +18,6 @@ mod polkadot_sign;
 mod polkadot_transaction_util;
 
 const GENESIS_HASH: &str = "91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3";
-const POLYMESH_GENESIS_HASH: &str =
-    "6fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063";
 const PRIVATE_KEY: &str = "abf8e5bdbe30c65656c0a3cbd181ff8a56294a69dfedd27982aace4a76909115";
 const PRIVATE_KEY_IOS: &str = "37932b086586a6675e66e562fe68bd3eeea4177d066619c602fe3efc290ada62";
 const PRIVATE_KEY_2: &str = "70a794d4f1019c3ce002f33062f45029c4f930a56b3d20ec477f7668c6bbc37f";
@@ -70,7 +68,12 @@ pub fn helper_encode_and_compile(
     let mut pre_imager = PreImageHelper::<CompilerProto::PreSigningOutput>::default();
     let preimage_output = pre_imager.pre_image_hashes(coin, &input);
 
-    assert_eq!(preimage_output.error, SigningError::OK);
+    assert_eq!(
+        preimage_output.error,
+        SigningError::OK,
+        "{}",
+        preimage_output.error_message
+    );
     let preimage = preimage_output.data.to_hex();
 
     // Step 2: Compile transaction info
@@ -89,13 +92,13 @@ pub fn helper_encode_and_compile(
     // Compile transaction info
     let mut compiler = CompilerHelper::<Proto::SigningOutput>::default();
     let output = compiler.compile(coin, &input, vec![signature_bytes], vec![public_key]);
-    assert_eq!(output.error, SigningError::OK);
+    assert_eq!(output.error, SigningError::OK, "{}", output.error_message);
     let signed = output.encoded.to_hex();
 
     (preimage, signed)
 }
 
-pub fn balance_call(
+fn balance_call(
     call: Proto::mod_Balance::OneOfmessage_oneof,
 ) -> Proto::mod_SigningInput::OneOfmessage_oneof {
     Proto::mod_SigningInput::OneOfmessage_oneof::balance_call(Proto::Balance {
@@ -108,17 +111,5 @@ pub fn staking_call(
 ) -> Proto::mod_SigningInput::OneOfmessage_oneof {
     Proto::mod_SigningInput::OneOfmessage_oneof::staking_call(Proto::Staking {
         message_oneof: call,
-    })
-}
-
-pub fn polymesh_call(
-    call: Proto::mod_Identity::OneOfmessage_oneof,
-) -> Proto::mod_SigningInput::OneOfmessage_oneof {
-    Proto::mod_SigningInput::OneOfmessage_oneof::polymesh_call(Proto::PolymeshCall {
-        message_oneof: Proto::mod_PolymeshCall::OneOfmessage_oneof::identity_call(
-            Proto::Identity {
-                message_oneof: call,
-            },
-        ),
     })
 }

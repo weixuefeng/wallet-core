@@ -36,6 +36,15 @@ class CoinTestGen
     name
   end
 
+  # Native token name, or display name if not specified
+  def native_token_name(coin)
+    name = coin['nativeTokenName']
+    if name == nil
+      name = display_name(coin)
+    end
+    name
+  end
+
   # Explorer urls
   def explorer_tx_url(c)
     path = c['explorer']['url'].to_s + c['explorer']['txPath'].to_s
@@ -60,7 +69,7 @@ class CoinTestGen
 
   def generate_coin_test_file(coin, templateFile, overwriteExisting = true)
     path = File.expand_path(templateFile, File.join(File.dirname(__FILE__), '..', 'lib', 'templates'))
-    template = ERB.new(File.read(path), nil, '-')
+    template = ERB.new(File.read(path), trim_mode: '-')
     result = template.result(binding)
 
     folder = 'tests/chains/'

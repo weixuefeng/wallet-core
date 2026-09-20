@@ -197,6 +197,14 @@ enum TWCoinType {
     TWCoinTypePactus = 21888,
     TWCoinTypeSonic = 10000146,
     TWCoinTypeNewChain = 1642,
+    TWCoinTypePolymesh = 595,
+    TWCoinTypePlasma = 9745,
+    TWCoinTypeMonad = 10143,
+    TWCoinTypeMegaETH = 4326,
+    TWCoinTypeSeiEVM = 1329,
+    TWCoinTypeHyperEVM = 10000999,
+    TWCoinTypeRobinhoodChain = 10004663,
+    TWCoinTypeArc = 10005042,
     // end_of_tw_coin_type_marker_do_not_modify
 
 };

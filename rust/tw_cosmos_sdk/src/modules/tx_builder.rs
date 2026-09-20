@@ -237,6 +237,9 @@ where
             },
             MessageEnum::None => SigningError::err(SigningErrorType::Error_invalid_params)
                 .context("No TX message provided"),
+            MessageEnum::wasm_instantiate_contract_message(ref generic) => {
+                Self::wasm_instantiate_contract_generic_msg_from_proto(coin, generic)
+            },
         }
     }
 
@@ -601,6 +604,50 @@ where
         Ok(msg.into_boxed())
     }
 
+    pub fn wasm_instantiate_contract_generic_msg_from_proto(
+        _coin: &dyn CoinContext,
+        generic: &Proto::mod_Message::WasmInstantiateContract<'_>,
+    ) -> SigningResult<CosmosMessageBox> {
+        use crate::transaction::message::wasm_message_instantiate_contract::{
+            InstantiateMsg, WasmInstantiateContractMessage,
+        };
+
+        let funds = generic
+            .init_funds
+            .iter()
+            .map(Self::coin_from_proto)
+            .collect::<SigningResult<_>>()?;
+
+        let sender = Address::from_str(&generic.sender)
+            .into_tw()
+            .context("Invalid sender address")?;
+
+        let admin = if generic.admin.is_empty() {
+            None
+        } else {
+            Some(
+                Address::from_str(&generic.admin)
+                    .into_tw()
+                    .context("Invalid admin address")?,
+            )
+        };
+
+        let msg = WasmInstantiateContractMessage {
+            sender,
+            admin,
+            code_id: generic.code_id,
+            label: generic.label.to_string(),
+            msg: InstantiateMsg::Json(
+                serde_json::from_slice(&generic.msg)
+                    .into_tw()
+                    .context("Invalid JSON in msg")?,
+            ),
+            funds,
+        };
+
+        Ok(msg.into_boxed())
+    }
+
     pub fn thorchain_send_msg_from_proto(
         _coin: &dyn CoinContext,
         send: &Proto::mod_Message::THORChainSend<'_>,
@@ -756,6 +803,8 @@ where
                 symbol: asset_proto.symbol.to_string(),
                 ticker: asset_proto.ticker.to_string(),
                 synth: asset_proto.synth,
+                trade: asset_proto.trade,
+                secured: asset_proto.secured,
             };
             coins.push(ThorchainCoin {
                 asset,

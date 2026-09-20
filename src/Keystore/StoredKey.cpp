@@ -52,38 +52,80 @@ StoredKey StoredKey::createWithPrivateKey(const std::string& name, const Data& p
     return StoredKey(StoredKeyType::privateKey, name, password, privateKeyData, TWStoredKeyEncryptionLevelStandard, encryption);
 }
 
-StoredKey StoredKey::createWithPrivateKeyAddDefaultAddress(const std::string& name, const Data& password, TWCoinType coin, const Data& privateKeyData, TWStoredKeyEncryption encryption) {
+StoredKey StoredKey::createWithPrivateKeyAddDefaultAddress(
+    const std::string& name,
+    const Data& password,
+    TWCoinType coin,
+    const Data& privateKeyData,
+    TWStoredKeyEncryption encryption,
+    TWDerivation derivation
+) {
     const auto curve = TW::curve(coin);
     if (!PrivateKey::isValid(privateKeyData, curve)) {
         throw std::invalid_argument("Invalid private key data");
     }
 
     StoredKey key = createWithPrivateKey(name, password, privateKeyData, encryption);
-    const auto derivationPath = TW::derivationPath(coin);
+    const auto derivationPath = TW::derivationPath(coin, derivation);
     const auto pubKeyType = TW::publicKeyType(coin);
-    const auto pubKey = PrivateKey(privateKeyData).getPublicKey(pubKeyType);
-    const auto address = TW::deriveAddress(coin, PrivateKey(privateKeyData));
-    key.accounts.emplace_back(address, coin, TWDerivationDefault, derivationPath, hex(pubKey.bytes), "");
+    const auto pubKey = PrivateKey(privateKeyData, TWCoinTypeCurve(coin)).getPublicKey(pubKeyType);
+    const auto address = TW::deriveAddress(coin, PrivateKey(privateKeyData), derivation);
+    key.accounts.emplace_back(address, coin, derivation, derivationPath, hex(pubKey.bytes), "");
     return key;
 }
 
-StoredKey::StoredKey(StoredKeyType type, std::string name, const Data& password, const Data& data, TWStoredKeyEncryptionLevel encryptionLevel, TWStoredKeyEncryption encryption)
-    : type(type), id(), name(std::move(name)), accounts() {
-    const auto encryptionParams = EncryptionParameters::getPreset(encryptionLevel, encryption);
-    payload = EncryptedPayload(password, data, encryptionParams);
+StoredKey StoredKey::createWithEncodedPrivateKeyAddDefaultAddress(
+    const std::string& name,
+    const Data& password,
+    TWCoinType coin,
+    const std::string& encodedPrivateKey,
+    TWStoredKeyEncryption encryption,
+    TWDerivation derivation
+) {
+    const auto curve = TW::curve(coin);
+    const auto privateKey = TW::decodePrivateKey(coin, encodedPrivateKey);
+    StoredKey key = StoredKey(StoredKeyType::privateKey, name, password, privateKey.bytes, TWStoredKeyEncryptionLevelDefault, encryption, encodedPrivateKey);
+    const auto derivationPath = TW::derivationPath(coin, derivation);
+    const auto pubKeyType = TW::publicKeyType(coin);
+    const auto pubKey = privateKey.getPublicKey(pubKeyType);
+    const auto address = TW::deriveAddress(coin, privateKey, derivation);
+    key.accounts.emplace_back(address, coin, derivation, derivationPath, hex(pubKey.bytes), "");
+    return key;
+}
 
+StoredKey::StoredKey(StoredKeyType type, std::string name, const Data& password, const Data& data, TWStoredKeyEncryptionLevel encryptionLevel, TWStoredKeyEncryption encryption, const std::optional<std::string>& encodedStr)
+    : type(type), id(), name(std::move(name)), accounts() {
+    const auto cipherParams = AESParameters::AESParametersFromEncryption(encryption);
+    const auto scryptParams = ScryptParameters::getPreset(encryptionLevel);
+    payload = EncryptedPayload(password, data, cipherParams, scryptParams);
+
+    if (encodedStr) {
+        const auto bytes = reinterpret_cast<const uint8_t*>(encodedStr->c_str());
+        const auto encodedData = Data(bytes, bytes + encodedStr->size());
+
+        // Generate new parameters with random iv and salt for the encoded private key.
+        const auto cipherParamsEncoded = AESParameters::AESParametersFromEncryption(encryption);
+        const auto scryptParamsEncoded = ScryptParameters::getPreset(encryptionLevel);
+
+        encodedPayload = EncryptedPayload(password, encodedData, cipherParamsEncoded, scryptParamsEncoded);
+    }
     const char* uuid_ptr = Rust::tw_uuid_random();
     id = std::make_optional<std::string>(uuid_ptr);
     Rust::free_string(uuid_ptr);
 }
 
-const HDWallet<> StoredKey::wallet(const Data& password) const {
+HDWallet<> StoredKey::wallet(const Data& password) const {
     if (type != StoredKeyType::mnemonicPhrase) {
         throw std::invalid_argument("Invalid account requested.");
     }
-    const auto data = payload.decrypt(password);
-    const auto mnemonic = std::string(reinterpret_cast<const char*>(data.data()), data.size());
-    return HDWallet<>(mnemonic, "");
+    auto data = payload.decrypt(password);
+    auto mnemonic = std::string(reinterpret_cast<const char*>(data.data()), data.size());
+    const HDWallet<> wallet = {mnemonic, ""};
+
+    // clear decrypted data from memory
+    memzero(data.data(), data.size());
+    memzero(mnemonic.data(), mnemonic.size());
+    return wallet;
 }
 
 std::vector<Account> StoredKey::getAccounts(TWCoinType coin) const {
@@ -261,7 +303,7 @@ const PrivateKey StoredKey::privateKey(TWCoinType coin, [[maybe_unused]] TWDeriv
         return wallet.getKey(coin, account.derivationPath);
     }
     // type == StoredKeyType::privateKey
-    return PrivateKey(payload.decrypt(password));
+    return PrivateKey(payload.decrypt(password), TWCoinTypeCurve(coin));
 }
 
 void StoredKey::fixAddresses(const Data& password) {
@@ -292,6 +334,30 @@ void StoredKey::fixAddresses(const Data& password) {
     }
 }
 
+void StoredKey::fixEncryption(const Data& password) {
+    // Store the re-generated payloads separately before replacing the existing ones,
+    // to avoid data loss in case of unexpected errors during regeneration.
+    std::optional<EncryptedPayload> regeneratedPayload;
+    std::optional<EncryptedPayload> regeneratedEncodedPayload;
+
+    if (payload.params.shouldFix()) {
+        regeneratedPayload = payload.regenerateWithRecommendedParams(password);
+    }
+
+    if (encodedPayload.has_value() && encodedPayload->params.shouldFix()) {
+        regeneratedEncodedPayload = encodedPayload->regenerateWithRecommendedParams(password);
+    }
+
+    // Replace the existing payloads with the re-generated ones, if they were re-generated.
+    // Note: no exceptions expected from this point.
+    if (regeneratedPayload.has_value()) {
+        payload = std::move(*regeneratedPayload);
+    }
+    if (regeneratedEncodedPayload.has_value()) {
+        encodedPayload = std::move(*regeneratedEncodedPayload);
+    }
+}
+
 bool StoredKey::updateAddress(TWCoinType coin) {
     bool addressUpdated = false;
     const auto publicKeyType = TW::publicKeyType(coin);
@@ -308,6 +374,20 @@ bool StoredKey::updateAddress(TWCoinType coin) {
     }
 
     return addressUpdated;
+}
+
+std::string StoredKey::decryptPrivateKeyEncoded(const Data& password) const {
+    if (encodedPayload) {
+        auto data = encodedPayload->decrypt(password);
+        const auto dataString = std::string(reinterpret_cast<const char*>(data.data()), data.size());
+        memzero(data.data(), data.size());
+        return dataString;
+    }
+
+    auto data = payload.decrypt(password);
+    const auto dataHex = TW::hex(data);
+    memzero(data.data(), data.size());
+    return dataHex;
 }
 
 // -----------------
@@ -327,6 +407,7 @@ static const auto type = "type";
 static const auto name = "name";
 static const auto id = "id";
 static const auto crypto = "crypto";
+static const auto encodedCrypto = "encodedCrypto";
 static const auto activeAccounts = "activeAccounts";
 static const auto version = "version";
 static const auto coin = "coin";
@@ -367,6 +448,12 @@ void StoredKey::loadJson(const nlohmann::json& json) {
         throw DecryptionError::invalidKeyFile;
     }
 
+    if (json.count(CodingKeys::SK::encodedCrypto) != 0) {
+        encodedPayload = EncryptedPayload(json[CodingKeys::SK::encodedCrypto]);
+    } else { 
+        encodedPayload = std::nullopt;
+    }
+
     if (json.count(CodingKeys::SK::activeAccounts) != 0 &&
         json[CodingKeys::SK::activeAccounts].is_array()) {
         for (auto& accountJSON : json[CodingKeys::SK::activeAccounts]) {
@@ -404,6 +491,9 @@ nlohmann::json StoredKey::json() const {
 
     j[CodingKeys::SK::name] = name;
     j[CodingKeys::SK::crypto] = payload.json();
+    if (encodedPayload) {
+        j[CodingKeys::SK::encodedCrypto] = encodedPayload->json();
+    }
 
     nlohmann::json accountsJSON = nlohmann::json::array();
     for (const auto& account : accounts) {
@@ -416,9 +506,32 @@ nlohmann::json StoredKey::json() const {
 
 // File operations
 
-void StoredKey::store(const std::string& path) {
+void StoredKey::store(const std::string& path) const {
+    const std::string jsonData = json().dump();
+
     auto stream = std::ofstream(path);
-    stream << json();
+    if (!stream) {
+        throw std::invalid_argument("Can't open file for writing: " + path);
+    }
+    stream << jsonData;
+    stream.flush();
+    if (!stream) {
+        throw std::runtime_error("Failed to write key file: " + path);
+    }
+}
+
+void StoredKey::storeWithTemporaryFile(const std::string& path, const std::string& tempFilePath) const {
+    try {
+        store(tempFilePath);
+    } catch (...) {
+        std::remove(tempFilePath.c_str());
+        throw;
+    }
+
+    if (std::rename(tempFilePath.c_str(), path.c_str()) != 0) {
+        std::remove(tempFilePath.c_str());
+        throw std::runtime_error("Failed to rename key file: temp=" + tempFilePath + ", target=" + path);
+    }
 }
 
 StoredKey StoredKey::load(const std::string& path) {

@@ -12,7 +12,7 @@ class CoinAddressDerivationTests: XCTestCase {
 
         for _ in 0..<4 {
             for coin in CoinType.allCases {
-                let privateKey = wallet.getKeyForCoin(coin: coin)
+                let privateKey = wallet.getKeyForCoin(coin: coin)!
                 let derivedAddress = coin.deriveAddress(privateKey: privateKey)
                 let address = coin.address(string: derivedAddress)
 
@@ -120,7 +120,14 @@ class CoinAddressDerivationTests: XCTestCase {
                      .blast,
                      .bounceBit,
                      .zkLinkNova,
-                     .sonic:
+                     .sonic,
+                     .plasma,
+                     .monad,
+                     .megaETH,
+                     .seiEVM,
+                     .hyperEVM,
+                     .robinhoodChain,
+                     .arc:
                     let expectedResult = "0x8f348F300873Fd5DA36950B2aC75a26584584feE"
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .ronin:
@@ -203,6 +210,9 @@ class CoinAddressDerivationTests: XCTestCase {
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .polkadot:
                     let expectedResult = "13nN6BGAoJwd7Nw1XxeBCx5YcBXuYnL94Mh7i3xBprqVSsFk"
+                    assertCoinDerivation(coin, expectedResult, derivedAddress, address)
+                case .polymesh:
+                    let expectedResult = "2DHK8VhBpacs9quk78AVP9TmmcG5iXi2oKtZqneSNsVXxCKw"
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .qtum:
                     let expectedResult = "QhceuaTdeCZtcxmVc6yyEDEJ7Riu5gWFoF"
@@ -312,7 +322,7 @@ class CoinAddressDerivationTests: XCTestCase {
                     let expectedResult = "UQDgEMqToTacHic7SnvnPFmvceG5auFkCcAw0mSCvzvKUaT4";
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .aptos:
-                    let expectedResult = "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30";
+                    let expectedResult = "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30";
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .nebl:
                     let expectedResult = "NgDVaXAwNgBwb88xLiFKomfBmPkEh9F2d7";

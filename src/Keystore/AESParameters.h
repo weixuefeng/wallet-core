@@ -20,9 +20,14 @@ enum AESKeySize : std::int32_t {
 
 inline constexpr std::size_t gBlockSize{16};
 inline constexpr const char* gAes128Ctr{"aes-128-ctr"};
-inline constexpr const char* gAes128Cbc{"aes-128-cbc"};
 inline constexpr const char* gAes192Ctr{"aes-192-ctr"};
 inline constexpr const char* gAes256Ctr{"aes-256-ctr"};
+
+enum class AESValidationError {
+    InvalidIV,
+};
+
+std::string toString(AESValidationError error);
 
 // AES128/192/256 parameters.
 struct AESParameters {
@@ -34,13 +39,19 @@ struct AESParameters {
     Data iv;
 
     /// Initializes `AESParameters` with a encryption cipher.
-    static AESParameters AESParametersFromEncryption(TWStoredKeyEncryption encryption);;
+    static AESParameters AESParametersFromEncryption(TWStoredKeyEncryption encryption);
 
     /// Initializes `AESParameters` with a JSON object.
     static AESParameters AESParametersFromJson(const nlohmann::json& json, const std::string& cipher);
 
+    /// Creates a copy of `this` with a new random IV.
+    [[nodiscard]] AESParameters copyWithNewIv() const;
+
     /// Saves `this` as a JSON object.
     nlohmann::json json() const;
+
+    /// Validates AES parameters.
+    [[nodiscard]] std::optional<AESValidationError> validate() const noexcept;
 };
 
 } // namespace TW::Keystore

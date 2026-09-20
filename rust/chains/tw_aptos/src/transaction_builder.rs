@@ -2,12 +2,11 @@
 //
 // Copyright © 2017 Trust Wallet.
 
-use crate::address::from_account_error;
+use crate::address::Address;
 use crate::aptos_move_packages::{
     aptos_account_create_account, aptos_account_transfer, aptos_account_transfer_coins,
-    coin_transfer, fungible_asset_transfer, managed_coin_register,
-    token_transfers_cancel_offer_script, token_transfers_claim_script,
-    token_transfers_offer_script,
+    coin_transfer, fungible_asset_transfer, token_transfers_cancel_offer_script,
+    token_transfers_claim_script, token_transfers_offer_script,
 };
 use crate::constants::{GAS_UNIT_PRICE, MAX_GAS_AMOUNT};
 use crate::liquid_staking::{
@@ -18,7 +17,6 @@ use crate::transaction::RawTransaction;
 use crate::transaction_payload::{
     convert_proto_struct_tag_to_type_tag, EntryFunction, TransactionPayload,
 };
-use move_core_types::account_address::AccountAddress;
 use move_core_types::language_storage::TypeTag;
 use serde_json::Value;
 use std::str::FromStr;
@@ -27,7 +25,7 @@ use tw_proto::Aptos::Proto::mod_SigningInput::OneOftransaction_payload;
 use tw_proto::Aptos::Proto::SigningInput;
 
 pub struct TransactionBuilder {
-    sender: Option<AccountAddress>,
+    sender: Option<Address>,
     sequence_number: Option<u64>,
     payload: TransactionPayload,
     max_gas_amount: u64,
@@ -37,7 +35,7 @@ pub struct TransactionBuilder {
 }
 
 impl TransactionBuilder {
-    pub fn sender(mut self, sender: AccountAddress) -> Self {
+    pub fn sender(mut self, sender: Address) -> Self {
         self.sender = Some(sender);
         self
     }
@@ -94,8 +92,7 @@ impl TransactionFactory {
         match input.transaction_payload {
             OneOftransaction_payload::transfer(transfer) => factory
                 .implicitly_create_user_account_and_transfer(
-                    AccountAddress::from_str(&transfer.to)
-                        .map_err(from_account_error)
+                    Address::from_str(&transfer.to)
                         .into_tw()
                         .context("Invalid destination address")?,
                     transfer.amount,
@@ -106,8 +103,7 @@ impl TransactionFactory {
                     .or_tw_err(SigningErrorType::Error_invalid_params)
                     .context("'TokenTransferMessage::function' is not set")?;
                 factory.coins_transfer(
-                    AccountAddress::from_str(&token_transfer.to)
-                        .map_err(from_account_error)
+                    Address::from_str(&token_transfer.to)
                         .into_tw()
                         .context("Invalid destination address")?,
                     token_transfer.amount,
@@ -115,21 +111,13 @@ impl TransactionFactory {
                 )
             },
             OneOftransaction_payload::create_account(create_account) => {
-                let address = AccountAddress::from_str(&create_account.auth_key)
-                    .map_err(from_account_error)
+                let address = Address::from_str(&create_account.auth_key)
                     .into_tw()
                     .context("Invalid 'auth_key' address")?;
                 factory.create_user_account(address)
             },
             OneOftransaction_payload::nft_message(nft_message) => {
                 factory.nft_ops(NftOperation::try_from(nft_message)?)
-            },
-            OneOftransaction_payload::register_token(register_token) => {
-                let function = register_token
-                    .function
-                    .or_tw_err(SigningErrorType::Error_invalid_params)
-                    .context("'ManagedTokensRegisterMessage::function' is not set")?;
-                Ok(factory.register_token(convert_proto_struct_tag_to_type_tag(function)?))
             },
             OneOftransaction_payload::liquid_staking_message(msg) => {
                 factory.liquid_staking_ops(LiquidStakingOperation::try_from(msg)?)
@@ -140,8 +128,7 @@ impl TransactionFactory {
                     .or_tw_err(SigningErrorType::Error_invalid_params)
                     .context("'TokenTransferCoinsMessage::function' is not set")?;
                 factory.implicitly_create_user_and_coins_transfer(
-                    AccountAddress::from_str(&token_transfer_coins.to)
-                        .map_err(from_account_error)
+                    Address::from_str(&token_transfer_coins.to)
                         .into_tw()
                         .context("Invalid destination address")?,
                     token_transfer_coins.amount,
@@ -150,12 +137,10 @@ impl TransactionFactory {
             },
             OneOftransaction_payload::fungible_asset_transfer(fungible_asset_transfer) => factory
                 .fungible_asset_transfer(
-                    AccountAddress::from_str(&fungible_asset_transfer.metadata_address)
-                        .map_err(from_account_error)
+                    Address::from_str(&fungible_asset_transfer.metadata_address)
                         .into_tw()
                         .context("Invalid metadata address")?,
-                    AccountAddress::from_str(&fungible_asset_transfer.to)
-                        .map_err(from_account_error)
+                    Address::from_str(&fungible_asset_transfer.to)
                         .into_tw()
                         .context("Invalid destination address")?,
                     fungible_asset_transfer.amount,
@@ -196,12 +181,8 @@ impl TransactionFactory {
         self.transaction_builder(payload)
     }
 
-    pub fn create_user_account(&self, to: AccountAddress) -> SigningResult<TransactionBuilder> {
+    pub fn create_user_account(&self, to: Address) -> SigningResult<TransactionBuilder> {
         Ok(self.payload(aptos_account_create_account(to)?))
-    }
-
-    pub fn register_token(&self, coin_type: TypeTag) -> TransactionBuilder {
-        self.payload(managed_coin_register(coin_type))
     }
 
     pub fn nft_ops(&self, operation: NftOperation) -> SigningResult<TransactionBuilder> {
@@ -251,7 +232,7 @@ impl TransactionFactory {
 
     pub fn implicitly_create_user_account_and_transfer(
         &self,
-        to: AccountAddress,
+        to: Address,
         amount: u64,
     ) -> SigningResult<TransactionBuilder> {
         Ok(self.payload(aptos_account_transfer(to, amount)?))
@@ -259,7 +240,7 @@ impl TransactionFactory {
 
     pub fn coins_transfer(
         &self,
-        to: AccountAddress,
+        to: Address,
         amount: u64,
         coin_type: TypeTag,
     ) -> SigningResult<TransactionBuilder> {
@@ -268,8 +249,8 @@ impl TransactionFactory {
 
     pub fn fungible_asset_transfer(
         &self,
-        metadata_address: AccountAddress,
-        to: AccountAddress,
+        metadata_address: Address,
+        to: Address,
         amount: u64,
     ) -> SigningResult<TransactionBuilder> {
         Ok(self.payload(fungible_asset_transfer(metadata_address, to, amount)?))
@@ -277,7 +258,7 @@ impl TransactionFactory {
 
     pub fn implicitly_create_user_and_coins_transfer(
         &self,
-        to: AccountAddress,
+        to: Address,
         amount: u64,
         coin_type: TypeTag,
     ) -> SigningResult<TransactionBuilder> {

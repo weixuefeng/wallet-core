@@ -94,7 +94,7 @@ bool PrivateKey::isValid(const Data& data, TWCurve curve) {
     }
 
     if (ec_curve != nullptr) {
-        bignum256 k;
+        bignum256 k {};
         bn_read_be(data.data(), &k);
         if (!bn_is_less(&k, &ec_curve->order)) {
             memzero(&k, sizeof(k));
@@ -121,6 +121,29 @@ PrivateKey::PrivateKey(const Data& data) {
     bytes = data;
 }
 
+PrivateKey::PrivateKey(Data&& data) {
+    if (!isValid(data)) {
+        throw std::invalid_argument("Invalid private key data");
+    }
+    bytes = std::move(data);
+}
+
+PrivateKey::PrivateKey(const Data& data, TWCurve curve) {
+    if (!isValid(data, curve)) {
+        throw std::invalid_argument("Invalid private key data");
+    }
+    bytes = data;
+    _curve = curve;
+}
+
+PrivateKey::PrivateKey(Data&& data, TWCurve curve) {
+    if (!isValid(data, curve)) {
+        throw std::invalid_argument("Invalid private key data");
+    }
+    bytes = std::move(data);
+    _curve = curve;
+}
+
 PrivateKey::PrivateKey(
     const Data& key1, const Data& extension1, const Data& chainCode1,
     const Data& key2, const Data& extension2, const Data& chainCode2) {
@@ -134,6 +157,41 @@ PrivateKey::PrivateKey(
     append(bytes, key2);
     append(bytes, extension2);
     append(bytes, chainCode2);
+}
+
+PrivateKey::PrivateKey(
+    const Data& key1, const Data& extension1, const Data& chainCode1,
+    const Data& key2, const Data& extension2, const Data& chainCode2,
+    TWCurve curve) {
+    if (key1.size() != _size || extension1.size() != _size || chainCode1.size() != _size ||
+        key2.size() != _size || extension2.size() != _size || chainCode2.size() != _size) {
+        throw std::invalid_argument("Invalid private key or extended key data");
+    }
+    bytes = key1;
+    append(bytes, extension1);
+    append(bytes, chainCode1);
+    append(bytes, key2);
+    append(bytes, extension2);
+    append(bytes, chainCode2);
+    _curve = curve;
+}
+
+PrivateKey& PrivateKey::operator=(const PrivateKey& other) noexcept {
+    if (this != &other) {
+        cleanup();
+        bytes = other.bytes;
+        _curve = other._curve;
+    }
+    return *this;
+}
+
+PrivateKey& PrivateKey::operator=(PrivateKey&& other) noexcept {
+    if (this != &other) {
+        cleanup();
+        bytes = std::move(other.bytes);
+        _curve = other._curve;
+    }
+    return *this;
 }
 
 PublicKey PrivateKey::getPublicKey(TWPublicKeyType type) const {
@@ -198,14 +256,16 @@ PublicKey PrivateKey::getPublicKey(TWPublicKeyType type) const {
 }
 
 int ecdsa_sign_digest_checked(const ecdsa_curve* curve, const uint8_t* priv_key, const uint8_t* digest, size_t digest_size, uint8_t* sig, uint8_t* pby, int (*is_canonical)(uint8_t by, uint8_t sig[64])) {
-    if (digest_size < 32) {
+    if (digest_size != PrivateKey::ecdsaMessageSize) {
         return -1;
     }
-    assert(digest_size >= 32);
     return ecdsa_sign_digest(curve, priv_key, digest, sig, pby, is_canonical);
 }
 
 Data PrivateKey::sign(const Data& digest, TWCurve curve) const {
+    if (_curve.has_value() && _curve.value() != curve) {
+        throw std::invalid_argument("Specified curve is different from the curve of the private key");
+    }
     Data result;
     bool success = false;
     switch (curve) {
@@ -256,7 +316,17 @@ Data PrivateKey::sign(const Data& digest, TWCurve curve) const {
     return result;
 }
 
+Data PrivateKey::sign(const Data& digest, int (*canonicalChecker)(uint8_t by, uint8_t sig[64])) const {
+    if (!_curve.has_value()) {
+        throw std::invalid_argument("Curve is not set");
+    }
+    return sign(digest, _curve.value(), canonicalChecker);
+}
+
 Data PrivateKey::sign(const Data& digest, TWCurve curve, int (*canonicalChecker)(uint8_t by, uint8_t sig[64])) const {
+    if (_curve.has_value() && _curve.value() != curve) {
+        throw std::invalid_argument("Specified curve is different from the curve of the private key");
+    }
     Data result;
     bool success = false;
     switch (curve) {
@@ -287,10 +357,20 @@ Data PrivateKey::sign(const Data& digest, TWCurve curve, int (*canonicalChecker)
     return result;
 }
 
+Data PrivateKey::sign(const Data& digest) const {
+    if (!_curve.has_value()) {
+        throw std::invalid_argument("Curve is not set");
+    }
+    return sign(digest, _curve.value());
+}
+
 Data PrivateKey::signAsDER(const Data& digest) const {
+    if (_curve.has_value() && _curve.value() != TWCurveSECP256k1) {
+        throw std::invalid_argument("DER signature is only supported for SECP256k1");
+    }
     Data sig(64);
     bool success =
-        ecdsa_sign_digest(&secp256k1, key().data(), digest.data(), sig.data(), nullptr, nullptr) == 0;
+        ecdsa_sign_digest_checked(&secp256k1, key().data(), digest.data(), digest.size(), sig.data(), nullptr, nullptr) == 0;
     if (!success) {
         return {};
     }
@@ -304,6 +384,9 @@ Data PrivateKey::signAsDER(const Data& digest) const {
 }
 
 Data PrivateKey::signZilliqa(const Data& message) const {
+    if (_curve.has_value() && _curve.value() != TWCurveSECP256k1) {
+        throw std::invalid_argument("Zilliqa signature is only supported for SECP256k1");
+    }
     Data sig(64);
     bool success = zil_schnorr_sign(&secp256k1, key().data(), message.data(), static_cast<uint32_t>(message.size()), sig.data()) == 0;
 

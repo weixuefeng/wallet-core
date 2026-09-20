@@ -8,6 +8,7 @@
 #include <TrustWalletCore/TWCardano.h>
 
 #include "Cbor.h"
+#include "Hash.h"
 #include "HexCoding.h"
 #include "PrivateKey.h"
 #include "uint256.h"
@@ -425,6 +426,114 @@ TEST(CardanoSigning, SignTransfer1) {
     }
 }
 
+TEST(CardanoSigning, SignTransferWithAuxiliaryData) {
+    auto input = createSampleInput(7000000);
+
+    // CIP-20 memo metadata: {674: {"msg": ["Hello from Vultisig"]}}
+    const auto auxData = Cbor::Encode::map({
+        {Cbor::Encode::uint(674), Cbor::Encode::map({
+            {Cbor::Encode::string("msg"), Cbor::Encode::array({
+                Cbor::Encode::string("Hello from Vultisig"),
+            })},
+        })},
+    }).encoded();
+    input.set_auxiliary_data(auxData.data(), auxData.size());
+
+    auto signer = Signer(input);
+    const auto output = signer.sign();
+    EXPECT_EQ(output.error(), Common::Proto::OK);
+
+    const auto encoded = data(output.encoded());
+    const auto decode = Cbor::Decode(encoded);
+    ASSERT_TRUE(decode.isValid());
+
+    const auto elements = decode.getArrayElements();
+    ASSERT_EQ(elements.size(), 3ul);
+
+    // The transaction body (element 0) commits the Blake2b-256 hash of the
+    // auxiliary data under key 7 (auxiliary_data_hash).
+    const auto expectedHash = Hash::blake2b(auxData, 32);
+    bool foundAuxHash = false;
+    for (const auto& [key, value] : elements[0].getMapElements()) {
+        if (key.getValue() == 7) {
+            foundAuxHash = true;
+            EXPECT_EQ(hex(value.getBytes()), hex(expectedHash));
+        }
+    }
+    EXPECT_TRUE(foundAuxHash);
+
+    // The signed transaction carries the same auxiliary data bytes (element 2),
+    // not a null placeholder.
+    EXPECT_EQ(hex(elements[2].encoded()), hex(auxData));
+
+    // The automatic fee planner accounts for the auxiliary data size: the same
+    // input without it plans a strictly smaller fee.
+    auto inputWithoutAux = input;
+    inputWithoutAux.clear_auxiliary_data();
+    EXPECT_GT(Signer(input).doPlan().fee, Signer(inputWithoutAux).doPlan().fee);
+}
+
+// Golden vector from a real CIP-20 memo transaction built with this code and
+// broadcast to the Cardano mainnet:
+//   https://cardanoscan.io/transaction/b5ab0684a1c244a1359f81b3b019526d9b7e16dbc75709f1595ce468942af32a
+// The transaction was MPC-signed, so we cannot reproduce its witness signature
+// here. Instead we assert the signature-independent transaction id, which is
+// blake2b-256 of the transaction body and commits the auxiliary_data_hash under
+// body key 7. Reproducing the on-chain id end-to-end proves the body (including
+// the memo hash) is encoded byte-for-byte as the mainnet ledger accepted it.
+TEST(CardanoSigning, SignTransferWithAuxiliaryDataMainnetGoldenTxId) {
+    Proto::SigningInput input;
+
+    auto* utxo = input.add_utxos();
+    const auto utxoHash = parse_hex("28bee653269041634a0e3274ff734250323e88e73f9676a2d0ef8e71e0478e6e");
+    utxo->mutable_out_point()->set_tx_hash(utxoHash.data(), utxoHash.size());
+    utxo->mutable_out_point()->set_output_index(1);
+    utxo->set_address("addr1v855fpsfqz8pued9vz9vp7twqujcn3cxuyfsan2vghn7jxcz9caqz");
+    utxo->set_amount(7894190);
+
+    input.mutable_transfer_message()->set_to_address("addr1v9hs3lp2vvz0he2u03rt09tq54y6a3lr6yhxaxg666zgnrgacgqwy");
+    input.mutable_transfer_message()->set_change_address("addr1v855fpsfqz8pued9vz9vp7twqujcn3cxuyfsan2vghn7jxcz9caqz");
+    input.mutable_transfer_message()->set_amount(1400000);
+    input.set_ttl(189775732);
+
+    // CIP-20 memo metadata: {674: {"msg": ["Hello from Vultisig"]}}
+    const auto auxData = Cbor::Encode::map({
+        {Cbor::Encode::uint(674), Cbor::Encode::map({
+            {Cbor::Encode::string("msg"), Cbor::Encode::array({
+                Cbor::Encode::string("Hello from Vultisig"),
+            })},
+        })},
+    }).encoded();
+    input.set_auxiliary_data(auxData.data(), auxData.size());
+
+    // Use the exact on-chain fee/change so the body matches the broadcast tx.
+    auto* plan = input.mutable_plan();
+    plan->set_available_amount(7894190);
+    plan->set_amount(1400000);
+    plan->set_fee(181320);
+    plan->set_change(6312870);
+    *plan->add_utxos() = input.utxos(0);
+
+    Transaction tx;
+    ASSERT_EQ(Signer::buildTransactionAux(tx, input, TransactionPlan::fromProto(input.plan())), Common::Proto::OK);
+
+    EXPECT_EQ(hex(tx.getId()), "b5ab0684a1c244a1359f81b3b019526d9b7e16dbc75709f1595ce468942af32a");
+}
+
+TEST(CardanoSigning, AnySignWithInvalidAuxiliaryDataReturnsError) {
+    auto input = createSampleInput(7000000);
+    // Not valid CBOR: declares a 2-element array but provides one element, so
+    // fromRaw() throws while planning. The public signing boundary catches it
+    // and returns an error rather than terminating the process.
+    const auto invalidAux = parse_hex("8200");
+    input.set_auxiliary_data(invalidAux.data(), invalidAux.size());
+
+    Proto::SigningOutput output;
+    ANY_SIGN(input, TWCoinTypeCardano);
+
+    EXPECT_NE(output.error(), Common::Proto::OK);
+}
+
 TEST(CardanoSigning, PlanAndSignTransfer1) {
     uint amount = 6000000;
     auto input = createSampleInput(amount);
@@ -615,7 +724,7 @@ TEST(CardanoSigning, SignTransferFromLegacy) {
 
     const auto privateKeyData = parse_hex("98f266d1aac660179bc2f456033941238ee6b2beb8ed0f9f34c9902816781f5a9903d1d395d6ab887b65ea5e344ef09b449507c21a75f0ce8c59d0ed1c6764eba7f484aa383806735c46fd769c679ee41f8952952036a6e2338ada940b8a91f4e890ca4eb6bec44bf751b5a843174534af64d6ad1f44e0613db78a7018781f5aa151d2997f52059466b715d8eefab30a78b874ae6ef4931fa58bb21ef8ce2423d46f19d0fbf75afb0b9a24e31d533f4fd74cee3b56e162568e8defe37123afc4");
     {
-        const auto privKey = PrivateKey(privateKeyData);
+        const auto privKey = PrivateKey(privateKeyData, TWCurveED25519ExtendedCardano);
         const auto pubKey = privKey.getPublicKey(TWPublicKeyTypeED25519Cardano);
         const auto addr = AddressV2(pubKey);
         EXPECT_EQ(addr.string(), "Ae2tdPwUPEZ6vkqxSjJxaQYmDxHf5DTnxtZ67pFLJGTb9LTnCGkDP6ca3f8");

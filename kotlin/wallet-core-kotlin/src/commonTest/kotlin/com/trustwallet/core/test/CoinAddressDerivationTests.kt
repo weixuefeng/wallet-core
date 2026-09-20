@@ -40,7 +40,7 @@ class CoinAddressDerivationTests {
         Fantom, Celo, CronosChain, SmartBitcoinCash, KuCoinCommunityChain, Boba, Metis,
         Aurora, Evmos, Moonriver, Moonbeam, KavaEvm, Kaia, Meter, OKXChain, PolygonzkEVM, Scroll,
         ConfluxeSpace, AcalaEVM, OpBNB, Neon, Base, Linea, Greenfield, Mantle, ZenEON, MantaPacific,
-        ZetaEVM, Merlin, Lightlink, Blast, BounceBit, ZkLinkNova, Sonic,
+        ZetaEVM, Merlin, Lightlink, Blast, BounceBit, ZkLinkNova, Sonic, Plasma, Monad, MegaETH, SeiEVM, HyperEVM, RobinhoodChain, Arc,
         -> "0x8f348F300873Fd5DA36950B2aC75a26584584feE"
 
         Ronin -> "ronin:8f348F300873Fd5DA36950B2aC75a26584584feE"
@@ -95,6 +95,7 @@ class CoinAddressDerivationTests {
         Acala -> "25GGezx3LWFQj6HZpYzoWoVzLsHojGtybef3vthC9nd19ms3"
         Kusama -> "G9xV2EatmrjRC1FLPexc3ddqNRRzCsAdURU8RFiAAJX6ppY"
         Polkadot -> "13nN6BGAoJwd7Nw1XxeBCx5YcBXuYnL94Mh7i3xBprqVSsFk"
+        Polymesh -> "2DHK8VhBpacs9quk78AVP9TmmcG5iXi2oKtZqneSNsVXxCKw"
         Pivx -> "D81AqC8zKma3Cht4TbVuh4jyVVyLkZULCm"
         Kava -> "kava1drpa0x9ptz0fql3frv562rcrhj2nstuz3pas87"
         Cardano -> "addr1qyr8jjfnypp95eq74aqzn7ss687ehxclgj7mu6gratmg3mul2040vt35dypp042awzsjk5xm3zr3zm5qh7454uwdv08s84ray2"
@@ -116,7 +117,7 @@ class CoinAddressDerivationTests {
         Nervos -> "ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqdtyq04tvp02wectaumxn0664yw2jd53lqk4mxg3"
         Everscale -> "0:0c39661089f86ec5926ea7d4ee4223d634ba4ed6dcc2e80c7b6a8e6d59f79b04"
         TON -> "UQDgEMqToTacHic7SnvnPFmvceG5auFkCcAw0mSCvzvKUaT4"
-        Aptos -> "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30"
+        Aptos -> "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30"
         Nebl -> "NgDVaXAwNgBwb88xLiFKomfBmPkEh9F2d7"
         Sui -> "0xada112cfb90b44ba889cc5d39ac2bf46281e4a91f7919c693bcd9b8323e81ed2"
         Hedera -> "0.0.302a300506032b657003210049eba62f64d0d941045595d9433e65d84ecc46bcdb1421de55e05fcf2d8357d5"

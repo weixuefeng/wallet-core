@@ -9,9 +9,17 @@
 #include "Protobuf/transaction_contents.pb.h"
 #include "../PublicKey.h"
 
+#include <stdexcept>
+
 namespace TW::Hedera::internals {
 static inline proto::AccountID accountIDfromStr(const std::string& input) {
     const auto hederaAccount = Address(input);
+    if (hederaAccount.alias().mPubKey.has_value()) {
+        // AccountID can carry an alias, but populating that oneof means serialising a
+        // Key protobuf. Until that is implemented, refuse the address: falling through
+        // would set accountNum from mNum and silently target shard.realm.0.
+        throw std::invalid_argument("Hedera alias addresses are not supported in signing input");
+    }
     auto accountID = proto::AccountID();
     accountID.set_accountnum(static_cast<std::int64_t>(hederaAccount.num()));
     accountID.set_realmnum(static_cast<std::int64_t>(hederaAccount.realm()));
@@ -85,12 +93,18 @@ static inline Proto::SigningOutput sign(const proto::TransactionBody& body, cons
 
 namespace TW::Hedera {
 
-Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) noexcept {
-    auto privateKey = PrivateKey(Data(input.private_key().begin(), input.private_key().end()));
+Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
+    auto privateKey = PrivateKey(input.private_key(), TWCurveED25519);
     auto body = internals::transactionBodyPrerequisites(input);
 
     switch (input.body().data_case()) {
     case Proto::TransactionBody::kTransfer: {
+        if (input.body().transfer().amount() <= 0) {
+            auto output = Proto::SigningOutput();
+            output.set_error(Common::Proto::Error_invalid_params);
+            output.set_error_message("Transfer amount must be positive");
+            return output;
+        }
         *body.mutable_cryptotransfer() = internals::cryptoTransferFromInput(input);
         break;
     }

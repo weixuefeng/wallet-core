@@ -12,6 +12,7 @@ use tw_coin_entry::coin_context::CoinContext;
 use tw_coin_entry::error::prelude::*;
 use tw_misc::traits::OptionalEmpty;
 use tw_proto::BitcoinV2::Proto;
+use tw_utxo::constants::check_max_input_output_count;
 use tw_utxo::context::UtxoContext;
 use tw_utxo::dust::DustPolicy;
 use tw_utxo::fee::fee_estimator::StandardFeeEstimator;
@@ -41,14 +42,21 @@ where
         let chain_info = chain_info(coin, &input.chain_info)?;
         let dust_policy = Self::dust_policy(&transaction_builder.dust_policy)?;
         let fee_estimator = Self::fee_estimator(transaction_builder)?;
-        let version = Self::transaction_version(&transaction_builder.version);
+        let version = Self::transaction_version(&transaction_builder.version, DEFAULT_TX_VERSION);
 
-        let public_keys = Self::get_public_keys(input)?;
+        let public_keys = Self::get_public_keys::<Context>(input)?;
 
         let mut builder = TransactionBuilder::default();
         builder
             .version(version)
             .lock_time(transaction_builder.lock_time);
+
+        check_max_input_output_count(
+            transaction_builder.inputs.len(),
+            transaction_builder.outputs.len(),
+            transaction_builder.change_output.is_some(),
+            transaction_builder.max_amount_output.is_some(),
+        )?;
 
         // Parse all UTXOs.
         for utxo_proto in transaction_builder.inputs.iter() {
@@ -62,6 +70,14 @@ where
 
         // If `max_amount_output` is set, construct a transaction with only one output.
         if let Some(max_output_proto) = transaction_builder.max_amount_output.as_ref() {
+            if !transaction_builder.outputs.is_empty()
+                || transaction_builder.change_output.is_some()
+            {
+                return SigningError::err(SigningErrorType::Error_invalid_params).context(
+                    "'max_amount_output' cannot be set together with 'outputs' or 'change_output'",
+                );
+            }
+
             let output_builder = OutputProtobuf::<Context>::new(&chain_info, max_output_proto);
 
             let max_output = output_builder
@@ -112,12 +128,14 @@ where
 }
 
 impl StandardSigningRequestBuilder {
-    pub fn get_public_keys(input: &Proto::SigningInput) -> SigningResult<PublicKeys> {
-        let mut public_keys = PublicKeys::default();
+    pub fn get_public_keys<Context: UtxoContext>(
+        input: &Proto::SigningInput,
+    ) -> SigningResult<PublicKeys> {
+        let mut public_keys = PublicKeys::with_public_key_hasher(Context::PUBLIC_KEY_HASHER);
 
         if input.private_keys.is_empty() {
             for public in input.public_keys.iter() {
-                public_keys.add_public_key(public.to_vec());
+                public_keys.add_public_key(public.to_vec())?;
             }
         } else {
             for private in input.private_keys.iter() {
@@ -145,19 +163,31 @@ impl StandardSigningRequestBuilder {
         }
     }
 
-    pub fn fee_estimator(
+    pub fn fee_estimator<Transaction>(
         proto: &Proto::TransactionBuilder,
     ) -> SigningResult<StandardFeeEstimator<Transaction>> {
         let fee_policy = FeePolicy::FeePerVb(proto.fee_per_vb);
         Ok(StandardFeeEstimator::new(fee_policy))
     }
 
-    pub fn transaction_version(proto: &Proto::TransactionVersion) -> u32 {
+    pub fn transaction_version(proto: &Proto::TransactionVersion, default: u32) -> u32 {
         match proto {
-            Proto::TransactionVersion::UseDefault => DEFAULT_TX_VERSION,
+            Proto::TransactionVersion::UseDefault => default,
             Proto::TransactionVersion::V1 => 1,
             Proto::TransactionVersion::V2 => 2,
         }
+    }
+
+    pub fn expect_transaction_version(
+        proto: &Proto::TransactionVersion,
+        expected: u32,
+    ) -> SigningResult<u32> {
+        if Self::transaction_version(proto, expected) != expected {
+            return SigningError::err(SigningErrorType::Error_invalid_params).context(format!(
+                "Invalid transaction 'version'. Expected Default or V{expected}"
+            ));
+        }
+        Ok(expected)
     }
 }
 

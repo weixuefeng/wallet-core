@@ -39,6 +39,9 @@ public:
     /// Encrypted payload.
     EncryptedPayload payload;
 
+    /// Optional encoded payload. Used when an encoded private key is imported.
+    std::optional<EncryptedPayload> encodedPayload;
+
     /// Active accounts.  Address should be unique.
     std::vector<Account> accounts;
 
@@ -60,7 +63,25 @@ public:
 
     /// Create a new StoredKey, with the given name and private key, and also add the default address for the given coin..
     /// @throws std::invalid_argument if privateKeyData is not a valid private key
-    static StoredKey createWithPrivateKeyAddDefaultAddress(const std::string& name, const Data& password, TWCoinType coin, const Data& privateKeyData, TWStoredKeyEncryption encryption = TWStoredKeyEncryptionAes128Ctr);
+    static StoredKey createWithPrivateKeyAddDefaultAddress(
+        const std::string& name,
+        const Data& password,
+        TWCoinType coin,
+        const Data& privateKeyData,
+        TWStoredKeyEncryption encryption = TWStoredKeyEncryptionAes128Ctr,
+        TWDerivation derivation = TWDerivationDefault
+    );
+
+    /// Create a new StoredKey, with the given name and encoded private key, and also add the default address for the given coin..
+    /// @throws std::invalid_argument if encodedPrivateKey is not a valid private key
+    static StoredKey createWithEncodedPrivateKeyAddDefaultAddress(
+        const std::string& name,
+        const Data& password,
+        TWCoinType coin,
+        const std::string& encodedPrivateKey,
+        TWStoredKeyEncryption encryption = TWStoredKeyEncryptionAes128Ctr,
+        TWDerivation derivation = TWDerivationDefault
+    );
 
     /// Create a StoredKey from a JSON object.
     static StoredKey createWithJson(const nlohmann::json& json);
@@ -68,10 +89,10 @@ public:
     /// Returns the HDWallet for this key.
     ///
     /// @throws std::invalid_argument if this key is of a type other than `mnemonicPhrase`.
-    const HDWallet<> wallet(const Data& password) const;
+    [[nodiscard]] HDWallet<> wallet(const Data& password) const;
 
     /// Returns all the accounts for a specific coin: 0, 1, or more.
-    std::vector<Account> getAccounts(TWCoinType coin) const;
+    [[nodiscard]] std::vector<Account> getAccounts(TWCoinType coin) const;
 
     /// If found, returns the account for a specific coin. In case of muliple accounts, the default derivation is returned, or the first one is returned.
     /// If none exists, and wallet is not null, an account is created (with default derivation).
@@ -83,10 +104,10 @@ public:
 
     /// Returns the account for a specific coin if it exists.
     /// In case of muliple accounts, the default derivation is returned, or the first one is returned.
-    std::optional<const Account> account(TWCoinType coin) const;
+    [[nodiscard]] std::optional<const Account> account(TWCoinType coin) const;
     
     /// Returns the account for a specific coin and derivation, if it exists.
-    std::optional<const Account> account(TWCoinType coin, TWDerivation derivation, const HDWallet<>& wallet) const;
+    [[nodiscard]] std::optional<const Account> account(TWCoinType coin, TWDerivation derivation, const HDWallet<>& wallet) const;
 
     /// Add an account with aribitrary address/derivation path.  Discouraged, use account() versions.
     /// Address must be unique (for a coin).
@@ -130,13 +151,19 @@ public:
     /// Stores the key into an encrypted file.
     ///
     /// \param path file path to store in.
-    void store(const std::string& path);
+    void store(const std::string& path) const;
+
+    /// Stores the key into an encrypted file, using a temporary file to ensure atomicity of the operation.
+    ///
+    /// \param path file path to store in.
+    /// \param tempFilePath file path to use for temporary file during the store operation.
+    void storeWithTemporaryFile(const std::string& path, const std::string& tempFilePath) const;
 
     /// Initializes `StoredKey` with a JSON object.
     void loadJson(const nlohmann::json& json);
 
     /// Saves `this` as a JSON object.
-    nlohmann::json json() const;
+    [[nodiscard]] nlohmann::json json() const;
 
     /// Fills in all empty or invalid addresses and public keys.
     ///
@@ -144,11 +171,24 @@ public:
     /// the encryption password to re-derive addresses from private keys.
     void fixAddresses(const Data& password);
 
+    /// Regenerates all encrypted data with new encryption parameters, if needed only.
+    /// This can be used to re-encrypt stored data with "valid" but weak encryption parameters, for example, empty salt.
+    ///
+    /// IMPORTANT: Weak PBKDF2 parameters are not migrated automatically by this method.
+    /// Only Scrypt encryption parameters are supported by the current implementation's fix-up logic.
+    void fixEncryption(const Data& password);
+
     /// Re-derives address for the account(s) associated with the given coin.
     ///
     /// This method can be used if address format has been changed.
     /// In case of multiple accounts, all of them will be updated.
     bool updateAddress(TWCoinType coin);
+
+    /// Decrypts the encoded private key.
+    ///
+    /// \returns the decoded private key.
+    /// \throws DecryptionError
+    [[nodiscard]] std::string decryptPrivateKeyEncoded(const Data& password) const;
 
 private:
     /// Default constructor, private
@@ -157,7 +197,15 @@ private:
     /// Initializes a `StoredKey` with a type, an encryption password, and unencrypted data.
     /// This constructor will encrypt the provided data with default encryption
     /// parameters.
-    StoredKey(StoredKeyType type, std::string name, const Data& password, const Data& data, TWStoredKeyEncryptionLevel encryptionLevel, TWStoredKeyEncryption encryption = TWStoredKeyEncryptionAes128Ctr);
+    StoredKey(
+        StoredKeyType type, 
+        std::string name, 
+        const Data& password, 
+        const Data& data, 
+        TWStoredKeyEncryptionLevel encryptionLevel, 
+        TWStoredKeyEncryption encryption = TWStoredKeyEncryptionAes128Ctr, 
+        const std::optional<std::string>& encodedStr = std::nullopt
+    );
 
     /// Find default account for coin, if exists.  If multiple exist, default is returned.
     /// Optional wallet is needed to derive default address
@@ -168,10 +216,10 @@ private:
     std::optional<Account> getDefaultAccountOrAny(TWCoinType coin, const HDWallet<>* wallet) const;
 
     /// Find account by coin+address (should be one, if multiple, first is returned)
-    std::optional<Account> getAccount(TWCoinType coin, const std::string& address) const;
+    [[nodiscard]] std::optional<Account> getAccount(TWCoinType coin, const std::string& address) const;
 
     /// Find account by coin+derivation (should be one, if multiple, first is returned)
-    std::optional<Account> getAccount(TWCoinType coin, TWDerivation derivation, const HDWallet<>& wallet) const;
+    [[nodiscard]] std::optional<Account> getAccount(TWCoinType coin, TWDerivation derivation, const HDWallet<>& wallet) const;
 
     /// Re-derive account address if missing
     Account fillAddressIfMissing(Account& account, const HDWallet<>* wallet) const;

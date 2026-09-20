@@ -2,9 +2,9 @@
 //
 // Copyright © 2017 Trust Wallet.
 
-use move_core_types::account_address::AccountAddress;
 use move_core_types::language_storage::TypeTag;
 use std::str::FromStr;
+use tw_aptos::address::Address;
 use tw_aptos::liquid_staking;
 use tw_aptos::liquid_staking::{LiquidStakingOperation, Stake, Unstake};
 use tw_aptos::nft::{Claim, NftOperation, Offer};
@@ -35,9 +35,7 @@ pub struct FungibleAssetTransfer {
     amount: u64,
 }
 
-pub struct RegisterToken {
-    coin_type: TypeTag,
-}
+pub struct RegisterToken;
 
 pub enum OpsDetails {
     RegisterToken(RegisterToken),
@@ -118,17 +116,6 @@ fn setup_proto_transaction<'a>(
         "nft_ops" => {
             if let OpsDetails::NftOps(nft) = ops_details.unwrap() {
                 Proto::mod_SigningInput::OneOftransaction_payload::nft_message(nft.into())
-            } else {
-                panic!("Unsupported arguments")
-            }
-        },
-        "register_token" => {
-            if let OpsDetails::RegisterToken(register_token) = ops_details.unwrap() {
-                Proto::mod_SigningInput::OneOftransaction_payload::register_token(
-                    Proto::ManagedTokensRegisterMessage {
-                        function: Some(convert_type_tag_to_struct_tag(register_token.coin_type)),
-                    },
-                )
             } else {
                 panic!("Unsupported arguments")
             }
@@ -233,12 +220,12 @@ fn test_aptos_sign_transaction_transfer() {
             "gas_unit_price": "100",
             "max_gas_amount": "3296766",
             "payload": {
-                "arguments": ["0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","1000"],
+                "arguments": ["0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","1000"],
                 "function": "0x1::aptos_account::transfer",
                 "type": "entry_function_payload",
                 "type_arguments": []
             },
-            "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+            "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
             "sequence_number": "99",
             "signature": {
                 "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -281,7 +268,7 @@ fn test_aptos_sign_create_account() {
                 "type": "entry_function_payload",
                 "type_arguments": []
             },
-            "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+            "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
             "sequence_number": "0",
             "signature": {
                 "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -327,12 +314,12 @@ fn test_aptos_sign_coin_transfer() {
                     "gas_unit_price": "100",
                     "max_gas_amount": "3296766",
                     "payload": {
-                        "arguments": ["0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","100000"],
+                        "arguments": ["0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","100000"],
                         "function": "0x1::coin::transfer",
                         "type": "entry_function_payload",
                         "type_arguments": ["0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::BTC"]
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "24",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -378,7 +365,7 @@ fn test_aptos_sign_fungible_asset_transfer() {
                         "type": "entry_function_payload",
                         "type_arguments": ["0x1::fungible_asset::Metadata"]
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "74",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -443,11 +430,11 @@ fn test_aptos_nft_offer() {
         "",
         "",
         Some(OpsDetails::NftOps(NftOperation::Offer(Offer {
-            receiver: AccountAddress::from_str(
+            receiver: Address::from_str(
                 "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
             )
             .unwrap(),
-            creator: AccountAddress::from_str(
+            creator: Address::from_str(
                 "0x9125e4054d884fdc7296b66e12c0d63a7baa0d88c77e8e784987c0a967c670ac",
             )
             .unwrap(),
@@ -468,7 +455,7 @@ fn test_aptos_nft_offer() {
                     "max_gas_amount": "3296766",
                     "payload": {
                         "arguments": [
-                                      "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                                      "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                                       "0x9125e4054d884fdc7296b66e12c0d63a7baa0d88c77e8e784987c0a967c670ac",
                                       "Topaz Troopers", "Topaz Trooper #20068", "0", "1"],
                         "function": "0x3::token_transfers::offer_script",
@@ -489,8 +476,8 @@ fn test_aptos_nft_offer() {
 #[test]
 fn test_aptos_cancel_nft_offer() {
     let input = setup_proto_transaction(
-        "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", // Sender's address
-        "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",  // Keypair
+        "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", // Sender's address
+        "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",   // Keypair
         "nft_ops",
         21, // Sequence number
         2,
@@ -500,11 +487,11 @@ fn test_aptos_cancel_nft_offer() {
         "",
         "",
         Some(OpsDetails::NftOps(NftOperation::Cancel(Offer {
-            receiver: AccountAddress::from_str(
+            receiver: Address::from_str(
                 "0x783135e8b00430253a22ba041d860c373d7a1501ccf7ac2d1ad37a8ed2775aee",
             )
             .unwrap(),
-            creator: AccountAddress::from_str(
+            creator: Address::from_str(
                 "0x9125e4054d884fdc7296b66e12c0d63a7baa0d88c77e8e784987c0a967c670ac",
             )
             .unwrap(),
@@ -532,7 +519,7 @@ fn test_aptos_cancel_nft_offer() {
                         "type": "entry_function_payload",
                         "type_arguments": []
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "21",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -546,8 +533,8 @@ fn test_aptos_cancel_nft_offer() {
 #[test]
 fn test_aptos_nft_claim() {
     let input = setup_proto_transaction(
-        "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", // Sender's address
-        "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",  // Keypair
+        "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", // Sender's address
+        "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec",   // Keypair
         "nft_ops",
         19, // Sequence number
         2,
@@ -557,11 +544,11 @@ fn test_aptos_nft_claim() {
         "",
         "",
         Some(OpsDetails::NftOps(NftOperation::Claim(Claim {
-            sender: AccountAddress::from_str(
+            sender: Address::from_str(
                 "0x783135e8b00430253a22ba041d860c373d7a1501ccf7ac2d1ad37a8ed2775aee",
             )
             .unwrap(),
-            creator: AccountAddress::from_str(
+            creator: Address::from_str(
                 "0x9125e4054d884fdc7296b66e12c0d63a7baa0d88c77e8e784987c0a967c670ac",
             )
             .unwrap(),
@@ -588,51 +575,11 @@ fn test_aptos_nft_claim() {
                         "type": "entry_function_payload",
                         "type_arguments": []
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "19",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
                         "signature": "0xede1ffb5f8f663741c2ca9597af44af81c98f7a910261bb4125f758fd0c0ebbf5bacb34f1196ad45153177729eb6d478676b364ab747da17602713f65ca2dd0a",
-                        "type": "ed25519_signature"
-                    }
-                }"#);
-}
-
-// Successfully broadcasted https://explorer.aptoslabs.com/txn/0xe591252daed785641bfbbcf72a5d17864568cf32e04c0cc9129f3a13834d0e8e?network=testnet
-#[test]
-fn test_aptos_register_token() {
-    let input = setup_proto_transaction("0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30", // Sender's address
-                                        "5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec", // Keypair
-                                        "register_token",
-                                        23, // Sequence number
-                                        2,
-                                        2000000,
-                                        3664390082,
-                                        100,
-                                        "",
-                                        "",
-                                        Some(OpsDetails::RegisterToken(RegisterToken { coin_type: TypeTag::from_str("0xe4497a32bf4a9fd5601b27661aa0b933a923191bf403bd08669ab2468d43b379::move_coin::MoveCoin").unwrap() })),
-    );
-    let output = Signer::sign_proto(input);
-    test_tx_result(output,
-                   "07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f3017000000000000000200000000000000000000000000000000000000000000000000000000000000010c6d616e616765645f636f696e0872656769737465720107e4497a32bf4a9fd5601b27661aa0b933a923191bf403bd08669ab2468d43b379096d6f76655f636f696e084d6f7665436f696e000080841e00000000006400000000000000c2276ada0000000002", // Expected raw transaction bytes
-                   "e230b49f552fb85356dbec9df13f0dc56228eb7a9c29a8af3a99f4ae95b86c72bdcaa4ff1e9beb0bd81c298b967b9d97449856ec8bc672a08e2efef345c37100", // Expected signature
-                   "07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f3017000000000000000200000000000000000000000000000000000000000000000000000000000000010c6d616e616765645f636f696e0872656769737465720107e4497a32bf4a9fd5601b27661aa0b933a923191bf403bd08669ab2468d43b379096d6f76655f636f696e084d6f7665436f696e000080841e00000000006400000000000000c2276ada00000000020020ea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c40e230b49f552fb85356dbec9df13f0dc56228eb7a9c29a8af3a99f4ae95b86c72bdcaa4ff1e9beb0bd81c298b967b9d97449856ec8bc672a08e2efef345c37100", // Expected encoded transaction
-                   r#"{
-                    "expiration_timestamp_secs": "3664390082",
-                    "gas_unit_price": "100",
-                    "max_gas_amount": "2000000",
-                    "payload": {
-                        "arguments": [],
-                        "function": "0x1::managed_coin::register",
-                        "type": "entry_function_payload",
-                        "type_arguments": ["0xe4497a32bf4a9fd5601b27661aa0b933a923191bf403bd08669ab2468d43b379::move_coin::MoveCoin"]
-                    },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
-                    "sequence_number": "23",
-                    "signature": {
-                        "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
-                        "signature": "0xe230b49f552fb85356dbec9df13f0dc56228eb7a9c29a8af3a99f4ae95b86c72bdcaa4ff1e9beb0bd81c298b967b9d97449856ec8bc672a08e2efef345c37100",
                         "type": "ed25519_signature"
                     }
                 }"#);
@@ -655,7 +602,7 @@ fn test_aptos_tortuga_stake() {
         Some(OpsDetails::LiquidStakingOps(LiquidStakingOperation::Stake(
             Stake {
                 amount: 100000000,
-                smart_contract_address: AccountAddress::from_str(
+                smart_contract_address: Address::from_str(
                     "0x8f396e4246b2ba87b51c0739ef5ea4f26515a98375308c31ac2ec1e42142a57f",
                 )
                 .unwrap(),
@@ -706,7 +653,7 @@ fn test_aptos_tortuga_unstake() {
         Some(OpsDetails::LiquidStakingOps(
             LiquidStakingOperation::Unstake(Unstake {
                 amount: 99178100,
-                smart_contract_address: AccountAddress::from_str(
+                smart_contract_address: Address::from_str(
                     "0x8f396e4246b2ba87b51c0739ef5ea4f26515a98375308c31ac2ec1e42142a57f",
                 )
                 .unwrap(),
@@ -757,7 +704,7 @@ fn test_aptos_tortuga_claim() {
         Some(OpsDetails::LiquidStakingOps(LiquidStakingOperation::Claim(
             liquid_staking::Claim {
                 idx: 0,
-                smart_contract_address: AccountAddress::from_str(
+                smart_contract_address: Address::from_str(
                     "0x8f396e4246b2ba87b51c0739ef5ea4f26515a98375308c31ac2ec1e42142a57f",
                 )
                 .unwrap(),
@@ -843,7 +790,7 @@ fn test_aptos_blind_sign() {
                         ],
                         "type": "entry_function_payload"
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "42",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -905,7 +852,7 @@ fn test_aptos_blind_sign_with_abi() {
                         ],
                         "type": "entry_function_payload"
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "69",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",

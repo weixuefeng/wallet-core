@@ -19,5 +19,6 @@ publishing {
                 password = "o9ubwaa0ffypeis4"
             }
         }
+        mavenLocal()
     }
 }

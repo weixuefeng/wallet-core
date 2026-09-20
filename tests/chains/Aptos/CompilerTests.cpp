@@ -44,9 +44,9 @@ TEST(AptosCompiler, StandardTransaction) {
 
     // Sign the pre-hash data.
 
-    auto privateKey = PrivateKey(parse_hex("5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec"));
+    auto privateKey = PrivateKey(parse_hex("5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec"), TWCurveED25519);
     auto publicKey = privateKey.getPublicKey(TWPublicKeyTypeED25519).bytes;
-    auto signature = privateKey.sign(actualDataToSign, TWCurveED25519);
+    auto signature = privateKey.sign(actualDataToSign);
     EXPECT_EQ(hex(signature), "5707246db31e2335edc4316a7a656a11691d1d1647f6e864d1ab12f43428aaaf806cf02120d0b608cdd89c5c904af7b137432aacdd60cc53f9fad7bd33578e01");
 
     // Compile the transaction.
@@ -65,12 +65,12 @@ TEST(AptosCompiler, StandardTransaction) {
                     "gas_unit_price": "100",
                     "max_gas_amount": "3296766",
                     "payload": {
-                        "arguments": ["0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","1000"],
+                        "arguments": ["0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30","1000"],
                         "function": "0x1::aptos_account::transfer",
                         "type": "entry_function_payload",
                         "type_arguments": []
                     },
-                    "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+                    "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
                     "sequence_number": "99",
                     "signature": {
                         "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",
@@ -125,9 +125,9 @@ TEST(AptosCompiler, BlindTransactionJson) {
 
     // Sign the pre-hash data.
 
-    auto privateKey = PrivateKey(parse_hex("5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec"));
+    auto privateKey = PrivateKey(parse_hex("5d996aa76b3212142792d9130796cd2e11e3c445a93118c08414df4f66bc60ec"), TWCurveED25519);
     auto publicKey = privateKey.getPublicKey(TWPublicKeyTypeED25519).bytes;
-    auto signature = privateKey.sign(actualDataToSign, TWCurveED25519);
+    auto signature = privateKey.sign(actualDataToSign);
     EXPECT_EQ(hex(signature), "42cd67406e85afd1e948e7ad7f5f484fb4c60d82b267c6b6b28a92301e228b983206d2b87cd5487cf9acfb0effbd183ab90123570eb2e047cb152d337152210b");
 
     // Compile the transaction.
@@ -159,7 +159,7 @@ TEST(AptosCompiler, BlindTransactionJson) {
             ],
             "type": "entry_function_payload"
         },
-        "sender": "0x7968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
+        "sender": "0x07968dab936c1bad187c60ce4082f307d030d780e91e694ae03aef16aba73f30",
         "sequence_number": "42",
         "signature": {
             "public_key": "0xea526ba1710343d953461ff68641f1b7df5f23b9042ffa2d2a798d3adb3f3d6c",

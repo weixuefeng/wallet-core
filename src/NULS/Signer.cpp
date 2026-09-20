@@ -14,7 +14,7 @@ using namespace TW;
 
 namespace TW::NULS {
 
-Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) noexcept {
+Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) {
     auto output = Proto::SigningOutput();
     try {
         auto signer = Signer(input);
@@ -28,6 +28,9 @@ Proto::SigningOutput Signer::sign(const Proto::SigningInput& input) noexcept {
 }
 
 Signer::Signer(const Proto::SigningInput& input) : input(input) {
+    if (input.chain_id() > 0xFFFF || input.idassets_id() > 0xFFFF) {
+        throw std::invalid_argument("chain_id and idassets_id must fit in 16 bits");
+    }
     uint256_t balance = load(input.balance());
 
     Proto::TransactionCoinTo coinTo;
@@ -151,11 +154,11 @@ Data Signer::sign() const {
     Data txHash = calcTransactionDigest(dataRet);
 
     Data privKey = data(input.private_key());
-    auto priv = PrivateKey(privKey);
+    auto priv = PrivateKey(privKey, TWCurveSECP256k1);
     auto transactionSignature = makeTransactionSignature(priv, txHash);
     if (Address::isValid(input.fee_payer()) && input.from() != input.fee_payer()) {
         Data feePayerPrivKey = data(input.fee_payer_private_key());
-        auto feePayerPriv = PrivateKey(feePayerPrivKey);
+        auto feePayerPriv = PrivateKey(feePayerPrivKey, TWCurveSECP256k1);
         auto feePayerTransactionSignature = makeTransactionSignature(feePayerPriv, txHash);
         transactionSignature.insert(transactionSignature.end(),
                                     feePayerTransactionSignature.begin(),

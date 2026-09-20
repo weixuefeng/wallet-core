@@ -39,6 +39,11 @@ TEST(DerivationPath, InitWithString) {
 TEST(DerivationPath, InitInvalid) {
     ASSERT_THROW(DerivationPath("a/b/c"), std::invalid_argument);
     ASSERT_THROW(DerivationPath("m/44'/60''/"), std::invalid_argument);
+    // Raw index >= 0x80000000 must be rejected: m/2147483648 would derive the
+    // same key as m/0' but string() would emit it without apostrophe.
+    ASSERT_THROW(DerivationPath("m/2147483648"), std::invalid_argument);
+    ASSERT_THROW(DerivationPath("m/2147483648'"), std::invalid_argument);
+    ASSERT_THROW(DerivationPath("m/44'/4294967295"), std::invalid_argument);
 }
 
 TEST(DerivationPath, IndexOutOfBounds) {
@@ -92,6 +97,12 @@ TEST(Derivation, alternativeDerivation) {
     EXPECT_EQ(TW::derivationPath(TWCoinTypeSolana, TWDerivationDefault).string(), "m/44'/501'/0'");
     EXPECT_EQ(TW::derivationPath(TWCoinTypeSolana, TWDerivationSolanaSolana).string(), "m/44'/501'/0'/0'");
     EXPECT_EQ(std::string(TW::derivationName(TWCoinTypeSolana, TWDerivationSolanaSolana)), "solana");
+
+    EXPECT_EQ(TW::derivationPath(TWCoinTypePactus).string(), "m/44'/21888'/3'/0'");
+    EXPECT_EQ(TW::derivationPath(TWCoinTypePactus, TWDerivationPactusMainnet).string(), "m/44'/21888'/3'/0'");
+    EXPECT_EQ(TW::derivationPath(TWCoinTypePactus, TWDerivationPactusTestnet).string(), "m/44'/21777'/3'/0'");
+    EXPECT_EQ(std::string(TW::derivationName(TWCoinTypePactus, TWDerivationPactusMainnet)), "mainnet");
+    EXPECT_EQ(std::string(TW::derivationName(TWCoinTypePactus, TWDerivationPactusTestnet)), "testnet");
 }
 
 } // namespace TW

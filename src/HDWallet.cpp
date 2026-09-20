@@ -40,6 +40,9 @@ const int MnemonicBufLength = Mnemonic::MaxWords * (BIP39_MAX_WORD_LENGTH + 3) +
 
 template <std::size_t seedSize>
 HDWallet<seedSize>::HDWallet(const Data& seed) {
+    if (seed.size() != seedSize) {
+        throw std::invalid_argument("Invalid seed size");
+    }
     std::copy_n(seed.begin(), seedSize, this->seed.begin());
 }
 
@@ -111,6 +114,13 @@ static HDNode getMasterNode(const HDWallet<seedSize>& wallet, TWCurve curve) {
         // Derives the root Cardano HDNode from a passphrase and the entropy encoded in
         // a BIP-0039 mnemonic using the Icarus derivation (V2) scheme
         const auto entropy = wallet.getEntropy();
+        if (entropy.empty()) {
+            // Entropy is empty for mnemonics created with `check=false` that are not valid
+            // BIP-0039 English mnemonics (e.g. non-English wordlists), or for wallets
+            // constructed directly from a raw seed. Deriving from empty entropy would
+            // produce the same constant secret for every such wallet.
+            throw std::invalid_argument("Cannot derive a Cardano key: mnemonic entropy is empty");
+        }
         uint8_t secret[CARDANO_SECRET_LENGTH];
         secret_from_entropy_cardano_icarus((const uint8_t*)"", 0, entropy.data(), int(entropy.size()), secret, nullptr);
         hdnode_from_secret_cardano(secret, &node);
@@ -147,14 +157,14 @@ template <std::size_t seedSize>
 PrivateKey HDWallet<seedSize>::getMasterKey(TWCurve curve) const {
     auto node = getMasterNode(*this, curve);
     auto data = Data(node.private_key, node.private_key + PrivateKey::_size);
-    return PrivateKey(data);
+    return PrivateKey(data, curve);
 }
 
 template <std::size_t seedSize>
 PrivateKey HDWallet<seedSize>::getMasterKeyExtension(TWCurve curve) const {
     auto node = getMasterNode(*this, curve);
     auto data = Data(node.private_key_extension, node.private_key_extension + PrivateKey::_size);
-    return PrivateKey(data);
+    return PrivateKey(data, curve);
 }
 
 template <std::size_t seedSize>
@@ -171,9 +181,9 @@ PrivateKey HDWallet<seedSize>::getKeyByCurve(TWCurve curve, const DerivationPath
     auto node = getNode<seedSize>(*this, curve, derivationPath);
     switch (privateKeyType) {
     case TWPrivateKeyTypeCardano: {
-        if (derivationPath.indices.size() < 4 || derivationPath.indices[3].value > 1) {
-            // invalid derivation path
-            return PrivateKey(Data(PrivateKey::cardanoKeySize));
+        if (derivationPath.indices.size() < 5 || derivationPath.indices[3].value > 1) {
+            TW::memzero(&node);
+            throw std::invalid_argument("Invalid derivation path");
         }
         const DerivationPath stakingPath = cardanoStakingDerivationPath(derivationPath);
 
@@ -188,7 +198,7 @@ PrivateKey HDWallet<seedSize>::getKeyByCurve(TWCurve curve, const DerivationPath
         auto chainCode2 = Data(node2.chain_code, node2.chain_code + PrivateKey::_size);
 
         TW::memzero(&node);
-        return PrivateKey(pkData, extData, chainCode, pkData2, extData2, chainCode2);
+        return PrivateKey(pkData, extData, chainCode, pkData2, extData2, chainCode2, curve);
     }
     case TWPrivateKeyTypeDefault:
     default:
@@ -196,9 +206,9 @@ PrivateKey HDWallet<seedSize>::getKeyByCurve(TWCurve curve, const DerivationPath
         auto data = Data(node.private_key, node.private_key + PrivateKey::_size);
         TW::memzero(&node);
         if (curve == TWCurveStarkex) {
-            return ImmutableX::getPrivateKeyFromEthPrivKey(PrivateKey(data));
+            return ImmutableX::getPrivateKeyFromEthPrivKey(PrivateKey(data, curve));
         }
-        return PrivateKey(data);
+        return PrivateKey(data, curve);
     }
 }
 
@@ -312,7 +322,7 @@ std::optional<PrivateKey> HDWallet<seedSize>::getPrivateKeyFromExtended(const st
     hdnode_private_ckd(&node, path.change());
     hdnode_private_ckd(&node, path.address());
 
-    return PrivateKey(Data(node.private_key, node.private_key + 32));
+    return PrivateKey(Data(node.private_key, node.private_key + 32), curve);
 }
 
 template <std::size_t seedSize>

@@ -8,9 +8,7 @@ use tw_bitcoin::modules::signing_request::SigningRequestBuilder;
 use tw_bitcoin::modules::tx_builder::output_protobuf::OutputProtobuf;
 use tw_bitcoin::modules::tx_builder::utxo_protobuf::UtxoProtobuf;
 use tw_coin_entry::coin_context::CoinContext;
-use tw_coin_entry::error::prelude::{
-    MapTWError, ResultContext, SigningError, SigningErrorType, SigningResult,
-};
+use tw_coin_entry::error::prelude::*;
 use tw_proto::BitcoinV2::Proto;
 use tw_utxo::fee::fee_estimator::StandardFeeEstimator;
 use tw_utxo::fee::FeePolicy;
@@ -21,6 +19,7 @@ use tw_bitcoin::modules::signing_request::standard_signing_request::{
     chain_info, StandardSigningRequestBuilder,
 };
 use tw_hash::H32;
+use tw_utxo::constants::check_max_input_output_count;
 use tw_utxo::context::UtxoContext;
 
 pub struct ZcashExtraData {
@@ -46,16 +45,26 @@ where
         let dust_policy =
             StandardSigningRequestBuilder::dust_policy(&transaction_builder.dust_policy)?;
         let fee_estimator = Self::fee_estimator(transaction_builder, &extra_data)?;
-        let version = Self::transaction_version(&transaction_builder.version)?;
+        let version = StandardSigningRequestBuilder::expect_transaction_version(
+            &transaction_builder.version,
+            TRANSACTION_VERSION_4,
+        )?;
 
-        let public_keys = StandardSigningRequestBuilder::get_public_keys(input)?;
+        let public_keys = StandardSigningRequestBuilder::get_public_keys::<Context>(input)?;
 
         let mut builder = ZcashTransactionBuilder::default();
         builder
-            .version(version)
+            .overwintered_version(version)
             .lock_time(transaction_builder.lock_time)
             .expiry_height(extra_data.expiry_height)
             .branch_id(extra_data.branch_id);
+
+        check_max_input_output_count(
+            transaction_builder.inputs.len(),
+            transaction_builder.outputs.len(),
+            transaction_builder.change_output.is_some(),
+            transaction_builder.max_amount_output.is_some(),
+        )?;
 
         // Parse all UTXOs.
         for utxo_proto in transaction_builder.inputs.iter() {
@@ -69,6 +78,14 @@ where
 
         // If `max_amount_output` is set, construct a transaction with only one output.
         if let Some(max_output_proto) = transaction_builder.max_amount_output.as_ref() {
+            if !transaction_builder.outputs.is_empty()
+                || transaction_builder.change_output.is_some()
+            {
+                return SigningError::err(SigningErrorType::Error_invalid_params).context(
+                    "'max_amount_output' cannot be set together with 'outputs' or 'change_output'",
+                );
+            }
+
             let output_builder = OutputProtobuf::<Context>::new(&chain_info, max_output_proto);
 
             let max_output = output_builder
@@ -120,14 +137,6 @@ where
 }
 
 impl ZcashSigningRequestBuilder {
-    pub fn transaction_version(proto: &Proto::TransactionVersion) -> SigningResult<i32> {
-        match proto {
-            Proto::TransactionVersion::UseDefault => Ok(TRANSACTION_VERSION_4),
-            _ => SigningError::err(SigningErrorType::Error_invalid_params)
-                .context("ZCash currently supports `UseDefault` transaction version only"),
-        }
-    }
-
     pub fn fee_estimator(
         proto: &Proto::TransactionBuilder,
         extra_data: &ZcashExtraData,
